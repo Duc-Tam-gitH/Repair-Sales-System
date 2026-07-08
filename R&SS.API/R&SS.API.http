@@ -1,0 +1,6 @@
+@R_SS.API_HostAddress = http://localhost:5177
+
+GET {{R_SS.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

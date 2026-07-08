@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>R_SS.BLL</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.2.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\R&amp;SS.DAL\R&amp;SS.DAL.csproj" />
+    <ProjectReference Include="..\R&amp;SS.Models\R&amp;SS.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DTOs\Customer\" />
+    <Folder Include="DTOs\Inventory\" />
+    <Folder Include="DTOs\Report\" />
+    <Folder Include="DTOs\Supplier\" />
+    <Folder Include="DTOs\Payment\" />
+    <Folder Include="DTOs\TechnicalOrder\" />
+    <Folder Include="DTOs\Product\" />
+    <Folder Include="Mapping\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="Validators\" />
+  </ItemGroup>
+
+</Project>
