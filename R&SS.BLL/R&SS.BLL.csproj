@@ -12,6 +12,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,10 +28,10 @@
     <Folder Include="DTOs\Payment\" />
     <Folder Include="DTOs\TechnicalOrder\" />
     <Folder Include="DTOs\Product\" />
+    <Folder Include="DTOs\Authentication\" />
     <Folder Include="Mapping\" />
-    <Folder Include="Helpers\" />
     <Folder Include="Exceptions\" />
-    <Folder Include="Validators\" />
+    <Folder Include="Validators\Authentication\" />
   </ItemGroup>
 
 </Project>

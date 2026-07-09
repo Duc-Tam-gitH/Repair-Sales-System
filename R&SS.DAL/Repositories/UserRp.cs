@@ -7,11 +7,8 @@ namespace R_SS.DAL.Repositories
 {
     public class UserRp : GenericRp<User>, IUserRp
     {
-        private readonly AppDbContext _context;
-
         public UserRp(AppDbContext context) : base(context)
         {
-            _context = context;
         }
 
         // 1. Tìm User theo tên tài khoản (Không phân biệt chữ hoa/thường)
@@ -26,6 +23,14 @@ namespace R_SS.DAL.Repositories
         {
             return await _context.Users
                 .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+        }
+
+        public async Task<User?> GetByIdentifierAsync(string identifier)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u =>
+                    u.Username.ToLower() == identifier.ToLower() ||
+                    u.Email.ToLower() == identifier.ToLower());
         }
 
         // 3. Kiểm tra xem tên tài khoản đã có người dùng chưa

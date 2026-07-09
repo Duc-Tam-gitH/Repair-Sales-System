@@ -6,6 +6,7 @@ namespace R_SS.DAL.Repositories.Interfaces
     {
         Task<User?> GetByUsernameAsync(string username);
         Task<User?> GetByEmailAsync(string email);
+        Task<User?> GetByIdentifierAsync(string identifier);
         Task<bool> ExistsUsernameAsync(string username);
         Task<bool> ExistsEmailAsync(string email);
     }

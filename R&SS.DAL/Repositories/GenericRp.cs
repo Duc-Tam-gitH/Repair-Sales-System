@@ -26,6 +26,30 @@ namespace R_SS.DAL.Repositories
             return await _dbSet.FindAsync(id);
         }
 
+        public async Task<T?> GetByNameAsync(string name)
+        {
+            var entityType = typeof(T);
+            var candidateProperties = new[]
+            {
+                "Name",
+                "RoleName",
+                "Username",
+                "FullName",
+                "CategoryName",
+                "ProductName",
+                "SupplierName"
+            };
+
+            var propertyName = candidateProperties
+                .FirstOrDefault(p => entityType.GetProperty(p) != null);
+
+            if (propertyName == null)
+                throw new NotSupportedException($"Entity type '{entityType.Name}' does not expose a supported name property.");
+
+            return await _dbSet.FirstOrDefaultAsync(entity =>
+        EF.Property<string>(entity, propertyName).ToLower() == name.ToLower());
+        }
+
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();

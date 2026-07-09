@@ -6,6 +6,7 @@ namespace R_SS.DAL.Repositories.Interfaces
     {
         Task<IEnumerable<T>> GetAllAsync();
         Task<T?> GetByIdAsync(object id);
+        Task<T?> GetByNameAsync(string name);
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
         Task AddAsync(T entity);
         void Update(T entity);
