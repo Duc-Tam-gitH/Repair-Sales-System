@@ -9,5 +9,10 @@ namespace R_SS.DAL.Repositories.Interfaces
         Task<User?> GetByIdentifierAsync(string identifier);
         Task<bool> ExistsUsernameAsync(string username);
         Task<bool> ExistsEmailAsync(string email);
+        Task<User?> GetActiveByEmailAsync(string email);
+        Task<IReadOnlyCollection<User>> GetTechniciansAsync();
+        Task<bool> ExistsPhoneAsync(string phone, int? excludedUserId = null);
+        Task<int> CountManagersAsync();
+        Task<bool> HasOperationalReferencesAsync(int userId);
     }
 }

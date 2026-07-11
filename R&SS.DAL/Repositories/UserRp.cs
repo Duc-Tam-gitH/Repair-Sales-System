@@ -25,6 +25,12 @@ namespace R_SS.DAL.Repositories
                 .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
         }
 
+        public async Task<User?> GetActiveByEmailAsync(string email)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.IsActive);
+        }
+
         public async Task<User?> GetByIdentifierAsync(string identifier)
         {
             return await _context.Users
@@ -45,6 +51,37 @@ namespace R_SS.DAL.Repositories
         {
             return await _context.Users
                 .AnyAsync(u => u.Email.ToLower() == email.ToLower());
+        }
+
+        public async Task<IReadOnlyCollection<User>> GetTechniciansAsync()
+        {
+            return await _context.Users
+                .Include(user => user.UserRoles)
+                .ThenInclude(userRole => userRole.Role)
+                .Where(user => user.UserRoles.Any(userRole => userRole.Role != null && userRole.Role.RoleName == "Technician"))
+                .OrderBy(user => user.FullName)
+                .ToListAsync();
+        }
+
+        public async Task<bool> ExistsPhoneAsync(string phone, int? excludedUserId = null)
+        {
+            return await _context.Users.AnyAsync(user =>
+                user.Phone != null &&
+                user.Phone.ToLower() == phone.ToLower() &&
+                (!excludedUserId.HasValue || user.UserId != excludedUserId.Value));
+        }
+
+        public async Task<int> CountManagersAsync()
+        {
+            return await _context.UserRoles.CountAsync(userRole =>
+                userRole.Role != null && userRole.Role.RoleName == "Manager" && userRole.User != null && userRole.User.IsActive);
+        }
+
+        public async Task<bool> HasOperationalReferencesAsync(int userId)
+        {
+            return await _context.SalesOrders.AnyAsync(order => order.CreatedByUserId == userId) ||
+                await _context.RepairOrders.AnyAsync(order => order.ReceivedByUserId == userId || order.AssignedTechnicianId == userId) ||
+                await _context.PurchaseOrders.AnyAsync(order => order.CreatedByUserId == userId);
         }
     }
 }

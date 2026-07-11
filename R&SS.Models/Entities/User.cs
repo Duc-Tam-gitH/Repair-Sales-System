@@ -24,7 +24,12 @@ namespace R_SS.Models.Entities
     public string? Phone { get; set; }
     [MaxLength(255)]
     public string? Address { get; set; }
+    [MaxLength(100)]
+    public string? Specialization { get; set; }
+    [MaxLength(30)]
+    public string WorkStatus { get; set; } = "Working";
     public bool IsActive { get; set; } = true;
+    public DateTime? AccountLockedUntilUtc { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
 

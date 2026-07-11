@@ -1,38 +1,62 @@
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using R_SS.API.Extensions;
+using R_SS.API.Services;
 using R_SS.BLL;
+using R_SS.BLL.Interfaces;
 using R_SS.DAL;
-
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddDalServices(builder.Configuration);
+
 builder.Services.AddBusinessServices();
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+        var jwtAudience = builder.Configuration["Jwt:Audience"];
+        var jwtKey = builder.Configuration["Jwt:Key"];
+
+        if (string.IsNullOrWhiteSpace(jwtIssuer))
+        {
+            throw new InvalidOperationException("Jwt:Issuer configuration missing.");
+        }
+
+        if (string.IsNullOrWhiteSpace(jwtAudience))
+        {
+            throw new InvalidOperationException("Missing Jwt:Audience configuration.");
+        }
+
+        if (string.IsNullOrWhiteSpace(jwtKey))
+        {
+            throw new InvalidOperationException("Jwt:Key is missing. Configure a valid JWT signing key.");
+        }
+
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? string.Empty)),
+                Encoding.UTF8.GetBytes(jwtKey)),
             ClockSkew = TimeSpan.Zero
         };
     });
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -44,6 +68,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseGlobalException();
 
 app.UseAuthentication();
 app.UseAuthorization();

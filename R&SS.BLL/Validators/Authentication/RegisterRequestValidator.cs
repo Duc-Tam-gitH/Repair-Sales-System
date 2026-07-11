@@ -14,13 +14,11 @@ public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
     {
         RuleFor(x => x.Username)
             .NotEmpty().WithMessage("Username is required.")
-            .MinimumLength(4)
-            .MaximumLength(50);
+            .Length(4, 50).WithMessage("Username must be between 4 and 50 characters.");
 
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Password is required.")
-            .MinimumLength(8)
-            .MaximumLength(100);
+            .MinimumLength(8).WithMessage("Password must be at least 8 characters.");
 
         RuleFor(x => x.ConfirmPassword)
             .NotEmpty().WithMessage("Confirm Password is required.")
@@ -34,12 +32,12 @@ public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
 
         RuleFor(x => x.FullName)
             .NotEmpty().WithMessage("Full Name is required.")
-            .MaximumLength(100);
+            .MaximumLength(100).WithMessage("Full Name must not exceed 100 characters.");
 
         RuleFor(x => x.Phone)
-            .MaximumLength(20);
+            .MaximumLength(20).WithMessage("Phone number must not exceed 20 characters.");
 
         RuleFor(x => x.Address)
-            .MaximumLength(255);
+            .MaximumLength(255).WithMessage("Address must not exceed 255 characters.");
     }
 }

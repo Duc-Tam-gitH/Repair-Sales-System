@@ -10,6 +10,9 @@ namespace R_SS.Models.Entities
         [Required, MaxLength(100)]
         public string CategoryName { get; set; } = string.Empty;
 
+        [Required, MaxLength(50)]
+        public string CategoryCode { get; set; } = string.Empty;
+
         [MaxLength(255)]
         public string? Description { get; set; }
 

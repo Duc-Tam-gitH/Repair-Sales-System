@@ -14,13 +14,43 @@ public interface IUnitOfWork : IDisposable
 
     IUserRoleRp UserRoles { get; }
 
+    IPasswordResetRequestRp PasswordResetRequests { get; }
+
     ICustomerRp Customers { get; }
+
+    ICustomerUpdateHistoryRp CustomerUpdateHistories { get; }
 
     ISupplierRp Suppliers { get; }
 
     IProductCategoryRp ProductCategories { get; }
 
+    IProductCategoryManagementHistoryRp ProductCategoryManagementHistories { get; }
+
     IProductRp Products { get; }
+
+    IProductManagementHistoryRp ProductManagementHistories { get; }
+
+    IPromotionRp Promotions { get; }
+
+    IPromotionProductRp PromotionProducts { get; }
+
+    IPromotionManagementHistoryRp PromotionManagementHistories { get; }
+
+    IInventoryTransactionRp InventoryTransactions { get; }
+
+    ISystemActivityLogRp SystemActivityLogs { get; }
+
+    IServiceRequestRp ServiceRequests { get; }
+
+    IInvoiceRecordRp InvoiceRecords { get; }
+
+    IRolePermissionRp RolePermissions { get; }
+
+    ISystemConfigurationRp SystemConfigurations { get; }
+
+    INotificationTemplateRp NotificationTemplates { get; }
+
+    INotificationTemplateHistoryRp NotificationTemplateHistories { get; }
 
     IPurchaseOrderRp PurchaseOrders { get; }
 
@@ -34,7 +64,17 @@ public interface IUnitOfWork : IDisposable
 
     IRepairOrderDetailRp RepairOrderDetails { get; }
 
+    IRepairOrderStatusHistoryRp RepairOrderStatusHistories { get; }
+
+    ITechnicianAssignmentHistoryRp TechnicianAssignmentHistories { get; }
+
+    IServiceFeedbackRp ServiceFeedbacks { get; }
+
     IPaymentRp Payments { get; }
+
+    ICartRp Carts { get; }
+
+    ICartItemRp CartItems { get; }
 
     IDbContextTransaction BeginTransaction();
 

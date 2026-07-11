@@ -1,5 +1,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using R_SS.BLL.Constants;
 using R_SS.BLL.DTOs.Authentication;
@@ -263,26 +265,225 @@ public class AuthServiceTests
             .WithMessage("Account not found.");
     }
 
+    [Fact]
+    public async Task LogoutAsync_ShouldReturnLogoutConfirmation()
+    {
+        var service = CreateService(
+            new Mock<IUnitOfWork>().Object,
+            new Mock<IPasswordHasher>().Object,
+            new Mock<IJwtTokenGenerator>().Object);
+
+        var response = await service.LogoutAsync();
+
+        response.Message.Should().Be("Logout successfully.");
+        response.LoggedOutAtUtc.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+    }
+
+    [Fact]
+    public async Task LogoutEndpoint_ShouldReturnOkResultWithResponse()
+    {
+        var authServiceMock = new Mock<IAuthService>();
+        authServiceMock.Setup(x => x.LogoutAsync()).ReturnsAsync(new LogoutResponse
+        {
+            Message = "Logout successfully.",
+            LoggedOutAtUtc = new DateTime(2026, 7, 10, 0, 0, 0, DateTimeKind.Utc)
+        });
+
+        var controller = new R_SS.API.Controllers.AuthController(authServiceMock.Object);
+
+        var result = await controller.Logout();
+
+        var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        var apiResponse = okResult.Value.Should().BeOfType<R_SS.API.Responses.ApiResponse<LogoutResponse>>().Subject;
+        apiResponse.Success.Should().BeTrue();
+        apiResponse.Message.Should().Be("Logout successfully.");
+        apiResponse.Data.Should().NotBeNull();
+        apiResponse.Data!.Message.Should().Be("Logout successfully.");
+    }
+
+    [Fact]
+    public async Task RequestPasswordResetAsync_ShouldSendOtp_WhenEmailExists()
+    {
+        var user = BuildUser();
+        var userRepoMock = new Mock<IUserRp>();
+        var roleRepoMock = new Mock<IRoleRp>();
+        var userRoleRepoMock = new Mock<IUserRoleRp>();
+        var passwordResetRepoMock = new Mock<IPasswordResetRequestRp>();
+        var unitOfWorkMock = CreateUnitOfWorkMock(userRepoMock, roleRepoMock, userRoleRepoMock, passwordResetRepoMock);
+        var passwordHasherMock = new Mock<IPasswordHasher>();
+        var tokenGeneratorMock = new Mock<IJwtTokenGenerator>();
+        var otpGeneratorMock = new Mock<IOtpGenerator>();
+        var emailSenderMock = new Mock<IEmailSender>();
+
+        userRepoMock.Setup(x => x.GetByEmailAsync(user.Email)).ReturnsAsync(user);
+        passwordResetRepoMock.Setup(x => x.GetByUserIdAsync(user.UserId)).ReturnsAsync((PasswordResetRequest?)null);
+        otpGeneratorMock.Setup(x => x.Generate(It.IsAny<int>())).Returns("123456");
+        emailSenderMock
+            .Setup(x => x.SendPasswordResetOtpAsync(user.Email, user.FullName, "123456"))
+            .Returns(Task.CompletedTask);
+
+        var service = CreateAuthService(
+            unitOfWorkMock.Object,
+            passwordHasherMock.Object,
+            tokenGeneratorMock.Object,
+            otpGeneratorMock.Object,
+            emailSenderMock.Object);
+
+        var response = await service.RequestPasswordResetAsync(new ForgotPasswordRequest
+        {
+            Email = user.Email
+        });
+
+        response.Message.Should().Be("OTP sent successfully.");
+        response.OtpExpiresAtUtc.Should().BeAfter(DateTime.UtcNow);
+        emailSenderMock.Verify(x => x.SendPasswordResetOtpAsync(user.Email, user.FullName, "123456"), Times.Once);
+        passwordResetRepoMock.Verify(x => x.AddAsync(It.IsAny<PasswordResetRequest>()), Times.Once);
+        unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task RequestPasswordResetAsync_ShouldThrow_WhenEmailDoesNotExist()
+    {
+        var userRepoMock = new Mock<IUserRp>();
+        var roleRepoMock = new Mock<IRoleRp>();
+        var userRoleRepoMock = new Mock<IUserRoleRp>();
+        var passwordResetRepoMock = new Mock<IPasswordResetRequestRp>();
+        var unitOfWorkMock = CreateUnitOfWorkMock(userRepoMock, roleRepoMock, userRoleRepoMock, passwordResetRepoMock);
+        var passwordHasherMock = new Mock<IPasswordHasher>();
+        var tokenGeneratorMock = new Mock<IJwtTokenGenerator>();
+        var otpGeneratorMock = new Mock<IOtpGenerator>();
+        var emailSenderMock = new Mock<IEmailSender>();
+
+        userRepoMock.Setup(x => x.GetByEmailAsync("missing@example.com")).ReturnsAsync((User?)null);
+
+        var service = CreateAuthService(
+            unitOfWorkMock.Object,
+            passwordHasherMock.Object,
+            tokenGeneratorMock.Object,
+            otpGeneratorMock.Object,
+            emailSenderMock.Object);
+
+        var act = async () => await service.RequestPasswordResetAsync(new ForgotPasswordRequest
+        {
+            Email = "missing@example.com"
+        });
+
+        await act.Should().ThrowAsync<NotFoundException>()
+            .WithMessage("Email does not exist.");
+    }
+
+    [Fact]
+    public async Task VerifyPasswordResetOtpAsync_ShouldLockAccount_WhenOtpFailsTooManyTimes()
+    {
+        var user = BuildUser();
+        var resetRequest = BuildPasswordResetRequest(user.UserId, "hashed-otp");
+        resetRequest.OtpAttemptCount = 5;
+
+        var userRepoMock = new Mock<IUserRp>();
+        var roleRepoMock = new Mock<IRoleRp>();
+        var userRoleRepoMock = new Mock<IUserRoleRp>();
+        var passwordResetRepoMock = new Mock<IPasswordResetRequestRp>();
+        var unitOfWorkMock = CreateUnitOfWorkMock(userRepoMock, roleRepoMock, userRoleRepoMock, passwordResetRepoMock);
+        var passwordHasherMock = new Mock<IPasswordHasher>();
+        var tokenGeneratorMock = new Mock<IJwtTokenGenerator>();
+        var otpGeneratorMock = new Mock<IOtpGenerator>();
+        var emailSenderMock = new Mock<IEmailSender>();
+
+        userRepoMock.Setup(x => x.GetByEmailAsync(user.Email)).ReturnsAsync(user);
+        passwordResetRepoMock.Setup(x => x.GetByUserIdAsync(user.UserId)).ReturnsAsync(resetRequest);
+        passwordHasherMock.Setup(x => x.Verify("000000", "hashed-otp")).Returns(false);
+
+        var service = CreateAuthService(
+            unitOfWorkMock.Object,
+            passwordHasherMock.Object,
+            tokenGeneratorMock.Object,
+            otpGeneratorMock.Object,
+            emailSenderMock.Object);
+
+        var act = async () => await service.VerifyPasswordResetOtpAsync(new VerifyForgotPasswordOtpRequest
+        {
+            Email = user.Email,
+            OtpCode = "000000"
+        });
+
+        await act.Should().ThrowAsync<UnauthorizedException>()
+            .WithMessage("Account is temporarily locked. Please try again later.");
+        user.AccountLockedUntilUtc.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task ResetPasswordAsync_ShouldUpdatePassword_WhenOtpWasVerified()
+    {
+        var user = BuildUser();
+        var resetRequest = BuildPasswordResetRequest(user.UserId, "hashed-otp");
+        resetRequest.IsOtpVerified = true;
+        resetRequest.OtpVerifiedAtUtc = DateTime.UtcNow;
+
+        var userRepoMock = new Mock<IUserRp>();
+        var roleRepoMock = new Mock<IRoleRp>();
+        var userRoleRepoMock = new Mock<IUserRoleRp>();
+        var passwordResetRepoMock = new Mock<IPasswordResetRequestRp>();
+        var unitOfWorkMock = CreateUnitOfWorkMock(userRepoMock, roleRepoMock, userRoleRepoMock, passwordResetRepoMock);
+        var passwordHasherMock = new Mock<IPasswordHasher>();
+        var tokenGeneratorMock = new Mock<IJwtTokenGenerator>();
+        var otpGeneratorMock = new Mock<IOtpGenerator>();
+        var emailSenderMock = new Mock<IEmailSender>();
+
+        userRepoMock.Setup(x => x.GetByEmailAsync(user.Email)).ReturnsAsync(user);
+        passwordResetRepoMock.Setup(x => x.GetByUserIdAsync(user.UserId)).ReturnsAsync(resetRequest);
+        passwordHasherMock.Setup(x => x.Hash("NewPassword123!")).Returns("new-hash");
+
+        var service = CreateAuthService(
+            unitOfWorkMock.Object,
+            passwordHasherMock.Object,
+            tokenGeneratorMock.Object,
+            otpGeneratorMock.Object,
+            emailSenderMock.Object);
+
+        var response = await service.ResetPasswordAsync(new ResetPasswordRequest
+        {
+            Email = user.Email,
+            NewPassword = "NewPassword123!",
+            ConfirmPassword = "NewPassword123!"
+        });
+
+        response.Message.Should().Be("Password reset successfully.");
+        user.PasswordHash.Should().Be("new-hash");
+        resetRequest.IsCompleted.Should().BeTrue();
+        user.AccountLockedUntilUtc.Should().BeNull();
+    }
+
     private AuthService CreateService(User? user, bool passwordMatches, string roleName)
     {
         var userRepoMock = new Mock<IUserRp>();
         var roleRepoMock = new Mock<IRoleRp>();
         var userRoleRepoMock = new Mock<IUserRoleRp>();
+        var passwordResetRepoMock = new Mock<IPasswordResetRequestRp>();
         var unitOfWorkMock = new Mock<IUnitOfWork>();
         var passwordHasherMock = new Mock<IPasswordHasher>();
         var tokenGeneratorMock = new Mock<IJwtTokenGenerator>();
+        var otpGeneratorMock = new Mock<IOtpGenerator>();
+        var emailSenderMock = new Mock<IEmailSender>();
 
         unitOfWorkMock.SetupGet(x => x.Users).Returns(userRepoMock.Object);
         unitOfWorkMock.SetupGet(x => x.Roles).Returns(roleRepoMock.Object);
         unitOfWorkMock.SetupGet(x => x.UserRoles).Returns(userRoleRepoMock.Object);
+        unitOfWorkMock.SetupGet(x => x.PasswordResetRequests).Returns(passwordResetRepoMock.Object);
 
         userRepoMock
             .Setup(x => x.GetByIdentifierAsync(It.IsAny<string>()))
+            .ReturnsAsync(user);
+        userRepoMock
+            .Setup(x => x.GetByEmailAsync(It.IsAny<string>()))
             .ReturnsAsync(user);
 
         passwordHasherMock
             .Setup(x => x.Verify(It.IsAny<string>(), It.IsAny<string>()))
             .Returns(passwordMatches);
+
+        passwordHasherMock
+            .Setup(x => x.Hash(It.IsAny<string>()))
+            .Returns("hashed-value");
 
         tokenGeneratorMock
             .Setup(x => x.GenerateToken(It.IsAny<User>(), It.IsAny<string>()))
@@ -291,6 +492,14 @@ public class AuthServiceTests
                 AccessToken = "token-value",
                 ExpiresAtUtc = DateTime.UtcNow.AddMinutes(60)
             });
+
+        otpGeneratorMock
+            .Setup(x => x.Generate(It.IsAny<int>()))
+            .Returns("123456");
+
+        emailSenderMock
+            .Setup(x => x.SendPasswordResetOtpAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            .Returns(Task.CompletedTask);
 
         userRoleRepoMock
             .Setup(x => x.GetByUserIdAsync(It.IsAny<int>()))
@@ -310,8 +519,16 @@ public class AuthServiceTests
             unitOfWorkMock.Object,
             passwordHasherMock.Object,
             tokenGeneratorMock.Object,
+            otpGeneratorMock.Object,
+            emailSenderMock.Object,
             new RegisterRequestValidator(),
-            new LoginRequestValidator());
+            new LoginRequestValidator(),
+            new ForgotPasswordRequestValidator(),
+            new VerifyForgotPasswordOtpRequestValidator(),
+            new ResetPasswordRequestValidator(),
+            new ChangePasswordRequestValidator(),
+            new UpdatePersonalInfoRequestValidator(),
+            Mock.Of<ILogger<AuthService>>());
     }
 
     private static AuthService CreateService(
@@ -323,19 +540,30 @@ public class AuthServiceTests
             unitOfWork,
             passwordHasher,
             jwtTokenGenerator,
+            new Mock<IOtpGenerator>().Object,
+            new Mock<IEmailSender>().Object,
             new RegisterRequestValidator(),
-            new LoginRequestValidator());
+            new LoginRequestValidator(),
+            new ForgotPasswordRequestValidator(),
+            new VerifyForgotPasswordOtpRequestValidator(),
+            new ResetPasswordRequestValidator(),
+            new ChangePasswordRequestValidator(),
+            new UpdatePersonalInfoRequestValidator(),
+            Mock.Of<ILogger<AuthService>>());
     }
 
     private static Mock<IUnitOfWork> CreateUnitOfWorkMock(
         Mock<IUserRp> userRepoMock,
         Mock<IRoleRp> roleRepoMock,
-        Mock<IUserRoleRp> userRoleRepoMock)
+        Mock<IUserRoleRp> userRoleRepoMock,
+        Mock<IPasswordResetRequestRp>? passwordResetRepoMock = null)
     {
         var unitOfWorkMock = new Mock<IUnitOfWork>();
+        passwordResetRepoMock ??= new Mock<IPasswordResetRequestRp>();
         unitOfWorkMock.SetupGet(x => x.Users).Returns(userRepoMock.Object);
         unitOfWorkMock.SetupGet(x => x.Roles).Returns(roleRepoMock.Object);
         unitOfWorkMock.SetupGet(x => x.UserRoles).Returns(userRoleRepoMock.Object);
+        unitOfWorkMock.SetupGet(x => x.PasswordResetRequests).Returns(passwordResetRepoMock.Object);
         unitOfWorkMock.Setup(x => x.BeginTransactionAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(Mock.Of<IDbContextTransaction>());
         unitOfWorkMock.Setup(x => x.CommitAsync(It.IsAny<CancellationToken>()))
@@ -345,6 +573,29 @@ public class AuthServiceTests
         unitOfWorkMock.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
         return unitOfWorkMock;
+    }
+
+    private static AuthService CreateAuthService(
+        IUnitOfWork unitOfWork,
+        IPasswordHasher passwordHasher,
+        IJwtTokenGenerator jwtTokenGenerator,
+        IOtpGenerator otpGenerator,
+        IEmailSender emailSender)
+    {
+        return new AuthService(
+            unitOfWork,
+            passwordHasher,
+            jwtTokenGenerator,
+            otpGenerator,
+            emailSender,
+            new RegisterRequestValidator(),
+            new LoginRequestValidator(),
+            new ForgotPasswordRequestValidator(),
+            new VerifyForgotPasswordOtpRequestValidator(),
+            new ResetPasswordRequestValidator(),
+            new ChangePasswordRequestValidator(),
+            new UpdatePersonalInfoRequestValidator(),
+            Mock.Of<ILogger<AuthService>>());
     }
 
     private static RegisterRequest BuildRegisterRequest() => new()
@@ -370,6 +621,31 @@ public class AuthServiceTests
             IsActive = true,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
+        };
+    }
+
+    private static PasswordResetRequest BuildPasswordResetRequest(int userId, string otpCodeHash)
+    {
+        var now = DateTime.UtcNow;
+
+        return new PasswordResetRequest
+        {
+            PasswordResetRequestId = 1,
+            UserId = userId,
+            User = BuildUser(),
+            OtpCodeHash = otpCodeHash,
+            OtpAttemptCount = 0,
+            OtpSentAtUtc = now,
+            OtpExpiresAtUtc = now.AddMinutes(15),
+            SendAttemptCount = 1,
+            SendWindowStartedAtUtc = now,
+            FunctionLockedUntilUtc = null,
+            IsOtpVerified = false,
+            OtpVerifiedAtUtc = null,
+            IsCompleted = false,
+            CompletedAtUtc = null,
+            CreatedAtUtc = now,
+            UpdatedAtUtc = now
         };
     }
 }

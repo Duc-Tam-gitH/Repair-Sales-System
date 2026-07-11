@@ -32,5 +32,6 @@ namespace R_SS.Models.Entities
         public virtual ICollection<SalesOrder> SalesOrders { get; set; } = new List<SalesOrder>();
         public virtual ICollection<RepairOrder> RepairOrders { get; set; } = new List<RepairOrder>();
         public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+        public virtual ICollection<CustomerUpdateHistory> UpdateHistories { get; set; } = new List<CustomerUpdateHistory>();
     }
 }

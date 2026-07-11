@@ -17,11 +17,31 @@ public static class DependencyInjection
     {
         // Register Services
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ICustomerService, CustomerService>();
+        services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<ICartService, CartService>();
+        services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IActivityHistoryService, ActivityHistoryService>();
+        services.AddScoped<ITechnicalTicketService, TechnicalTicketService>();
+        services.AddScoped<IFeedbackService, FeedbackService>();
+        services.AddScoped<IProductManagementService, ProductManagementService>();
+        services.AddScoped<IProductCategoryManagementService, ProductCategoryManagementService>();
+        services.AddScoped<IPromotionService, PromotionService>();
+        services.AddScoped<IInventoryService, InventoryService>();
+        services.AddScoped<IAccountManagementService, AccountManagementService>();
+        services.AddScoped<ISystemActivityLogService, SystemActivityLogService>();
+        services.AddScoped<IRevenueReportService, RevenueReportService>();
+        services.AddScoped<IInventoryStatisticService, InventoryStatisticService>();
+        services.AddScoped<IServiceRequestService, ServiceRequestService>();
+        services.AddScoped<IInvoiceService, InvoiceService>();
+        services.AddScoped<IDeliveryConfirmationService, DeliveryConfirmationService>();
+        services.AddScoped<IRolePermissionService, RolePermissionService>();
+        services.AddScoped<ISystemConfigurationService, SystemConfigurationService>();
+        services.AddScoped<INotificationTemplateService, NotificationTemplateService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IOtpGenerator, OtpGenerator>();
         services.AddAutoMapper(typeof(DependencyInjection).Assembly);
-
-        // Register Validators
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
         return services;

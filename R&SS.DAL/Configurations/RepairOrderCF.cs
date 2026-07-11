@@ -19,6 +19,12 @@ namespace R_SS.DAL.Configurations
             builder.Property(x => x.DeviceName)
                 .HasMaxLength(150);
 
+            builder.Property(x => x.DeviceType)
+                .HasMaxLength(100);
+
+            builder.Property(x => x.Brand)
+                .HasMaxLength(100);
+
             builder.Property(x => x.DeviceModel)
                 .HasMaxLength(150);
 
@@ -29,8 +35,30 @@ namespace R_SS.DAL.Configurations
                 .HasMaxLength(255)
                 .IsRequired();
 
+            builder.Property(x => x.RequestType)
+                .HasMaxLength(30)
+                .IsRequired();
+
+            builder.Property(x => x.DeviceCondition)
+                .HasMaxLength(255);
+
             builder.Property(x => x.Diagnosis)
                 .HasMaxLength(255);
+
+            builder.Property(x => x.InspectionResult)
+                .HasMaxLength(255);
+
+            builder.Property(x => x.WorkPerformed)
+                .HasMaxLength(255);
+
+            builder.Property(x => x.RepairResult)
+                .HasMaxLength(255);
+
+            builder.Property(x => x.AccompanyingAccessories)
+                .HasMaxLength(255);
+
+            builder.Property(x => x.ServiceFee)
+                .HasPrecision(18, 2);
 
             builder.Property(x => x.Status)
                 .HasMaxLength(30)
@@ -61,6 +89,11 @@ namespace R_SS.DAL.Configurations
             builder.HasOne(x => x.ReceivedByUser)
                 .WithMany()
                 .HasForeignKey(x => x.ReceivedByUserId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasOne(x => x.AssignedTechnician)
+                .WithMany()
+                .HasForeignKey(x => x.AssignedTechnicianId)
                 .OnDelete(DeleteBehavior.SetNull);
         }
     }

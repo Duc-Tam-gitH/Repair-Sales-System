@@ -16,6 +16,10 @@ namespace R_SS.DAL.Configurations
                 .HasMaxLength(100)
                 .IsRequired();
 
+            builder.Property(x => x.CategoryCode)
+                .HasMaxLength(50)
+                .IsRequired();
+
             builder.Property(x => x.Description)
                 .HasMaxLength(255);
 
@@ -29,6 +33,7 @@ namespace R_SS.DAL.Configurations
                 .HasDefaultValueSql("GETDATE()");
 
             builder.HasIndex(x => x.CategoryName).IsUnique();
+            builder.HasIndex(x => x.CategoryCode).IsUnique();
         }
     }
 }

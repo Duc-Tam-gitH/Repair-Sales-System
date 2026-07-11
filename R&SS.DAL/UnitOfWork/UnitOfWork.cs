@@ -21,17 +21,37 @@ public sealed class UnitOfWork : IUnitOfWork
         Users = new UserRp(_context);
         Roles = new RoleRp(_context);
         UserRoles = new UserRoleRp(_context);
+        PasswordResetRequests = new PasswordResetRequestRp(_context);
         Customers = new CustomerRp(_context);
+        CustomerUpdateHistories = new CustomerUpdateHistoryRp(_context);
         Suppliers = new SupplierRp(_context);
         ProductCategories = new ProductCategoryRp(_context);
+        ProductCategoryManagementHistories = new ProductCategoryManagementHistoryRp(_context);
         Products = new ProductRp(_context);
+        ProductManagementHistories = new ProductManagementHistoryRp(_context);
+        Promotions = new PromotionRp(_context);
+        PromotionProducts = new PromotionProductRp(_context);
+        PromotionManagementHistories = new PromotionManagementHistoryRp(_context);
+        InventoryTransactions = new InventoryTransactionRp(_context);
+        SystemActivityLogs = new SystemActivityLogRp(_context);
+        ServiceRequests = new ServiceRequestRp(_context);
+        InvoiceRecords = new InvoiceRecordRp(_context);
+        RolePermissions = new RolePermissionRp(_context);
+        SystemConfigurations = new SystemConfigurationRp(_context);
+        NotificationTemplates = new NotificationTemplateRp(_context);
+        NotificationTemplateHistories = new NotificationTemplateHistoryRp(_context);
         PurchaseOrders = new PurchaseOrderRp(_context);
         PurchaseOrderDetails = new PurchaseOrderDetailRp(_context);
         SalesOrders = new SalesOrderRp(_context);
         SalesOrderDetails = new SalesOrderDetailRp(_context);
         RepairOrders = new RepairOrderRp(_context);
         RepairOrderDetails = new RepairOrderDetailRp(_context);
+        RepairOrderStatusHistories = new RepairOrderStatusHistoryRp(_context);
+        TechnicianAssignmentHistories = new TechnicianAssignmentHistoryRp(_context);
+        ServiceFeedbacks = new ServiceFeedbackRp(_context);
         Payments = new PaymentRp(_context);
+        Carts = new CartRp(_context);
+        CartItems = new CartItemRp(_context);
     }
 
     public IUserRp Users { get; }
@@ -40,13 +60,43 @@ public sealed class UnitOfWork : IUnitOfWork
 
     public IUserRoleRp UserRoles { get; }
 
+    public IPasswordResetRequestRp PasswordResetRequests { get; }
+
     public ICustomerRp Customers { get; }
+
+    public ICustomerUpdateHistoryRp CustomerUpdateHistories { get; }
 
     public ISupplierRp Suppliers { get; }
 
     public IProductCategoryRp ProductCategories { get; }
 
+    public IProductCategoryManagementHistoryRp ProductCategoryManagementHistories { get; }
+
     public IProductRp Products { get; }
+
+    public IProductManagementHistoryRp ProductManagementHistories { get; }
+
+    public IPromotionRp Promotions { get; }
+
+    public IPromotionProductRp PromotionProducts { get; }
+
+    public IPromotionManagementHistoryRp PromotionManagementHistories { get; }
+
+    public IInventoryTransactionRp InventoryTransactions { get; }
+
+    public ISystemActivityLogRp SystemActivityLogs { get; }
+
+    public IServiceRequestRp ServiceRequests { get; }
+
+    public IInvoiceRecordRp InvoiceRecords { get; }
+
+    public IRolePermissionRp RolePermissions { get; }
+
+    public ISystemConfigurationRp SystemConfigurations { get; }
+
+    public INotificationTemplateRp NotificationTemplates { get; }
+
+    public INotificationTemplateHistoryRp NotificationTemplateHistories { get; }
 
     public IPurchaseOrderRp PurchaseOrders { get; }
 
@@ -60,7 +110,17 @@ public sealed class UnitOfWork : IUnitOfWork
 
     public IRepairOrderDetailRp RepairOrderDetails { get; }
 
+    public IRepairOrderStatusHistoryRp RepairOrderStatusHistories { get; }
+
+    public ITechnicianAssignmentHistoryRp TechnicianAssignmentHistories { get; }
+
+    public IServiceFeedbackRp ServiceFeedbacks { get; }
+
     public IPaymentRp Payments { get; }
+
+    public ICartRp Carts { get; }
+
+    public ICartItemRp CartItems { get; }
 
     public IDbContextTransaction BeginTransaction()
     {

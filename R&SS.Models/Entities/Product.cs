@@ -32,6 +32,9 @@ namespace R_SS.Models.Entities
         [MaxLength(255)]
         public string? Description { get; set; }
 
+        [MaxLength(500)]
+        public string? ImageUrl { get; set; }
+
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
