@@ -89,12 +89,12 @@ namespace R_SS.DAL.Configurations
             builder.HasOne(x => x.ReceivedByUser)
                 .WithMany()
                 .HasForeignKey(x => x.ReceivedByUserId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(x => x.AssignedTechnician)
                 .WithMany()
                 .HasForeignKey(x => x.AssignedTechnicianId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
