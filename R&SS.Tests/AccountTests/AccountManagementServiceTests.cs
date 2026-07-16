@@ -71,7 +71,13 @@ public class AccountManagementServiceTests
     }
 
     private static ManageAccountRequest BuildRequest() => new() { ActorUserId = 2, ActorRole = RoleConstants.Manager, Username = "tech01", Password = "Password123!", FullName = "Tech One", Email = "tech@example.com", RoleName = RoleConstants.Technician };
-    private static User BuildUser(string role) => new() { UserId = 1, Username = role, PasswordHash = "hash", Email = "manager@example.com", FullName = "Manager", IsActive = true };
+    private static User BuildUser(string role) => new() { 
+        UserId = 1, 
+        Username = role, 
+        PasswordHash = "hash", 
+        Email = "manager@example.com", 
+        FullName = "Manager", 
+        IsActive = true };
 
     private sealed class TestMocks
     {

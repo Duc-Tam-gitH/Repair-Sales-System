@@ -51,7 +51,7 @@ public class InventoryStatisticServiceTests
     {
         var service = CreateService(CreateMocks());
 
-        var act = async () => await service.GenerateAsync(new InventoryStatisticRequest { ActorRole = RoleConstants.Customer });
+        var act = async () => await service.GenerateAsync(new InventoryStatisticRequest { ActorRole = RoleConstants.Client });
 
         await act.Should().ThrowAsync<UnauthorizedException>().WithMessage("Only Managers can view inventory statistics.");
     }

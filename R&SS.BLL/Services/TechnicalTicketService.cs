@@ -567,7 +567,7 @@ public class TechnicalTicketService : ITechnicalTicketService
 
     private static TechnicalTicketResponse MapTicket(RepairOrder ticket, string actorRole, int? viewerCustomerId)
     {
-        var isOwner = actorRole.Equals(RoleConstants.Customer, StringComparison.OrdinalIgnoreCase) &&
+        var isOwner = actorRole.Equals(RoleConstants.Client, StringComparison.OrdinalIgnoreCase) &&
             viewerCustomerId == ticket.CustomerId;
         var isStaffOtpViewer = actorRole.Equals(RoleConstants.Receptionist, StringComparison.OrdinalIgnoreCase) ||
             actorRole.Equals(RoleConstants.Manager, StringComparison.OrdinalIgnoreCase);
@@ -599,7 +599,7 @@ public class TechnicalTicketService : ITechnicalTicketService
 
     private static bool CanView(RepairOrder ticket, ViewTechnicalTicketsRequest viewer)
     {
-        if (viewer.ActorRole.Equals(RoleConstants.Customer, StringComparison.OrdinalIgnoreCase))
+        if (viewer.ActorRole.Equals(RoleConstants.Client, StringComparison.OrdinalIgnoreCase))
         {
             return viewer.CustomerId == ticket.CustomerId;
         }

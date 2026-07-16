@@ -120,7 +120,7 @@ public class OrderServiceTests
         {
             CustomerId = 1,
             ActorUserId = 9,
-            ActorRole = RoleConstants.Customer,
+            ActorRole = RoleConstants.Client,
             PaymentMethod = "Cash",
             Items = new[] { new OrderItemRequest { ProductId = 1, Quantity = 1 } }
         });

@@ -51,7 +51,7 @@ public class TechnicalTicketServiceTests
     {
         var service = CreateService(CreateMocks());
         var request = BuildCreateRequest();
-        request.ActorRole = RoleConstants.Customer;
+        request.ActorRole = RoleConstants.Client;
 
         var act = async () => await service.CreateAsync(request);
 
@@ -85,7 +85,7 @@ public class TechnicalTicketServiceTests
         var response = await service.GetDetailsAsync(ticket.RepairOrderId, new ViewTechnicalTicketsRequest
         {
             ActorUserId = 1,
-            ActorRole = RoleConstants.Customer,
+            ActorRole = RoleConstants.Client,
             CustomerId = ticket.CustomerId
         });
 
@@ -103,7 +103,7 @@ public class TechnicalTicketServiceTests
         var act = async () => await service.GetDetailsAsync(ticket.RepairOrderId, new ViewTechnicalTicketsRequest
         {
             ActorUserId = 99,
-            ActorRole = RoleConstants.Customer,
+            ActorRole = RoleConstants.Client,
             CustomerId = 99
         });
 

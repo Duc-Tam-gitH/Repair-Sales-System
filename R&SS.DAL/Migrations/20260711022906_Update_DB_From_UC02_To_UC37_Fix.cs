@@ -6,11 +6,15 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace R_SS.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class Update_DB_From_UC02_To_UC37 : Migration
+    public partial class Update_DB_From_UC02_To_UC37_Fix : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_RepairOrders_Users_ReceivedByUserId",
+                table: "RepairOrders");
+
             migrationBuilder.AlterColumn<bool>(
                 name: "IsActive",
                 table: "Users",
@@ -996,8 +1000,14 @@ namespace R_SS.DAL.Migrations
                 table: "RepairOrders",
                 column: "AssignedTechnicianId",
                 principalTable: "Users",
-                principalColumn: "UserId",
-                onDelete: ReferentialAction.NoAction);
+                principalColumn: "UserId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_RepairOrders_Users_ReceivedByUserId",
+                table: "RepairOrders",
+                column: "ReceivedByUserId",
+                principalTable: "Users",
+                principalColumn: "UserId");
         }
 
         /// <inheritdoc />
@@ -1005,6 +1015,10 @@ namespace R_SS.DAL.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_RepairOrders_Users_AssignedTechnicianId",
+                table: "RepairOrders");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_RepairOrders_Users_ReceivedByUserId",
                 table: "RepairOrders");
 
             migrationBuilder.DropTable(
@@ -1294,6 +1308,14 @@ namespace R_SS.DAL.Migrations
                 oldClrType: typeof(bool),
                 oldType: "bit",
                 oldDefaultValue: true);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_RepairOrders_Users_ReceivedByUserId",
+                table: "RepairOrders",
+                column: "ReceivedByUserId",
+                principalTable: "Users",
+                principalColumn: "UserId",
+                onDelete: ReferentialAction.SetNull);
         }
     }
 }

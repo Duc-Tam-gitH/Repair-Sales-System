@@ -60,4 +60,53 @@ public class RegisterRequestValidatorTests
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(error => error.PropertyName == nameof(RegisterRequest.ConfirmPassword));
     }
+
+    [Fact]
+    public async Task ValidateAsync_ShouldFail_ForAllRequiredUc01InvalidFields()
+    {
+        var validator = new RegisterRequestValidator();
+
+        var result = await validator.ValidateAsync(new RegisterRequest
+        {
+            Username = string.Empty,
+            Password = "123",
+            ConfirmPassword = "456",
+            Email = "abc",
+            FullName = string.Empty,
+            Phone = new string('1', 21),
+            Address = new string('A', 256)
+        });
+
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(error => error.PropertyName == nameof(RegisterRequest.Username));
+        result.Errors.Should().Contain(error => error.PropertyName == nameof(RegisterRequest.Password));
+        result.Errors.Should().Contain(error => error.PropertyName == nameof(RegisterRequest.ConfirmPassword));
+        result.Errors.Should().Contain(error => error.PropertyName == nameof(RegisterRequest.Email));
+        result.Errors.Should().Contain(error => error.PropertyName == nameof(RegisterRequest.FullName));
+        result.Errors.Should().Contain(error => error.PropertyName == nameof(RegisterRequest.Phone));
+        result.Errors.Should().Contain(error => error.PropertyName == nameof(RegisterRequest.Address));
+    }
+
+    [Fact]
+    public async Task ValidateAsync_ShouldFail_WhenMaximumLengthsAreExceeded()
+    {
+        var validator = new RegisterRequestValidator();
+
+        var result = await validator.ValidateAsync(new RegisterRequest
+        {
+            Username = new string('u', 51),
+            Password = "Password123!",
+            ConfirmPassword = "Password123!",
+            Email = "john.doe@example.com",
+            FullName = new string('F', 101),
+            Phone = new string('1', 21),
+            Address = new string('A', 256)
+        });
+
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(error => error.PropertyName == nameof(RegisterRequest.Username));
+        result.Errors.Should().Contain(error => error.PropertyName == nameof(RegisterRequest.FullName));
+        result.Errors.Should().Contain(error => error.PropertyName == nameof(RegisterRequest.Phone));
+        result.Errors.Should().Contain(error => error.PropertyName == nameof(RegisterRequest.Address));
+    }
 }

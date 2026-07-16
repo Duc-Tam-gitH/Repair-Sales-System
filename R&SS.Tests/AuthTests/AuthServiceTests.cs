@@ -20,7 +20,7 @@ namespace R_SS.Tests.AuthTests;
 public class AuthServiceTests
 {
     [Fact]
-    public async Task RegisterAsync_ShouldCreateUserAndAssignCustomerRole_WhenDataIsValid()
+    public async Task RegisterAsync_ShouldCreateUserAndAssignClientRole_WhenDataIsValid()
     {
         var userRepoMock = new Mock<IUserRp>();
         var roleRepoMock = new Mock<IRoleRp>();
@@ -30,7 +30,7 @@ public class AuthServiceTests
         var tokenGeneratorMock = new Mock<IJwtTokenGenerator>();
 
         var request = BuildRegisterRequest();
-        var customerRole = new Role { RoleId = 2, RoleName = RoleConstants.Customer };
+        var clientRole = new Role { RoleId = 2, RoleName = RoleConstants.Client };
         var savedUser = default(User);
         var savedUserRole = default(UserRole);
 
@@ -45,7 +45,7 @@ public class AuthServiceTests
             })
             .Returns(Task.CompletedTask);
 
-        roleRepoMock.Setup(x => x.GetByNameAsync(RoleConstants.Customer)).ReturnsAsync(customerRole);
+        roleRepoMock.Setup(x => x.GetByNameAsync(RoleConstants.Client)).ReturnsAsync(clientRole);
         userRoleRepoMock
             .Setup(x => x.AddAsync(It.IsAny<UserRole>()))
             .Callback<UserRole>(userRole =>
@@ -66,7 +66,7 @@ public class AuthServiceTests
 
         passwordHasherMock.Verify(x => x.Hash(request.Password), Times.Once);
         userRepoMock.Verify(x => x.AddAsync(It.IsAny<User>()), Times.Once);
-        roleRepoMock.Verify(x => x.GetByNameAsync(RoleConstants.Customer), Times.Once);
+        roleRepoMock.Verify(x => x.GetByNameAsync(RoleConstants.Client), Times.Once);
         userRoleRepoMock.Verify(x => x.AddAsync(It.IsAny<UserRole>()), Times.Once);
         unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         unitOfWorkMock.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
@@ -75,7 +75,7 @@ public class AuthServiceTests
         savedUser.Should().NotBeNull();
         savedUserRole.Should().NotBeNull();
         savedUserRole!.User.Should().BeSameAs(savedUser);
-        savedUserRole.Role.Should().BeSameAs(customerRole);
+        savedUserRole.Role.Should().BeSameAs(clientRole);
     }
 
     [Fact]
@@ -155,7 +155,7 @@ public class AuthServiceTests
     }
 
     [Fact]
-    public async Task RegisterAsync_ShouldThrow_WhenCustomerRoleIsMissing()
+    public async Task RegisterAsync_ShouldCreateClientRole_WhenDefaultRoleIsMissing()
     {
         var userRepoMock = new Mock<IUserRp>();
         var roleRepoMock = new Mock<IRoleRp>();
@@ -168,19 +168,25 @@ public class AuthServiceTests
         userRepoMock.Setup(x => x.ExistsUsernameAsync(request.Username)).ReturnsAsync(false);
         userRepoMock.Setup(x => x.ExistsEmailAsync(request.Email)).ReturnsAsync(false);
         userRepoMock.Setup(x => x.AddAsync(It.IsAny<User>())).Returns(Task.CompletedTask);
-        roleRepoMock.Setup(x => x.GetByNameAsync(RoleConstants.Customer)).ReturnsAsync((Role?)null);
+        roleRepoMock.Setup(x => x.GetByNameAsync(RoleConstants.Client)).ReturnsAsync((Role?)null);
+        roleRepoMock.Setup(x => x.AddAsync(It.IsAny<Role>())).Returns(Task.CompletedTask);
+        userRoleRepoMock.Setup(x => x.AddAsync(It.IsAny<UserRole>())).Returns(Task.CompletedTask);
 
         var service = CreateService(unitOfWorkMock.Object, passwordHasherMock.Object, tokenGeneratorMock.Object);
 
-        var act = async () => await service.RegisterAsync(request);
+        var response = await service.RegisterAsync(request);
 
-        await act.Should().ThrowAsync<InvalidOperationException>()
-            .WithMessage("Customer role not found.");
+        response.Message.Should().Be("Register successfully.");
 
         unitOfWorkMock.Verify(x => x.BeginTransactionAsync(It.IsAny<CancellationToken>()), Times.Once);
-        unitOfWorkMock.Verify(x => x.RollbackAsync(It.IsAny<CancellationToken>()), Times.Once);
-        unitOfWorkMock.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Never);
-        userRoleRepoMock.Verify(x => x.AddAsync(It.IsAny<UserRole>()), Times.Never);
+        unitOfWorkMock.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        unitOfWorkMock.Verify(x => x.RollbackAsync(It.IsAny<CancellationToken>()), Times.Never);
+        roleRepoMock.Verify(x => x.AddAsync(It.Is<Role>(role =>
+            role.RoleName == RoleConstants.Client &&
+            role.Description == "Default client role.")), Times.Once);
+        userRoleRepoMock.Verify(x => x.AddAsync(It.Is<UserRole>(userRole =>
+            userRole.Role != null &&
+            userRole.Role.RoleName == RoleConstants.Client)), Times.Once);
     }
 
     [Fact]
@@ -193,13 +199,13 @@ public class AuthServiceTests
         var passwordHasherMock = new Mock<IPasswordHasher>();
         var tokenGeneratorMock = new Mock<IJwtTokenGenerator>();
         var request = BuildRegisterRequest();
-        var customerRole = new Role { RoleId = 2, RoleName = RoleConstants.Customer };
+        var clientRole = new Role { RoleId = 2, RoleName = RoleConstants.Client };
 
         userRepoMock.Setup(x => x.ExistsUsernameAsync(request.Username)).ReturnsAsync(false);
         userRepoMock.Setup(x => x.ExistsEmailAsync(request.Email)).ReturnsAsync(false);
         userRepoMock.Setup(x => x.AddAsync(It.IsAny<User>()))
             .ThrowsAsync(new InvalidOperationException("DB error"));
-        roleRepoMock.Setup(x => x.GetByNameAsync(RoleConstants.Customer)).ReturnsAsync(customerRole);
+        roleRepoMock.Setup(x => x.GetByNameAsync(RoleConstants.Client)).ReturnsAsync(clientRole);
 
         var service = CreateService(unitOfWorkMock.Object, passwordHasherMock.Object, tokenGeneratorMock.Object);
 
@@ -218,7 +224,7 @@ public class AuthServiceTests
     public async Task LoginAsync_ShouldReturnTokenAndRole_WhenCredentialsAreValid()
     {
         var user = BuildUser();
-        var service = CreateService(user, passwordMatches: true, roleName: "Customer");
+        var service = CreateService(user, passwordMatches: true, roleName: RoleConstants.Client);
 
         var response = await service.LoginAsync(new LoginRequest
         {
@@ -229,7 +235,7 @@ public class AuthServiceTests
         response.UserId.Should().Be(user.UserId);
         response.Username.Should().Be(user.Username);
         response.Email.Should().Be(user.Email);
-        response.RoleName.Should().Be("Customer");
+        response.RoleName.Should().Be(RoleConstants.Client);
         response.AccessToken.Should().Be("token-value");
         response.Message.Should().Be("Login successfully.");
     }
@@ -238,7 +244,7 @@ public class AuthServiceTests
     public async Task LoginAsync_ShouldThrowUnauthorizedException_WhenPasswordIsWrong()
     {
         var user = BuildUser();
-        var service = CreateService(user, passwordMatches: false, roleName: "Customer");
+        var service = CreateService(user, passwordMatches: false, roleName: RoleConstants.Client);
 
         var act = async () => await service.LoginAsync(new LoginRequest
         {
@@ -253,7 +259,7 @@ public class AuthServiceTests
     [Fact]
     public async Task LoginAsync_ShouldThrowNotFoundException_WhenUserDoesNotExist()
     {
-        var service = CreateService(null, passwordMatches: false, roleName: "Customer");
+        var service = CreateService(null, passwordMatches: false, roleName: RoleConstants.Client);
 
         var act = async () => await service.LoginAsync(new LoginRequest
         {

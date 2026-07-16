@@ -19,7 +19,6 @@
     <ProjectReference Include="..\R&amp;SS.BLL\R&amp;SS.BLL.csproj" />
     <ProjectReference Include="..\R&amp;SS.DAL\R&amp;SS.DAL.csproj" />
     <ProjectReference Include="..\R&amp;SS.Models\R&amp;SS.Models.csproj" />
-    <ProjectReference Include="..\R&amp;SS.Tests\R&amp;SS.Tests.csproj" />
   </ItemGroup>
 
 </Project>

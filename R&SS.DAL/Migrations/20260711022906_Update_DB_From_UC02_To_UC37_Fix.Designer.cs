@@ -12,8 +12,8 @@ using R_SS.DAL.Data;
 namespace R_SS.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260711022143_Update_DB_From_UC02_To_UC37")]
-    partial class Update_DB_From_UC02_To_UC37
+    [Migration("20260711022906_Update_DB_From_UC02_To_UC37_Fix")]
+    partial class Update_DB_From_UC02_To_UC37_Fix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

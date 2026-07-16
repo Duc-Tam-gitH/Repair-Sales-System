@@ -43,7 +43,7 @@ public class CustomerServiceTests
 
         var act = async () => await service.SearchAsync(new CustomerSearchRequest
         {
-            ActorRole = RoleConstants.Customer
+            ActorRole = RoleConstants.Client
         });
 
         await act.Should().ThrowAsync<UnauthorizedException>()

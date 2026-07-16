@@ -552,17 +552,31 @@ public class AuthService : IAuthService
 
     private async Task AssignDefaultRoleAsync(User user)
     {
-        var customerRole = await _unitOfWork.Roles.GetByNameAsync(RoleConstants.Customer);
-        if (customerRole is null)
-        {
-            throw new InvalidOperationException("Customer role not found.");
-        }
+        var clientRole = await GetOrCreateClientRoleAsync();
 
         await _unitOfWork.UserRoles.AddAsync(new UserRole
         {
             User = user,
-            Role = customerRole
+            Role = clientRole
         });
+    }
+
+    private async Task<Role> GetOrCreateClientRoleAsync()
+    {
+        var clientRole = await _unitOfWork.Roles.GetByNameAsync(RoleConstants.Client);
+        if (clientRole is not null)
+        {
+            return clientRole;
+        }
+
+        clientRole = new Role
+        {
+            RoleName = RoleConstants.Client,
+            Description = "Default client role."
+        };
+
+        await _unitOfWork.Roles.AddAsync(clientRole);
+        return clientRole;
     }
 
     private async Task<string?> GetPrimaryRoleNameAsync(int userId)

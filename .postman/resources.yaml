@@ -1,0 +1,7 @@
+# Use this workspace to collaborate
+workspace:
+  id: bae99eb3-8fb6-41b7-8aec-07a7e35a56bd
+
+localResources:
+  specs:
+    - ../R&SS.API/obj/Debug/net8.0/EndpointInfo/R&SS.API.json
