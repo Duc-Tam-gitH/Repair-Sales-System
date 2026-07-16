@@ -106,7 +106,7 @@ public class AuthService : IAuthService
 
         await ValidateLoginRequestAsync(request);
 
-        var user = await _unitOfWork.Users.GetByIdentifierAsync(request.EmailOrUsername);
+        var user = await _unitOfWork.Users.GetUserWithRolesAsync(request.EmailOrUsername);
         if (user is null)
         {
             throw new NotFoundException("Account not found.");
@@ -124,7 +124,7 @@ public class AuthService : IAuthService
             throw new UnauthorizedException("Incorrect password.");
         }
 
-        var roleName = await GetPrimaryRoleNameAsync(user.UserId);
+        var roleName = GetPrimaryRoleName(user);
         if (string.IsNullOrWhiteSpace(roleName))
         {
             throw new NotFoundException("User role not found.");
@@ -579,10 +579,11 @@ public class AuthService : IAuthService
         return clientRole;
     }
 
-    private async Task<string?> GetPrimaryRoleNameAsync(int userId)
+    private static string? GetPrimaryRoleName(User user)
     {
-        var userRoles = await _unitOfWork.UserRoles.GetByUserIdAsync(userId);
-        var userRole = userRoles.FirstOrDefault();
+        var userRole = user.UserRoles
+            .OrderBy(role => role.UserRoleId)
+            .FirstOrDefault();
         return userRole?.Role?.RoleName;
     }
 }

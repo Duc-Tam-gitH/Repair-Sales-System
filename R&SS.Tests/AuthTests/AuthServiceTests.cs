@@ -1,6 +1,9 @@
 using FluentAssertions;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using R_SS.BLL.Constants;
@@ -14,6 +17,7 @@ using R_SS.BLL.Validators.Authentication;
 using R_SS.DAL.Repositories.Interfaces;
 using R_SS.DAL.UnitOfWork;
 using R_SS.Models.Entities;
+using System.Security.Claims;
 
 namespace R_SS.Tests.AuthTests;
 
@@ -272,6 +276,46 @@ public class AuthServiceTests
     }
 
     [Fact]
+    public async Task LoginAsync_ShouldThrowUnauthorizedException_WhenAccountIsLocked()
+    {
+        var user = BuildUser();
+        user.AccountLockedUntilUtc = DateTime.UtcNow.AddMinutes(15);
+        var service = CreateService(user, passwordMatches: true, roleName: RoleConstants.Client);
+
+        var act = async () => await service.LoginAsync(new LoginRequest
+        {
+            EmailOrUsername = "john.doe@example.com",
+            Password = "Password123!"
+        });
+
+        await act.Should().ThrowAsync<UnauthorizedException>()
+            .WithMessage("Account is temporarily locked. Please try again later.");
+    }
+
+    [Fact]
+    public void JwtTokenGenerator_ShouldIncludeCorrectRoleClaim()
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Jwt:Key"] = "RepairSalesSystem_TestSecretKey_1234567890",
+                ["Jwt:Issuer"] = "RepairSalesSystem.Tests",
+                ["Jwt:Audience"] = "RepairSalesSystem.Tests",
+                ["Jwt:ExpiresInMinutes"] = "60"
+            })
+            .Build();
+        var generator = new JwtTokenGenerator(configuration);
+        var user = BuildUser();
+
+        var result = generator.GenerateToken(user, RoleConstants.Client);
+
+        var token = new JwtSecurityTokenHandler().ReadJwtToken(result.AccessToken);
+        token.Claims.Should().Contain(claim =>
+            claim.Type == ClaimTypes.Role &&
+            claim.Value == RoleConstants.Client);
+    }
+
+    [Fact]
     public async Task LogoutAsync_ShouldReturnLogoutConfirmation()
     {
         var service = CreateService(
@@ -305,6 +349,68 @@ public class AuthServiceTests
         apiResponse.Message.Should().Be("Logout successfully.");
         apiResponse.Data.Should().NotBeNull();
         apiResponse.Data!.Message.Should().Be("Logout successfully.");
+    }
+
+    [Fact]
+    public async Task ChangePasswordEndpoint_ShouldUseAuthenticatedUserId()
+    {
+        var authServiceMock = new Mock<IAuthService>();
+        authServiceMock
+            .Setup(x => x.ChangePasswordAsync(It.IsAny<ChangePasswordRequest>()))
+            .ReturnsAsync(new ChangePasswordResponse
+            {
+                Message = "Password changed successfully.",
+                ChangedAtUtc = DateTime.UtcNow
+            });
+        var controller = CreateAuthenticatedController(authServiceMock.Object, userId: 42);
+        var request = new ChangePasswordRequest
+        {
+            UserId = 999,
+            CurrentPassword = "OldPassword123",
+            NewPassword = "NewPassword123",
+            ConfirmNewPassword = "NewPassword123"
+        };
+
+        var result = await controller.ChangePassword(request);
+
+        var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        var apiResponse = okResult.Value.Should().BeOfType<R_SS.API.Responses.ApiResponse<ChangePasswordResponse>>().Subject;
+        apiResponse.Success.Should().BeTrue();
+        authServiceMock.Verify(x => x.ChangePasswordAsync(It.Is<ChangePasswordRequest>(changeRequest =>
+            changeRequest.UserId == 42)), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdatePersonalInfoEndpoint_ShouldUseAuthenticatedUserId()
+    {
+        var authServiceMock = new Mock<IAuthService>();
+        authServiceMock
+            .Setup(x => x.UpdatePersonalInfoAsync(It.IsAny<UpdatePersonalInfoRequest>()))
+            .ReturnsAsync(new PersonalInfoResponse
+            {
+                UserId = 42,
+                Username = "john.doe",
+                Email = "john.doe@example.com",
+                FullName = "John Doe",
+                Message = "Personal information updated successfully."
+            });
+        var controller = CreateAuthenticatedController(authServiceMock.Object, userId: 42);
+        var request = new UpdatePersonalInfoRequest
+        {
+            UserId = 999,
+            FullName = "John Doe",
+            Email = "john.doe@example.com",
+            Phone = "0912345678",
+            Address = "Vung Tau"
+        };
+
+        var result = await controller.UpdatePersonalInfo(request);
+
+        var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        var apiResponse = okResult.Value.Should().BeOfType<R_SS.API.Responses.ApiResponse<PersonalInfoResponse>>().Subject;
+        apiResponse.Success.Should().BeTrue();
+        authServiceMock.Verify(x => x.UpdatePersonalInfoAsync(It.Is<UpdatePersonalInfoRequest>(updateRequest =>
+            updateRequest.UserId == 42)), Times.Once);
     }
 
     [Fact]
@@ -480,8 +586,26 @@ public class AuthServiceTests
             .Setup(x => x.GetByIdentifierAsync(It.IsAny<string>()))
             .ReturnsAsync(user);
         userRepoMock
+            .Setup(x => x.GetUserWithRolesAsync(It.IsAny<string>()))
+            .ReturnsAsync(user);
+        userRepoMock
             .Setup(x => x.GetByEmailAsync(It.IsAny<string>()))
             .ReturnsAsync(user);
+
+        if (user is not null)
+        {
+            user.UserRoles = new List<UserRole>
+            {
+                new()
+                {
+                    UserRoleId = 1,
+                    UserId = user.UserId,
+                    RoleId = 1,
+                    User = user,
+                    Role = new Role { RoleId = 1, RoleName = roleName }
+                }
+            };
+        }
 
         passwordHasherMock
             .Setup(x => x.Verify(It.IsAny<string>(), It.IsAny<string>()))
@@ -506,20 +630,6 @@ public class AuthServiceTests
         emailSenderMock
             .Setup(x => x.SendPasswordResetOtpAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
             .Returns(Task.CompletedTask);
-
-        userRoleRepoMock
-            .Setup(x => x.GetByUserIdAsync(It.IsAny<int>()))
-            .ReturnsAsync(new[]
-            {
-                new UserRole
-                {
-                    UserRoleId = 1,
-                    UserId = user?.UserId ?? 0,
-                    RoleId = 1,
-                    User = user ?? BuildUser(),
-                    Role = new Role { RoleId = 1, RoleName = roleName }
-                }
-            });
 
         return new AuthService(
             unitOfWorkMock.Object,
@@ -556,6 +666,23 @@ public class AuthServiceTests
             new ChangePasswordRequestValidator(),
             new UpdatePersonalInfoRequestValidator(),
             Mock.Of<ILogger<AuthService>>());
+    }
+
+    private static R_SS.API.Controllers.AuthController CreateAuthenticatedController(IAuthService authService, int userId)
+    {
+        return new R_SS.API.Controllers.AuthController(authService)
+        {
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+                    }, "TestAuth"))
+                }
+            }
+        };
     }
 
     private static Mock<IUnitOfWork> CreateUnitOfWorkMock(

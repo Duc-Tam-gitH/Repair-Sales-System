@@ -25,6 +25,16 @@ namespace R_SS.DAL.Repositories
                 .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
         }
 
+        public async Task<User?> GetUserWithRolesAsync(string emailOrUsername)
+        {
+            return await _context.Users
+                .Include(user => user.UserRoles)
+                .ThenInclude(userRole => userRole.Role)
+                .FirstOrDefaultAsync(user =>
+                    user.Username.ToLower() == emailOrUsername.ToLower() ||
+                    user.Email.ToLower() == emailOrUsername.ToLower());
+        }
+
         public async Task<User?> GetActiveByEmailAsync(string email)
         {
             return await _context.Users

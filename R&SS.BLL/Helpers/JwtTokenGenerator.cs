@@ -19,16 +19,13 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator
 
     public JwtTokenResult GenerateToken(User user, string roleName)
     {
-        var key = _configuration["Jwt:Key"];
-        if (string.IsNullOrWhiteSpace(key))
+        var settings = JwtSettings.FromConfiguration(_configuration);
+        if (string.IsNullOrWhiteSpace(settings.Key))
         {
             throw new InvalidOperationException("JWT signing key is missing.");
         }
 
-        var issuer = _configuration["Jwt:Issuer"];
-        var audience = _configuration["Jwt:Audience"];
-        var expiresInMinutes = GetExpirationMinutes();
-        var expiresAtUtc = DateTime.UtcNow.AddMinutes(expiresInMinutes);
+        var expiresAtUtc = DateTime.UtcNow.AddMinutes(settings.ExpiresInMinutes);
 
         var claims = new[]
         {
@@ -41,12 +38,12 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator
             new Claim(ClaimTypes.Role, roleName)
         };
 
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.Key));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: issuer,
-            audience: audience,
+            issuer: settings.Issuer,
+            audience: settings.Audience,
             claims: claims,
             notBefore: DateTime.UtcNow,
             expires: expiresAtUtc,
@@ -59,9 +56,4 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator
         };
     }
 
-    private int GetExpirationMinutes()
-    {
-        var rawValue = _configuration["Jwt:ExpiresInMinutes"];
-        return int.TryParse(rawValue, out var minutes) && minutes > 0 ? minutes : 60;
-    }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using R_SS.API.Responses;
 using R_SS.BLL.DTOs.Authentication;
 using R_SS.BLL.Interfaces;
+using System.Security.Claims;
 
 namespace R_SS.API.Controllers;
 
@@ -97,5 +98,70 @@ public class AuthController : ControllerBase
             Message = "Logout successfully.",
             Data = result
         });
+    }
+
+    [Authorize(Roles = "Client")]
+    [HttpGet("client-only")]
+    public IActionResult ClientOnly()
+    {
+        return Ok("Client access granted.");
+    }
+
+    [Authorize]
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+    {
+        var userId = GetCurrentUserId();
+        if (!userId.HasValue)
+        {
+            return Unauthorized(new ApiResponse<ChangePasswordResponse>
+            {
+                Success = false,
+                Message = "Unauthorized.",
+                Data = null
+            });
+        }
+
+        request.UserId = userId.Value;
+        var result = await _authService.ChangePasswordAsync(request);
+
+        return Ok(new ApiResponse<ChangePasswordResponse>
+        {
+            Success = true,
+            Message = "Password changed successfully.",
+            Data = result
+        });
+    }
+
+    [Authorize]
+    [HttpPut("me")]
+    public async Task<IActionResult> UpdatePersonalInfo([FromBody] UpdatePersonalInfoRequest request)
+    {
+        var userId = GetCurrentUserId();
+        if (!userId.HasValue)
+        {
+            return Unauthorized(new ApiResponse<PersonalInfoResponse>
+            {
+                Success = false,
+                Message = "Unauthorized.",
+                Data = null
+            });
+        }
+
+        request.UserId = userId.Value;
+        var result = await _authService.UpdatePersonalInfoAsync(request);
+
+        return Ok(new ApiResponse<PersonalInfoResponse>
+        {
+            Success = true,
+            Message = "Personal information updated successfully.",
+            Data = result
+        });
+    }
+
+    private int? GetCurrentUserId()
+    {
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return int.TryParse(userIdValue, out var userId) ? userId : null;
     }
 }
