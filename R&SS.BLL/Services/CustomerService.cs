@@ -116,6 +116,48 @@ public class CustomerService : ICustomerService
     }
 
     /// <summary>
+    /// Activates or deactivates a customer and records update history.
+    /// </summary>
+    public async Task<CustomerResponse> UpdateStatusAsync(UpdateCustomerStatusRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        if (request.CustomerId <= 0)
+        {
+            throw new ValidationException(new[] { new ValidationFailure(nameof(request.CustomerId), "Customer id must be greater than 0.") });
+        }
+
+        EnsureCustomerManagerRole(request.ActorRole);
+
+        var customer = await _unitOfWork.Customers.GetByIdAsync(request.CustomerId);
+        if (customer is null)
+        {
+            throw new NotFoundException("Customer not found.");
+        }
+
+        var oldStatus = customer.IsActive;
+        customer.IsActive = request.IsActive;
+        customer.UpdatedAt = DateTime.UtcNow;
+
+        _unitOfWork.Customers.Update(customer);
+        await _unitOfWork.CustomerUpdateHistories.AddAsync(new CustomerUpdateHistory
+        {
+            Customer = customer,
+            CustomerId = customer.CustomerId,
+            UpdatedByUserId = request.ActorUserId,
+            UpdatedAtUtc = DateTime.UtcNow,
+            ChangedContent = $"IsActive: '{oldStatus}' -> '{request.IsActive}'" +
+                (string.IsNullOrWhiteSpace(request.Reason) ? string.Empty : $"; Reason: {request.Reason.Trim()}")
+        });
+        await _unitOfWork.SaveChangesAsync();
+        _logger.LogInformation("User {UserId} updated customer {CustomerId} status.", request.ActorUserId, customer.CustomerId);
+
+        var response = _mapper.Map<CustomerResponse>(customer);
+        response.Message = "Customer status updated successfully.";
+        return response;
+    }
+
+    /// <summary>
     /// Updates customer information and records update history.
     /// </summary>
     public async Task<CustomerResponse> UpdateAsync(UpdateCustomerRequest request)

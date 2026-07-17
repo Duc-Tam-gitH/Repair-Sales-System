@@ -12,6 +12,11 @@ public interface IEmailSender
     Task SendPasswordResetOtpAsync(string email, string fullName, string otpCode);
 
     /// <summary>
+    /// Sends a temporary diagnostic email to verify SMTP delivery.
+    /// </summary>
+    Task SendDiagnosticEmailAsync(string email, string subject, string body);
+
+    /// <summary>
     /// Sends a technical ticket creation notification.
     /// </summary>
     Task SendTechnicalTicketCreatedAsync(string email, string fullName, string ticketCode);

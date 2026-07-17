@@ -52,6 +52,13 @@ public interface IAuthService
     Task<ChangePasswordResponse> ChangePasswordAsync(ChangePasswordRequest request);
 
     /// <summary>
+    /// Gets the authenticated user's personal information.
+    /// </summary>
+    /// <param name="userId">Authenticated user id.</param>
+    /// <returns>The user's personal information.</returns>
+    Task<PersonalInfoResponse> GetPersonalInfoAsync(int userId);
+
+    /// <summary>
     /// Updates the authenticated user's personal information.
     /// </summary>
     /// <param name="request">Personal information update data.</param>

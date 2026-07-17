@@ -333,13 +333,14 @@ public class AuthServiceTests
     public async Task LogoutEndpoint_ShouldReturnOkResultWithResponse()
     {
         var authServiceMock = new Mock<IAuthService>();
+        var emailSenderMock = new Mock<IEmailSender>();
         authServiceMock.Setup(x => x.LogoutAsync()).ReturnsAsync(new LogoutResponse
         {
             Message = "Logout successfully.",
             LoggedOutAtUtc = new DateTime(2026, 7, 10, 0, 0, 0, DateTimeKind.Utc)
         });
 
-        var controller = new R_SS.API.Controllers.AuthController(authServiceMock.Object);
+        var controller = CreateController(authServiceMock.Object, emailSenderMock.Object);
 
         var result = await controller.Logout();
 
@@ -361,8 +362,8 @@ public class AuthServiceTests
             {
                 Message = "Password changed successfully.",
                 ChangedAtUtc = DateTime.UtcNow
-            });
-        var controller = CreateAuthenticatedController(authServiceMock.Object, userId: 42);
+        });
+        var controller = CreateAuthenticatedController(authServiceMock.Object, Mock.Of<IEmailSender>(), userId: 42);
         var request = new ChangePasswordRequest
         {
             UserId = 999,
@@ -394,7 +395,7 @@ public class AuthServiceTests
                 FullName = "John Doe",
                 Message = "Personal information updated successfully."
             });
-        var controller = CreateAuthenticatedController(authServiceMock.Object, userId: 42);
+        var controller = CreateAuthenticatedController(authServiceMock.Object, Mock.Of<IEmailSender>(), userId: 42);
         var request = new UpdatePersonalInfoRequest
         {
             UserId = 999,
@@ -411,6 +412,41 @@ public class AuthServiceTests
         apiResponse.Success.Should().BeTrue();
         authServiceMock.Verify(x => x.UpdatePersonalInfoAsync(It.Is<UpdatePersonalInfoRequest>(updateRequest =>
             updateRequest.UserId == 42)), Times.Once);
+    }
+
+    [Fact]
+    public async Task SmtpDiagnosticEndpoint_ShouldSendTestEmail()
+    {
+        var authServiceMock = new Mock<IAuthService>();
+        var emailSenderMock = new Mock<IEmailSender>();
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Smtp:Host"] = "smtp.gmail.com",
+                ["Smtp:Port"] = "465",
+                ["Smtp:FromEmail"] = "ductam1973vt@gmail.com",
+                ["Smtp:UseSsl"] = "true"
+            })
+            .Build();
+
+        emailSenderMock
+            .Setup(sender => sender.SendDiagnosticEmailAsync("debug@example.com", "SMTP Diagnostic Test", "This is a temporary SMTP diagnostic email from Repair & Sales System."))
+            .Returns(Task.CompletedTask);
+
+        var controller = new R_SS.API.Controllers.AuthController(authServiceMock.Object, emailSenderMock.Object, configuration);
+
+        var result = await controller.SendSmtpDiagnostic(new SmtpDiagnosticRequest
+        {
+            RecipientEmail = "debug@example.com"
+        });
+
+        var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        var apiResponse = okResult.Value.Should().BeOfType<R_SS.API.Responses.ApiResponse<SmtpDiagnosticResponse>>().Subject;
+        apiResponse.Success.Should().BeTrue();
+        apiResponse.Data!.RecipientEmail.Should().Be("debug@example.com");
+        apiResponse.Data.Host.Should().Be("smtp.gmail.com");
+        apiResponse.Data.Port.Should().Be(465);
+        emailSenderMock.Verify(sender => sender.SendDiagnosticEmailAsync("debug@example.com", "SMTP Diagnostic Test", It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
@@ -450,6 +486,7 @@ public class AuthServiceTests
         response.OtpExpiresAtUtc.Should().BeAfter(DateTime.UtcNow);
         emailSenderMock.Verify(x => x.SendPasswordResetOtpAsync(user.Email, user.FullName, "123456"), Times.Once);
         passwordResetRepoMock.Verify(x => x.AddAsync(It.IsAny<PasswordResetRequest>()), Times.Once);
+        passwordResetRepoMock.Verify(x => x.Update(It.IsAny<PasswordResetRequest>()), Times.Never);
         unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -565,6 +602,30 @@ public class AuthServiceTests
         user.AccountLockedUntilUtc.Should().BeNull();
     }
 
+    [Fact]
+    public async Task GetPersonalInfoAsync_ShouldReturnCurrentUserProfile_WhenUserExists()
+    {
+        var user = BuildUser();
+        var userRepoMock = new Mock<IUserRp>();
+        var roleRepoMock = new Mock<IRoleRp>();
+        var userRoleRepoMock = new Mock<IUserRoleRp>();
+        var unitOfWorkMock = CreateUnitOfWorkMock(userRepoMock, roleRepoMock, userRoleRepoMock);
+        var service = CreateService(
+            unitOfWorkMock.Object,
+            new Mock<IPasswordHasher>().Object,
+            new Mock<IJwtTokenGenerator>().Object);
+
+        userRepoMock.Setup(x => x.GetByIdAsync(user.UserId)).ReturnsAsync(user);
+
+        var response = await service.GetPersonalInfoAsync(user.UserId);
+
+        response.UserId.Should().Be(user.UserId);
+        response.Username.Should().Be(user.Username);
+        response.Email.Should().Be(user.Email);
+        response.FullName.Should().Be(user.FullName);
+        response.Message.Should().Be("Personal information retrieved successfully.");
+    }
+
     private AuthService CreateService(User? user, bool passwordMatches, string roleName)
     {
         var userRepoMock = new Mock<IUserRp>();
@@ -668,9 +729,9 @@ public class AuthServiceTests
             Mock.Of<ILogger<AuthService>>());
     }
 
-    private static R_SS.API.Controllers.AuthController CreateAuthenticatedController(IAuthService authService, int userId)
+    private static R_SS.API.Controllers.AuthController CreateAuthenticatedController(IAuthService authService, IEmailSender emailSender, int userId)
     {
-        return new R_SS.API.Controllers.AuthController(authService)
+        return new R_SS.API.Controllers.AuthController(authService, emailSender, CreateSmtpConfiguration())
         {
             ControllerContext = new ControllerContext
             {
@@ -683,6 +744,24 @@ public class AuthServiceTests
                 }
             }
         };
+    }
+
+    private static R_SS.API.Controllers.AuthController CreateController(IAuthService authService, IEmailSender emailSender)
+    {
+        return new R_SS.API.Controllers.AuthController(authService, emailSender, CreateSmtpConfiguration());
+    }
+
+    private static IConfiguration CreateSmtpConfiguration()
+    {
+        return new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Smtp:Host"] = "smtp.gmail.com",
+                ["Smtp:Port"] = "465",
+                ["Smtp:FromEmail"] = "ductam1973vt@gmail.com",
+                ["Smtp:UseSsl"] = "true"
+            })
+            .Build();
     }
 
     private static Mock<IUnitOfWork> CreateUnitOfWorkMock(

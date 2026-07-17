@@ -333,6 +333,38 @@ public class AuthService : IAuthService
     }
 
     /// <summary>
+    /// Gets the personal information for a logged-in user.
+    /// </summary>
+    /// <param name="userId">Authenticated user id.</param>
+    /// <returns>The user's personal information.</returns>
+    public async Task<PersonalInfoResponse> GetPersonalInfoAsync(int userId)
+    {
+        if (userId <= 0)
+        {
+            throw new UnauthorizedException("Unauthorized.");
+        }
+
+        var user = await _unitOfWork.Users.GetByIdAsync(userId);
+        if (user is null)
+        {
+            throw new NotFoundException("Account not found.");
+        }
+
+        EnsureAccountIsActiveAndNotLocked(user);
+
+        return new PersonalInfoResponse
+        {
+            UserId = user.UserId,
+            Username = user.Username,
+            Email = user.Email,
+            FullName = user.FullName,
+            Phone = user.Phone,
+            Address = user.Address,
+            Message = "Personal information retrieved successfully."
+        };
+    }
+
+    /// <summary>
     /// Updates the personal information for a logged-in user.
     /// </summary>
     /// <param name="request">Personal information update data.</param>
@@ -500,8 +532,6 @@ public class AuthService : IAuthService
         resetRequest.IsCompleted = false;
         resetRequest.CompletedAtUtc = null;
         resetRequest.UpdatedAtUtc = now;
-
-        _unitOfWork.PasswordResetRequests.Update(resetRequest);
     }
 
     private async Task<User> CreateUserAsync(RegisterRequest request)

@@ -12,10 +12,14 @@ namespace R_SS.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly IEmailSender _emailSender;
+    private readonly IConfiguration _configuration;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, IEmailSender emailSender, IConfiguration configuration)
     {
         _authService = authService;
+        _emailSender = emailSender;
+        _configuration = configuration;
     }
 
     [HttpPost("register")]
@@ -45,6 +49,7 @@ public class AuthController : ControllerBase
     }
 
     [AllowAnonymous]
+    [HttpPost("forgot-password")]
     [HttpPost("forgot-password/request")]
     public async Task<IActionResult> RequestPasswordReset([FromBody] ForgotPasswordRequest request)
     {
@@ -55,6 +60,39 @@ public class AuthController : ControllerBase
             Success = true,
             Message = "OTP sent successfully.",
             Data = result
+        });
+    }
+
+    [AllowAnonymous]
+    [HttpPost("debug/smtp-test")]
+    public async Task<IActionResult> SendSmtpDiagnostic([FromBody] SmtpDiagnosticRequest request)
+    {
+        await _emailSender.SendDiagnosticEmailAsync(request.RecipientEmail, request.Subject, request.Body);
+
+        var host = _configuration["Smtp:Host"] ?? string.Empty;
+        var port = int.TryParse(_configuration["Smtp:Port"], out var parsedPort) ? parsedPort : 0;
+        var fromEmail = _configuration["Smtp:FromEmail"] ?? string.Empty;
+        var useSslValue = _configuration["Smtp:UseSsl"] ?? string.Empty;
+        var socketOption = port == 465
+            ? "SslOnConnect"
+            : bool.TryParse(useSslValue, out var parsedUseSsl) && parsedUseSsl
+                ? "StartTls"
+                : "None";
+
+        return Ok(new ApiResponse<SmtpDiagnosticResponse>
+        {
+            Success = true,
+            Message = "SMTP diagnostic email sent.",
+            Data = new SmtpDiagnosticResponse
+            {
+                RecipientEmail = request.RecipientEmail,
+                Host = host,
+                Port = port,
+                FromEmail = fromEmail,
+                SocketOption = socketOption,
+                SentAtUtc = DateTime.UtcNow,
+                Message = "SMTP diagnostic email sent."
+            }
         });
     }
 
@@ -108,7 +146,7 @@ public class AuthController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("change-password")]
+    [HttpPut("change-password")]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
     {
         var userId = GetCurrentUserId();

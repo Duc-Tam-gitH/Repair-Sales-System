@@ -1,5 +1,7 @@
 using MailKit.Net.Smtp;
+using MailKit.Security;
 using MimeKit;
+using Microsoft.Extensions.Logging;
 using R_SS.BLL.Interfaces;
 
 namespace R_SS.API.Services;
@@ -7,10 +9,12 @@ namespace R_SS.API.Services;
 public class SmtpEmailSender : IEmailSender
 {
     private readonly IConfiguration _configuration;
+    private readonly ILogger<SmtpEmailSender> _logger;
 
-    public SmtpEmailSender(IConfiguration configuration)
+    public SmtpEmailSender(IConfiguration configuration, ILogger<SmtpEmailSender> logger)
     {
         _configuration = configuration;
+        _logger = logger;
     }
 
     public async Task SendPasswordResetOtpAsync(string email, string fullName, string otpCode)
@@ -20,6 +24,11 @@ public class SmtpEmailSender : IEmailSender
             fullName,
             "Password Reset OTP",
             $"Hello {fullName},\n\nYour password reset OTP is: {otpCode}\nThis code will expire in 15 minutes.\n\nIf you did not request this reset, please ignore this email.");
+    }
+
+    public async Task SendDiagnosticEmailAsync(string email, string subject, string body)
+    {
+        await SendPlainTextAsync(email, email, subject, body);
     }
 
     public async Task SendTechnicalTicketCreatedAsync(string email, string fullName, string ticketCode)
@@ -142,15 +151,45 @@ public class SmtpEmailSender : IEmailSender
             Text = body
         };
 
-        using var client = new SmtpClient();
-        await client.ConnectAsync(host, port, useSsl);
-
-        if (!string.IsNullOrWhiteSpace(username))
+        try
         {
-            await client.AuthenticateAsync(username, password ?? string.Empty);
-        }
+            using var client = new SmtpClient();
+            var socketOptions = port == 465
+                ? SecureSocketOptions.SslOnConnect
+                : useSsl
+                    ? SecureSocketOptions.StartTls
+                    : SecureSocketOptions.None;
 
-        await client.SendAsync(message);
-        await client.DisconnectAsync(true);
+            _logger.LogInformation(
+                "Connecting to SMTP host {Host}:{Port} with {SocketOptions} for recipient {Recipient}.",
+                host,
+                port,
+                socketOptions,
+                email);
+
+            await client.ConnectAsync(host, port, socketOptions);
+
+            if (!string.IsNullOrWhiteSpace(username))
+            {
+                await client.AuthenticateAsync(username, password ?? string.Empty);
+            }
+
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
+
+            _logger.LogInformation(
+                "SMTP message sent successfully to {Recipient} with subject {Subject}.",
+                email,
+                subject);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "Failed to send SMTP message to {Recipient} with subject {Subject}.",
+                email,
+                subject);
+            throw;
+        }
     }
 }

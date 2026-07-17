@@ -23,4 +23,9 @@ public interface ICustomerService
     /// Updates customer information and records update history.
     /// </summary>
     Task<CustomerResponse> UpdateAsync(UpdateCustomerRequest request);
+
+    /// <summary>
+    /// Activates or deactivates a customer and records update history.
+    /// </summary>
+    Task<CustomerResponse> UpdateStatusAsync(UpdateCustomerStatusRequest request);
 }
