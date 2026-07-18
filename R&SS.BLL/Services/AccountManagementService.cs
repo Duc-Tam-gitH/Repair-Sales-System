@@ -236,7 +236,11 @@ public class AccountManagementService : IAccountManagementService
     private static string? Normalize(string? value) => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
     private static void EnsureManager(string role)
     {
-        if (!role.Equals(RoleConstants.Manager, StringComparison.OrdinalIgnoreCase)) throw new UnauthorizedException("Only Managers can manage accounts.");
+        if (!role.Equals(RoleConstants.Manager, StringComparison.OrdinalIgnoreCase) &&
+            !role.Equals(RoleConstants.Admin, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new UnauthorizedException("Only Managers or Admins can manage accounts.");
+        }
     }
     private static void ThrowIfInvalid(ValidationResult result)
     {

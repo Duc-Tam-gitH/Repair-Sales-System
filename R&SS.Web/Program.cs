@@ -30,6 +30,8 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+await DefaultAdministratorSeeder.SeedAsync(app.Services);
+
 var vietnameseCulture = new CultureInfo("vi-VN");
 var localizationOptions = new RequestLocalizationOptions
 {
