@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Localization;
 using R_SS.BLL;
 using R_SS.BLL.Interfaces;
 using R_SS.DAL.Data;
 using R_SS.DAL.UnitOfWork;
 using R_SS.Web.Services;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,14 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+var vietnameseCulture = new CultureInfo("vi-VN");
+var localizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture(vietnameseCulture),
+    SupportedCultures = new[] { vietnameseCulture },
+    SupportedUICultures = new[] { vietnameseCulture }
+};
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -40,6 +50,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseRequestLocalization(localizationOptions);
 
 app.UseAuthentication();
 app.UseAuthorization();

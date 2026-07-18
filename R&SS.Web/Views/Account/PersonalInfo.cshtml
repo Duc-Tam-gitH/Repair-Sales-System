@@ -1,7 +1,7 @@
 @model PersonalInfoResponse
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Personal Information";
+    ViewData["Title"] = "Thông tin cá nhân";
 }
 
 @section Styles {
@@ -11,11 +11,11 @@
 <section class="profile-page" aria-labelledby="profile-title">
     <div class="profile-header">
         <div>
-            <span>Account</span>
-            <h1 id="profile-title">Personal Information</h1>
-            <p>Review and update your contact information.</p>
+            <span>Tài khoản</span>
+            <h1 id="profile-title">Thông tin cá nhân</h1>
+            <p>Xem và cập nhật thông tin liên hệ của bạn.</p>
         </div>
-        <a class="btn btn-outline-primary" asp-controller="Account" asp-action="ChangePassword">Change Password</a>
+        <a class="btn btn-outline-primary" asp-controller="Account" asp-action="ChangePassword">Đổi mật khẩu</a>
     </div>
 
     @if (TempData["SuccessMessage"] is string successMessage)
@@ -28,7 +28,7 @@
         @Html.AntiForgeryToken()
         <div class="row g-4">
             <div class="col-md-6">
-                <label class="form-label" for="FullName">Full Name</label>
+                <label class="form-label" for="FullName">Họ và tên</label>
                 <input class="form-control" id="FullName" name="FullName" type="text" value="@Model.FullName" />
             </div>
             <div class="col-md-6">
@@ -36,14 +36,14 @@
                 <input class="form-control" id="Email" name="Email" type="email" value="@Model.Email" />
             </div>
             <div class="col-md-6">
-                <label class="form-label" for="Phone">Phone Number</label>
+                <label class="form-label" for="Phone">Số điện thoại</label>
                 <input class="form-control" id="Phone" name="Phone" type="tel" value="@Model.Phone" />
             </div>
             <div class="col-12">
-                <label class="form-label" for="Address">Address</label>
+                <label class="form-label" for="Address">Địa chỉ</label>
                 <textarea class="form-control" id="Address" name="Address" rows="4">@Model.Address</textarea>
             </div>
         </div>
-        <button class="btn btn-primary mt-4" type="submit">Update</button>
+        <button class="btn btn-primary mt-4" type="submit">Cập nhật</button>
     </form>
 </section>

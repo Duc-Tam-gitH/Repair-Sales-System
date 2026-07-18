@@ -1,15 +1,15 @@
 @model RegisterRequest
 @{
     Layout = null;
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Đăng ký";
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Register - Repair & Sales System</title>
+    <title>Đăng ký - Hệ thống Sửa chữa & Bán hàng</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/Register.css" asp-append-version="true" />
 </head>
@@ -19,8 +19,8 @@
             <div class="register-heading">
                 <span>R&SS</span>
                 <div>
-                    <h1 id="register-title">Create account</h1>
-                    <p>Register to access service requests, sales, and customer support.</p>
+                    <h1 id="register-title">Tạo tài khoản</h1>
+                    <p>Đăng ký để gửi yêu cầu dịch vụ, mua hàng và nhận hỗ trợ khách hàng.</p>
                 </div>
             </div>
 
@@ -30,7 +30,7 @@
                 @Html.AntiForgeryToken()
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label" asp-for="FullName">Full Name</label>
+                        <label class="form-label" asp-for="FullName">Họ và tên</label>
                         <input class="form-control" asp-for="FullName" required />
                         <span class="text-danger" asp-validation-for="FullName"></span>
                     </div>
@@ -40,35 +40,35 @@
                         <span class="text-danger" asp-validation-for="Email"></span>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" asp-for="Phone">Phone Number</label>
+                        <label class="form-label" asp-for="Phone">Số điện thoại</label>
                         <input class="form-control" asp-for="Phone" type="tel" />
                         <span class="text-danger" asp-validation-for="Phone"></span>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" asp-for="Username">Username</label>
+                        <label class="form-label" asp-for="Username">Tên đăng nhập</label>
                         <input class="form-control" asp-for="Username" required />
                         <span class="text-danger" asp-validation-for="Username"></span>
                     </div>
                     <div class="col-12">
-                        <label class="form-label" asp-for="Address">Address <span class="text-muted">(optional)</span></label>
+                        <label class="form-label" asp-for="Address">Địa chỉ <span class="text-muted">(không bắt buộc)</span></label>
                         <textarea class="form-control" asp-for="Address" rows="2"></textarea>
                         <span class="text-danger" asp-validation-for="Address"></span>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" asp-for="Password">Password</label>
+                        <label class="form-label" asp-for="Password">Mật khẩu</label>
                         <input class="form-control" asp-for="Password" type="password" required />
                         <span class="text-danger" asp-validation-for="Password"></span>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" asp-for="ConfirmPassword">Confirm Password</label>
+                        <label class="form-label" asp-for="ConfirmPassword">Xác nhận mật khẩu</label>
                         <input class="form-control" asp-for="ConfirmPassword" type="password" required />
                         <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
                     </div>
                 </div>
-                <button class="btn btn-success btn-lg w-100 mt-4" type="submit">Register</button>
+                <button class="btn btn-success btn-lg w-100 mt-4" type="submit">Đăng ký</button>
             </form>
 
-            <p class="register-footer">Already have an account? <a asp-controller="Account" asp-action="Login">Back to Login</a></p>
+            <p class="register-footer">Đã có tài khoản? <a asp-controller="Account" asp-action="Login">Quay lại đăng nhập</a></p>
         </section>
     </main>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

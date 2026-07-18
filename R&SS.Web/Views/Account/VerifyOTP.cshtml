@@ -1,7 +1,7 @@
 @model VerifyForgotPasswordOtpRequest
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "OTP Verification";
+    ViewData["Title"] = "Xác thực OTP";
 }
 
 @section Styles {
@@ -11,8 +11,8 @@
 <section class="otp-page" aria-labelledby="otp-title">
     <div class="otp-card">
         <div class="otp-icon">OTP</div>
-        <h1 id="otp-title">Verify OTP</h1>
-        <p>Enter the 6-digit code sent to your registered email address.</p>
+        <h1 id="otp-title">Xác thực OTP</h1>
+        <p>Nhập mã 6 chữ số đã gửi đến email đăng ký của bạn.</p>
 
         @if (TempData["SuccessMessage"] is string successMessage)
         {
@@ -23,15 +23,15 @@
         <form method="post" asp-controller="Account" asp-action="VerifyOTP">
             @Html.AntiForgeryToken()
             <input asp-for="Email" type="hidden" />
-            <label class="form-label" asp-for="OtpCode">6-digit OTP Code</label>
+            <label class="form-label" asp-for="OtpCode">Mã OTP 6 chữ số</label>
             <input class="form-control form-control-lg otp-input" asp-for="OtpCode" type="text" inputmode="numeric" maxlength="6" placeholder="000000" required />
             <span class="text-danger" asp-validation-for="OtpCode"></span>
             <div class="d-flex gap-2 mt-4">
-                <button class="btn btn-primary flex-fill" type="submit">Verify OTP</button>
-                <a class="btn btn-outline-secondary flex-fill" asp-controller="Account" asp-action="ForgotPassword">Resend OTP</a>
+                <button class="btn btn-primary flex-fill" type="submit">Xác thực OTP</button>
+                <a class="btn btn-outline-secondary flex-fill" asp-controller="Account" asp-action="ForgotPassword">Gửi lại OTP</a>
             </div>
         </form>
 
-        <a class="otp-return" asp-controller="Account" asp-action="ForgotPassword">Back to ForgotPassword</a>
+        <a class="otp-return" asp-controller="Account" asp-action="ForgotPassword">Quay lại quên mật khẩu</a>
     </div>
 </section>

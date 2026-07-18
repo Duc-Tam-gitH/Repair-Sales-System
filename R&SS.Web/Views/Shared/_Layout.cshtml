@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - R_SS.Web</title>
+    <title>@ViewData["Title"] - Hệ thống Sửa chữa & Bán hàng</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -17,8 +17,84 @@
             ?? User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
         var roleDisplay = ViewData["RoleDisplay"]?.ToString()
             ?? User.Identity?.Name
-            ?? "User";
-        var pageTitle = ViewData["Title"]?.ToString() ?? "Dashboard";
+            ?? "Người dùng";
+        var rawPageTitle = ViewData["Title"]?.ToString() ?? "Dashboard";
+        var titleTranslations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Login"] = "Đăng nhập",
+            ["Register"] = "Đăng ký",
+            ["Forgot Password"] = "Quên mật khẩu",
+            ["OTP Verification"] = "Xác thực OTP",
+            ["Reset Password"] = "Đặt lại mật khẩu",
+            ["Change Password"] = "Đổi mật khẩu",
+            ["Personal Information"] = "Thông tin cá nhân",
+            ["Dashboard"] = "Bảng điều khiển",
+            ["Customer Home"] = "Trang khách hàng",
+            ["Product Catalog"] = "Danh mục sản phẩm",
+            ["Product Details"] = "Chi tiết sản phẩm",
+            ["Shopping Cart"] = "Giỏ hàng",
+            ["Checkout"] = "Thanh toán",
+            ["My Orders"] = "Đơn hàng của tôi",
+            ["Order Details"] = "Chi tiết đơn hàng",
+            ["Submit Repair"] = "Gửi yêu cầu sửa chữa",
+            ["Repair Progress"] = "Tiến độ sửa chữa",
+            ["Repair History"] = "Lịch sử sửa chữa",
+            ["Service Rating"] = "Đánh giá dịch vụ",
+            ["Reception Dashboard"] = "Bảng điều khiển tiếp nhận",
+            ["Customer List"] = "Danh sách khách hàng",
+            ["Add Customer"] = "Thêm khách hàng",
+            ["Customer Details"] = "Chi tiết khách hàng",
+            ["Repair Request List"] = "Danh sách yêu cầu sửa chữa",
+            ["Equipment Reception"] = "Tiếp nhận thiết bị",
+            ["Technical Report List"] = "Danh sách báo cáo kỹ thuật",
+            ["Technical Report Details"] = "Chi tiết báo cáo kỹ thuật",
+            ["Device Handover"] = "Bàn giao thiết bị",
+            ["Technician Dashboard"] = "Bảng điều khiển kỹ thuật viên",
+            ["Assigned Tasks"] = "Công việc được giao",
+            ["Task Details"] = "Chi tiết công việc",
+            ["Record Faults"] = "Ghi nhận lỗi",
+            ["Propose Repair Plan"] = "Đề xuất phương án sửa chữa",
+            ["Update Progress"] = "Cập nhật tiến độ",
+            ["Update Components"] = "Cập nhật linh kiện",
+            ["Record Results"] = "Ghi nhận kết quả",
+            ["Work Schedule"] = "Lịch làm việc",
+            ["Warehouse Dashboard"] = "Bảng điều khiển kho",
+            ["Stock List"] = "Danh sách tồn kho",
+            ["Inventory Management"] = "Quản lý kho",
+            ["Inventory Details"] = "Chi tiết tồn kho",
+            ["Inventory Tracking"] = "Theo dõi tồn kho",
+            ["Supplier Management"] = "Quản lý nhà cung cấp",
+            ["Product Management"] = "Quản lý sản phẩm",
+            ["Add Product"] = "Thêm sản phẩm",
+            ["Update Product"] = "Cập nhật sản phẩm",
+            ["Category Management"] = "Quản lý danh mục",
+            ["Order Management"] = "Quản lý đơn hàng",
+            ["Revenue Report"] = "Báo cáo doanh thu",
+            ["Repair Report"] = "Báo cáo sửa chữa",
+            ["Inventory Report"] = "Báo cáo kho",
+            ["Customer Statistics"] = "Thống kê khách hàng",
+            ["Product Sales Statistics"] = "Thống kê bán sản phẩm",
+            ["Transaction List"] = "Danh sách giao dịch",
+            ["Transaction Details"] = "Chi tiết giao dịch",
+            ["Repair Payment"] = "Thanh toán sửa chữa",
+            ["Invoice Print"] = "In hóa đơn",
+            ["Audit Logs"] = "Nhật ký hệ thống",
+            ["Audit Log Details"] = "Chi tiết nhật ký",
+            ["Process Management"] = "Quản lý quy trình",
+            ["Management Dashboard"] = "Bảng điều khiển quản lý",
+            ["Repair Progress Dashboard"] = "Bảng tiến độ sửa chữa",
+            ["System Account Management"] = "Quản lý tài khoản hệ thống",
+            ["Add Account"] = "Thêm tài khoản",
+            ["Edit Account"] = "Sửa tài khoản",
+            ["Role Authorization"] = "Phân quyền vai trò",
+            ["Employee Management"] = "Quản lý nhân viên",
+            ["Customer Management"] = "Quản lý khách hàng",
+            ["Technical Request Management"] = "Quản lý yêu cầu kỹ thuật",
+            ["Approve Quotes"] = "Duyệt báo giá"
+        };
+        var pageTitle = titleTranslations.TryGetValue(rawPageTitle, out var translatedTitle)
+            ? translatedTitle
+            : rawPageTitle;
         var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
         var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
         string IsActive(string controller, string action) =>
@@ -34,90 +110,90 @@
                 <span class="tech-brand-icon"><i class="fa-solid fa-microchip"></i></span>
                 <span>
                     <strong>TECH SYSTEM</strong>
-                    <small>Repair Management</small>
+                    <small>Quản lý sửa chữa</small>
                 </span>
             </a>
 
             <nav class="tech-sidebar-nav">
                 @if (activeRole == "Customer")
                 {
-                    <a class="tech-nav-link @IsActive("Customer", "CustomerHome")" asp-controller="Customer" asp-action="CustomerHome"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
-                    <a class="tech-nav-link @IsActive("Customer", "ProductList")" asp-controller="Customer" asp-action="ProductList"><i class="fa-solid fa-laptop"></i><span>Products</span></a>
-                    <a class="tech-nav-link @IsActive("Customer", "Cart")" asp-controller="Customer" asp-action="Cart"><i class="fa-solid fa-cart-shopping"></i><span>Cart</span></a>
-                    <a class="tech-nav-link @IsActive("Customer", "MyOrders")" asp-controller="Customer" asp-action="MyOrders"><i class="fa-solid fa-clipboard-list"></i><span>Orders</span></a>
-                    <a class="tech-nav-link @IsActive("Customer", "RepairProgress")" asp-controller="Customer" asp-action="RepairProgress"><i class="fa-solid fa-screwdriver-wrench"></i><span>Repairs</span></a>
+                    <a class="tech-nav-link @IsActive("Customer", "CustomerHome")" asp-controller="Customer" asp-action="CustomerHome"><i class="fa-solid fa-house"></i><span>Bảng điều khiển</span></a>
+                    <a class="tech-nav-link @IsActive("Customer", "ProductList")" asp-controller="Customer" asp-action="ProductList"><i class="fa-solid fa-laptop"></i><span>Sản phẩm</span></a>
+                    <a class="tech-nav-link @IsActive("Customer", "Cart")" asp-controller="Customer" asp-action="Cart"><i class="fa-solid fa-cart-shopping"></i><span>Giỏ hàng</span></a>
+                    <a class="tech-nav-link @IsActive("Customer", "MyOrders")" asp-controller="Customer" asp-action="MyOrders"><i class="fa-solid fa-clipboard-list"></i><span>Đơn hàng</span></a>
+                    <a class="tech-nav-link @IsActive("Customer", "RepairProgress")" asp-controller="Customer" asp-action="RepairProgress"><i class="fa-solid fa-screwdriver-wrench"></i><span>Sửa chữa</span></a>
                 }
                 else if (activeRole == "Reception" || activeRole == "Receptionist")
                 {
-                    <a class="tech-nav-link @IsActive("Reception", "ReceptionDashboard")" asp-controller="Reception" asp-action="ReceptionDashboard"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
-                    <a class="tech-nav-link @IsActive("Reception", "CustomerList")" asp-controller="Reception" asp-action="CustomerList"><i class="fa-solid fa-users"></i><span>Customers</span></a>
-                    <a class="tech-nav-link @IsActive("Reception", "RepairRequestList")" asp-controller="Reception" asp-action="RepairRequestList"><i class="fa-solid fa-clipboard-list"></i><span>Repair Requests</span></a>
-                    <a class="tech-nav-link @IsActive("Reception", "TechnicalReportList")" asp-controller="Reception" asp-action="TechnicalReportList"><i class="fa-solid fa-file-lines"></i><span>Technical Reports</span></a>
-                    <a class="tech-nav-link @IsActive("Reception", "DeviceHandover")" asp-controller="Reception" asp-action="DeviceHandover"><i class="fa-solid fa-handshake"></i><span>Handover</span></a>
+                    <a class="tech-nav-link @IsActive("Reception", "ReceptionDashboard")" asp-controller="Reception" asp-action="ReceptionDashboard"><i class="fa-solid fa-house"></i><span>Bảng điều khiển</span></a>
+                    <a class="tech-nav-link @IsActive("Reception", "CustomerList")" asp-controller="Reception" asp-action="CustomerList"><i class="fa-solid fa-users"></i><span>Khách hàng</span></a>
+                    <a class="tech-nav-link @IsActive("Reception", "RepairRequestList")" asp-controller="Reception" asp-action="RepairRequestList"><i class="fa-solid fa-clipboard-list"></i><span>Yêu cầu sửa chữa</span></a>
+                    <a class="tech-nav-link @IsActive("Reception", "TechnicalReportList")" asp-controller="Reception" asp-action="TechnicalReportList"><i class="fa-solid fa-file-lines"></i><span>Báo cáo kỹ thuật</span></a>
+                    <a class="tech-nav-link @IsActive("Reception", "DeviceHandover")" asp-controller="Reception" asp-action="DeviceHandover"><i class="fa-solid fa-handshake"></i><span>Bàn giao</span></a>
                 }
                 else if (activeRole == "Technician")
                 {
-                    <a class="tech-nav-link @IsActive("Technician", "TechnicianDashboard")" asp-controller="Technician" asp-action="TechnicianDashboard"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
-                    <a class="tech-nav-link @IsActive("Technician", "AssignedTasks")" asp-controller="Technician" asp-action="AssignedTasks"><i class="fa-solid fa-list-check"></i><span>My Tasks</span></a>
-                    <a class="tech-nav-link @IsActive("Technician", "ComponentSearch")" asp-controller="Technician" asp-action="ComponentSearch"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Component Search</span></a>
-                    <a class="tech-nav-link @IsActive("Technician", "WorkSchedule")" asp-controller="Technician" asp-action="WorkSchedule"><i class="fa-solid fa-calendar-days"></i><span>Work Schedule</span></a>
+                    <a class="tech-nav-link @IsActive("Technician", "TechnicianDashboard")" asp-controller="Technician" asp-action="TechnicianDashboard"><i class="fa-solid fa-house"></i><span>Bảng điều khiển</span></a>
+                    <a class="tech-nav-link @IsActive("Technician", "AssignedTasks")" asp-controller="Technician" asp-action="AssignedTasks"><i class="fa-solid fa-list-check"></i><span>Công việc của tôi</span></a>
+                    <a class="tech-nav-link @IsActive("Technician", "ComponentSearch")" asp-controller="Technician" asp-action="ComponentSearch"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Tìm linh kiện</span></a>
+                    <a class="tech-nav-link @IsActive("Technician", "WorkSchedule")" asp-controller="Technician" asp-action="WorkSchedule"><i class="fa-solid fa-calendar-days"></i><span>Lịch làm việc</span></a>
                 }
                 else if (activeRole == "Manager" || activeRole == "Administrator" || activeRole == "Admin")
                 {
-                    <a class="tech-nav-link @IsActive("Management", "ManagementDashboard")" asp-controller="Management" asp-action="ManagementDashboard"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
-                    <a class="tech-nav-link @IsActive("Management", "RepairProgressDashboard")" asp-controller="Management" asp-action="RepairProgressDashboard"><i class="fa-solid fa-chart-line"></i><span>Repair Progress</span></a>
-                    <a class="tech-nav-link @IsActive("Management", "SystemAccountManagement")" asp-controller="Management" asp-action="SystemAccountManagement"><i class="fa-solid fa-user-shield"></i><span>Accounts</span></a>
-                    <a class="tech-nav-link @IsActive("Management", "EmployeeManagement")" asp-controller="Management" asp-action="EmployeeManagement"><i class="fa-solid fa-id-card"></i><span>Employees</span></a>
-                    <a class="tech-nav-link @IsActive("Management", "CustomerManagement")" asp-controller="Management" asp-action="CustomerManagement"><i class="fa-solid fa-users"></i><span>Customers</span></a>
-                    <a class="tech-nav-link @IsActive("Management", "TechnicalRequestManagement")" asp-controller="Management" asp-action="TechnicalRequestManagement"><i class="fa-solid fa-clipboard-list"></i><span>Requests</span></a>
-                    <a class="tech-nav-link @IsActive("Management", "ApproveQuotes")" asp-controller="Management" asp-action="ApproveQuotes"><i class="fa-solid fa-circle-check"></i><span>Approvals</span></a>
+                    <a class="tech-nav-link @IsActive("Management", "ManagementDashboard")" asp-controller="Management" asp-action="ManagementDashboard"><i class="fa-solid fa-house"></i><span>Bảng điều khiển</span></a>
+                    <a class="tech-nav-link @IsActive("Management", "RepairProgressDashboard")" asp-controller="Management" asp-action="RepairProgressDashboard"><i class="fa-solid fa-chart-line"></i><span>Tiến độ sửa chữa</span></a>
+                    <a class="tech-nav-link @IsActive("Management", "SystemAccountManagement")" asp-controller="Management" asp-action="SystemAccountManagement"><i class="fa-solid fa-user-shield"></i><span>Tài khoản</span></a>
+                    <a class="tech-nav-link @IsActive("Management", "EmployeeManagement")" asp-controller="Management" asp-action="EmployeeManagement"><i class="fa-solid fa-id-card"></i><span>Nhân viên</span></a>
+                    <a class="tech-nav-link @IsActive("Management", "CustomerManagement")" asp-controller="Management" asp-action="CustomerManagement"><i class="fa-solid fa-users"></i><span>Khách hàng</span></a>
+                    <a class="tech-nav-link @IsActive("Management", "TechnicalRequestManagement")" asp-controller="Management" asp-action="TechnicalRequestManagement"><i class="fa-solid fa-clipboard-list"></i><span>Yêu cầu</span></a>
+                    <a class="tech-nav-link @IsActive("Management", "ApproveQuotes")" asp-controller="Management" asp-action="ApproveQuotes"><i class="fa-solid fa-circle-check"></i><span>Phê duyệt</span></a>
                 }
                 else if (activeRole == "Warehouse")
                 {
-                    <a class="tech-nav-link @IsActive("Warehouse", "WarehouseDashboard")" asp-controller="Warehouse" asp-action="WarehouseDashboard"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
-                    <a class="tech-nav-link @IsActive("Warehouse", "StockList")" asp-controller="Warehouse" asp-action="StockList"><i class="fa-solid fa-boxes-stacked"></i><span>Stock List</span></a>
-                    <a class="tech-nav-link @IsActive("Warehouse", "InventoryManagement")" asp-controller="Warehouse" asp-action="InventoryManagement"><i class="fa-solid fa-warehouse"></i><span>Inventory Management</span></a>
-                    <a class="tech-nav-link @IsActive("Warehouse", "InventoryTracking")" asp-controller="Warehouse" asp-action="InventoryTracking"><i class="fa-solid fa-route"></i><span>Inventory Tracking</span></a>
-                    <a class="tech-nav-link @IsActive("Warehouse", "SupplierManagement")" asp-controller="Warehouse" asp-action="SupplierManagement"><i class="fa-solid fa-truck-field"></i><span>Suppliers</span></a>
+                    <a class="tech-nav-link @IsActive("Warehouse", "WarehouseDashboard")" asp-controller="Warehouse" asp-action="WarehouseDashboard"><i class="fa-solid fa-house"></i><span>Bảng điều khiển</span></a>
+                    <a class="tech-nav-link @IsActive("Warehouse", "StockList")" asp-controller="Warehouse" asp-action="StockList"><i class="fa-solid fa-boxes-stacked"></i><span>Tồn kho</span></a>
+                    <a class="tech-nav-link @IsActive("Warehouse", "InventoryManagement")" asp-controller="Warehouse" asp-action="InventoryManagement"><i class="fa-solid fa-warehouse"></i><span>Quản lý kho</span></a>
+                    <a class="tech-nav-link @IsActive("Warehouse", "InventoryTracking")" asp-controller="Warehouse" asp-action="InventoryTracking"><i class="fa-solid fa-route"></i><span>Theo dõi kho</span></a>
+                    <a class="tech-nav-link @IsActive("Warehouse", "SupplierManagement")" asp-controller="Warehouse" asp-action="SupplierManagement"><i class="fa-solid fa-truck-field"></i><span>Nhà cung cấp</span></a>
                 }
                 else if (activeRole == "ProductManagement")
                 {
-                    <a class="tech-nav-link @IsActive("ProductManagement", "CategoryManagement")" asp-controller="ProductManagement" asp-action="CategoryManagement"><i class="fa-solid fa-layer-group"></i><span>Categories</span></a>
-                    <a class="tech-nav-link @IsActive("ProductManagement", "ProductList")" asp-controller="ProductManagement" asp-action="ProductList"><i class="fa-solid fa-laptop"></i><span>Products</span></a>
-                    <a class="tech-nav-link @IsActive("ProductManagement", "OrderList")" asp-controller="ProductManagement" asp-action="OrderList"><i class="fa-solid fa-clipboard-list"></i><span>Orders</span></a>
+                    <a class="tech-nav-link @IsActive("ProductManagement", "CategoryManagement")" asp-controller="ProductManagement" asp-action="CategoryManagement"><i class="fa-solid fa-layer-group"></i><span>Danh mục</span></a>
+                    <a class="tech-nav-link @IsActive("ProductManagement", "ProductList")" asp-controller="ProductManagement" asp-action="ProductList"><i class="fa-solid fa-laptop"></i><span>Sản phẩm</span></a>
+                    <a class="tech-nav-link @IsActive("ProductManagement", "OrderList")" asp-controller="ProductManagement" asp-action="OrderList"><i class="fa-solid fa-clipboard-list"></i><span>Đơn hàng</span></a>
                 }
                 else if (activeRole == "Payment")
                 {
-                    <a class="tech-nav-link @IsActive("Payment", "TransactionList")" asp-controller="Payment" asp-action="TransactionList"><i class="fa-solid fa-money-check-dollar"></i><span>Transactions</span></a>
-                    <a class="tech-nav-link @IsActive("Payment", "RepairPayment")" asp-controller="Payment" asp-action="RepairPayment"><i class="fa-solid fa-screwdriver-wrench"></i><span>Repair Payment</span></a>
-                    <a class="tech-nav-link @IsActive("Payment", "InvoicePrint")" asp-controller="Payment" asp-action="InvoicePrint"><i class="fa-solid fa-file-invoice-dollar"></i><span>Invoices</span></a>
+                    <a class="tech-nav-link @IsActive("Payment", "TransactionList")" asp-controller="Payment" asp-action="TransactionList"><i class="fa-solid fa-money-check-dollar"></i><span>Giao dịch</span></a>
+                    <a class="tech-nav-link @IsActive("Payment", "RepairPayment")" asp-controller="Payment" asp-action="RepairPayment"><i class="fa-solid fa-screwdriver-wrench"></i><span>Thanh toán sửa chữa</span></a>
+                    <a class="tech-nav-link @IsActive("Payment", "InvoicePrint")" asp-controller="Payment" asp-action="InvoicePrint"><i class="fa-solid fa-file-invoice-dollar"></i><span>Hóa đơn</span></a>
                 }
                 else if (activeRole == "Reports")
                 {
-                    <a class="tech-nav-link @IsActive("Reports", "RevenueReport")" asp-controller="Reports" asp-action="RevenueReport"><i class="fa-solid fa-chart-column"></i><span>Revenue</span></a>
-                    <a class="tech-nav-link @IsActive("Reports", "RepairReport")" asp-controller="Reports" asp-action="RepairReport"><i class="fa-solid fa-screwdriver-wrench"></i><span>Repairs</span></a>
-                    <a class="tech-nav-link @IsActive("Reports", "InventoryReport")" asp-controller="Reports" asp-action="InventoryReport"><i class="fa-solid fa-boxes-stacked"></i><span>Inventory</span></a>
-                    <a class="tech-nav-link @IsActive("Reports", "CustomerStatistics")" asp-controller="Reports" asp-action="CustomerStatistics"><i class="fa-solid fa-users"></i><span>Customers</span></a>
-                    <a class="tech-nav-link @IsActive("Reports", "ProductSalesStatistics")" asp-controller="Reports" asp-action="ProductSalesStatistics"><i class="fa-solid fa-laptop"></i><span>Products</span></a>
+                    <a class="tech-nav-link @IsActive("Reports", "RevenueReport")" asp-controller="Reports" asp-action="RevenueReport"><i class="fa-solid fa-chart-column"></i><span>Doanh thu</span></a>
+                    <a class="tech-nav-link @IsActive("Reports", "RepairReport")" asp-controller="Reports" asp-action="RepairReport"><i class="fa-solid fa-screwdriver-wrench"></i><span>Sửa chữa</span></a>
+                    <a class="tech-nav-link @IsActive("Reports", "InventoryReport")" asp-controller="Reports" asp-action="InventoryReport"><i class="fa-solid fa-boxes-stacked"></i><span>Kho</span></a>
+                    <a class="tech-nav-link @IsActive("Reports", "CustomerStatistics")" asp-controller="Reports" asp-action="CustomerStatistics"><i class="fa-solid fa-users"></i><span>Khách hàng</span></a>
+                    <a class="tech-nav-link @IsActive("Reports", "ProductSalesStatistics")" asp-controller="Reports" asp-action="ProductSalesStatistics"><i class="fa-solid fa-laptop"></i><span>Sản phẩm</span></a>
                 }
                 else if (activeRole == "SystemAdmin")
                 {
-                    <a class="tech-nav-link @IsActive("SystemAdmin", "AuditLog")" asp-controller="SystemAdmin" asp-action="AuditLog"><i class="fa-solid fa-shield-halved"></i><span>Audit Logs</span></a>
-                    <a class="tech-nav-link @IsActive("SystemAdmin", "ProcessManagement")" asp-controller="SystemAdmin" asp-action="ProcessManagement"><i class="fa-solid fa-diagram-project"></i><span>Process Configuration</span></a>
+                    <a class="tech-nav-link @IsActive("SystemAdmin", "AuditLog")" asp-controller="SystemAdmin" asp-action="AuditLog"><i class="fa-solid fa-shield-halved"></i><span>Nhật ký hệ thống</span></a>
+                    <a class="tech-nav-link @IsActive("SystemAdmin", "ProcessManagement")" asp-controller="SystemAdmin" asp-action="ProcessManagement"><i class="fa-solid fa-diagram-project"></i><span>Cấu hình quy trình</span></a>
                 }
                 else
                 {
-                    <a class="tech-nav-link active" asp-controller="Home" asp-action="Home"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
-                    <a class="tech-nav-link" href="#"><i class="fa-regular fa-clipboard"></i><span>Orders</span></a>
-                    <a class="tech-nav-link" href="#"><i class="fa-solid fa-boxes-stacked"></i><span>Inventory</span></a>
-                    <a class="tech-nav-link" href="#"><i class="fa-regular fa-user"></i><span>Clients</span></a>
-                    <a class="tech-nav-link" href="#"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+                    <a class="tech-nav-link active" asp-controller="Home" asp-action="Home"><i class="fa-solid fa-house"></i><span>Bảng điều khiển</span></a>
+                    <a class="tech-nav-link" href="#"><i class="fa-regular fa-clipboard"></i><span>Đơn hàng</span></a>
+                    <a class="tech-nav-link" href="#"><i class="fa-solid fa-boxes-stacked"></i><span>Kho</span></a>
+                    <a class="tech-nav-link" href="#"><i class="fa-regular fa-user"></i><span>Khách hàng</span></a>
+                    <a class="tech-nav-link" href="#"><i class="fa-solid fa-gear"></i><span>Cài đặt</span></a>
                 }
             </nav>
 
             <div class="tech-sidebar-footer">
-                <span>System Status</span>
-                <strong><i class="fa-solid fa-circle"></i> Online</strong>
+                <span>Trạng thái hệ thống</span>
+                <strong><i class="fa-solid fa-circle"></i> Đang hoạt động</strong>
             </div>
         </aside>
 
@@ -130,7 +206,7 @@
                         <i class="fa-solid fa-bars"></i>
                     </button>
                     <div>
-                        <p>Technology Management System</p>
+                        <p>Hệ thống quản lý kỹ thuật</p>
                         <h1>@pageTitle</h1>
                     </div>
                 </div>
@@ -138,13 +214,13 @@
                 <div class="tech-topbar-right">
                     <label class="tech-search">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="search" placeholder="Search..." />
+                        <input type="search" placeholder="Tìm kiếm..." />
                     </label>
                     <a class="tech-user" asp-controller="Account" asp-action="PersonalInfo" aria-label="Profile">
                         <span class="tech-avatar"><i class="fa-regular fa-user"></i></span>
                         <span>@roleDisplay</span>
                     </a>
-                    <a class="btn tech-logout" asp-controller="Account" asp-action="Logout">Logout</a>
+                    <a class="btn tech-logout" asp-controller="Account" asp-action="Logout">Đăng xuất</a>
                 </div>
             </header>
 
@@ -153,11 +229,11 @@
             </main>
 
             <footer class="tech-footer">
-                <span>&copy; 2026 Tech System. All rights reserved.</span>
+                <span>&copy; 2026 Tech System. Đã đăng ký bản quyền.</span>
                 <nav aria-label="Footer links">
-                    <a asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    <a href="#">Terms</a>
-                    <a href="#">Support</a>
+                    <a asp-controller="Home" asp-action="Privacy">Quyền riêng tư</a>
+                    <a href="#">Điều khoản</a>
+                    <a href="#">Hỗ trợ</a>
                 </nav>
             </footer>
         </div>
