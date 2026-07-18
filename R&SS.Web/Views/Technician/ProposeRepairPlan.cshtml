@@ -1,0 +1,28 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Propose Repair Plan";
+    ViewData["ActiveRole"] = "Technician";
+    ViewData["RoleDisplay"] = "Technician User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ProposeRepairPlan.css" asp-append-version="true" />
+}
+
+<!-- Data saved via ITechnicianService.SubmitRepairPlan() -->
+<section class="repair-plan-page">
+    <div class="plan-card">
+        <h1>Propose Repair Plan</h1>
+        <p>Prepare repair steps, replacement parts, estimated cost, and expected completion time.</p>
+        <div class="alert alert-success" role="status">Plan submitted successfully!</div>
+        <form>
+            <label class="form-label" for="plan">Proposed Repair Plan</label><textarea class="form-control" id="plan" rows="5" placeholder="1. Remove keyboard module&#10;2. Clean connector area&#10;3. Install replacement keyboard&#10;4. Run final hardware test"></textarea>
+            <label class="form-label mt-3" for="parts">Proposed Replacement Parts</label><textarea class="form-control" id="parts" rows="3">Keyboard module, cleaning kit</textarea>
+            <div class="row g-3 mt-1">
+                <div class="col-md-6"><label class="form-label" for="cost">Estimated Cost</label><input class="form-control" id="cost" type="number" value="85" /></div>
+                <div class="col-md-6"><label class="form-label" for="time">Estimated Time</label><select class="form-select" id="time"><option>4 hours</option><option>1 day</option><option>2 days</option><option>3 days</option></select></div>
+            </div>
+            <div class="d-flex gap-2 mt-4"><a class="btn btn-primary" asp-controller="Technician" asp-action="UpdateProgress">Submit Repair Plan</a><a class="btn btn-outline-secondary" asp-controller="Technician" asp-action="TaskDetails">Back</a></div>
+        </form>
+    </div>
+</section>

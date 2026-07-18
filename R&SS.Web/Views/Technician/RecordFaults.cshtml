@@ -1,0 +1,26 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Record Faults";
+    ViewData["ActiveRole"] = "Technician";
+    ViewData["RoleDisplay"] = "Technician User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/RecordFaults.css" asp-append-version="true" />
+}
+
+<!-- Data saved via ITechnicianService.SaveInspectionResults() -->
+<section class="record-faults-page">
+    <div class="workflow-header"><span>Inspection</span><h1>Record Equipment Faults</h1><p>Document actual findings before proposing a repair plan.</p></div>
+    <div class="alert alert-success" role="status">Inspection results saved successfully.</div>
+    <form class="workflow-form">
+        <section class="readonly-box"><h2>Device Information</h2><p><strong>Dell Inspiron 15</strong> • Laptop • Dell / Inspiron 15</p><p>Initial fault: Keyboard not working after liquid exposure.</p></section>
+        <label class="form-label" for="inspection">Inspection Results</label><textarea class="form-control" id="inspection" rows="4"></textarea>
+        <label class="form-label mt-3" for="faults">Actual Faults</label><textarea class="form-control" id="faults" rows="4" placeholder="Keyboard matrix damaged; moisture residue found near connector."></textarea>
+        <div class="row g-3 mt-1">
+            <div class="col-md-6"><label class="form-label" for="condition">Equipment Condition</label><select class="form-select" id="condition"><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></div>
+            <div class="col-md-6"><label class="form-label" for="notes">Condition Notes</label><input class="form-control" id="notes" placeholder="Minor scratches on lid" /></div>
+        </div>
+        <div class="d-flex gap-2 mt-4"><a class="btn btn-primary" asp-controller="Technician" asp-action="ProposeRepairPlan">Save Inspection Results</a><a class="btn btn-outline-secondary" asp-controller="Technician" asp-action="ProposeRepairPlan">Skip to Plan</a></div>
+    </form>
+</section>

@@ -1,0 +1,64 @@
+@{
+    ViewData["Title"] = "Manager Home";
+    ViewData["ActiveRole"] = "Manager";
+    ViewData["RoleDisplay"] = "Signed in as Manager";
+}
+
+<section class="rss-role-home rss-manager-home" aria-labelledby="manager-home-title">
+    <header class="mb-4">
+        <p class="text-muted mb-1">Management dashboard</p>
+        <h1 id="manager-home-title">Manager Overview</h1>
+        <p class="text-muted mb-0">Monitor service workload, staff assignment, reports, inventory, and sales activity.</p>
+    </header>
+
+    <nav class="rss-role-menu mb-4" aria-label="Manager menu">
+        <a href="#">Dashboard</a>
+        <a href="#">Tickets</a>
+        <a href="#">Staff Assignment</a>
+        <a href="#">Reports</a>
+        <a href="#">Inventory</a>
+        <a href="#">Activity History</a>
+    </nav>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><div class="rss-metric"><span>Open Tickets</span><strong>31</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Awaiting Assignment</span><strong>6</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Orders Today</span><strong>18</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Revenue Today</span><strong>$4.8k</strong></div></div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><a class="rss-action rss-action-primary" href="#"><strong>Assign Staff</strong><span>Balance tickets across technicians.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>View Reports</strong><span>Open revenue and activity reports.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Review Inventory</strong><span>Check stock and low inventory.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Ticket Backlog</strong><span>Monitor overdue and blocked work.</span></a></div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <section class="rss-panel" aria-labelledby="workload-title">
+                <header><h2 id="workload-title">Technician Workload</h2></header>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead><tr><th>Technician</th><th>Assigned</th><th>In Progress</th><th>Waiting</th><th>Capacity</th></tr></thead>
+                        <tbody>
+                            <tr><td>Huy Nguyen</td><td>7</td><td>4</td><td>2</td><td>High</td></tr>
+                            <tr><td>Lan Ho</td><td>4</td><td>3</td><td>0</td><td>Available</td></tr>
+                            <tr><td>Son Vo</td><td>6</td><td>4</td><td>1</td><td>Normal</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="col-lg-4">
+            <section class="rss-panel" aria-labelledby="report-shortcuts-title">
+                <header><h2 id="report-shortcuts-title">Report Shortcuts</h2></header>
+                <ul>
+                    <li><a href="#">Revenue Report</a></li>
+                    <li><a href="#">Inventory Statistics</a></li>
+                    <li><a href="#">Activity History</a></li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</section>

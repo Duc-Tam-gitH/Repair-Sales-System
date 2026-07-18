@@ -1,0 +1,49 @@
+.handover-header,
+.handover-list,
+.handover-process {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
+    padding: 24px;
+}
+
+.handover-header {
+    align-items: center;
+    display: flex;
+    gap: 18px;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.handover-header h1,
+.handover-list h2,
+.handover-process h2 {
+    font-weight: 800;
+}
+
+.handover-header input {
+    max-width: 420px;
+}
+
+.handover-list article {
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    display: grid;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 14px;
+}
+
+.repair-summary,
+.refusal-box {
+    background: #f8fafc;
+    border-radius: 14px;
+    padding: 16px;
+}
+
+.confirm-line {
+    display: block;
+    font-weight: 800;
+    margin-top: 18px;
+}

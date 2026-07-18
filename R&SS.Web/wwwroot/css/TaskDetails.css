@@ -1,0 +1,23 @@
+.task-hero {
+    align-items: center;
+    background: linear-gradient(135deg, #172033, #0f766e);
+    border-radius: 20px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    padding: 28px;
+}
+.task-hero span { color: #bff1e9; font-weight: 800; }
+.task-hero h1, .detail-card h2, .progress-log h2 { font-weight: 800; }
+.action-stack { display: flex; flex-wrap: wrap; gap: 10px; }
+.detail-card, .progress-log {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
+    height: 100%;
+    padding: 22px;
+}
+.timeline { border-left: 3px solid #0f766e; display: grid; gap: 12px; padding-left: 16px; }
+.timeline span { color: #0f766e; font-weight: 800; }

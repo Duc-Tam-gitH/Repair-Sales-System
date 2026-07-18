@@ -18,6 +18,8 @@ public interface IUnitOfWork : IDisposable
 
     ICustomerRp Customers { get; }
 
+    IEmployeeRp Employees { get; }
+
     ICustomerUpdateHistoryRp CustomerUpdateHistories { get; }
 
     ISupplierRp Suppliers { get; }

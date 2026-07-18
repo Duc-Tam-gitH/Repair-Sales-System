@@ -1,0 +1,38 @@
+.report-header,
+.report-form,
+.report-section {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
+}
+
+.report-header {
+    align-items: center;
+    background: linear-gradient(135deg, #17315f, #0f766e);
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding: 26px;
+}
+
+.report-header span {
+    color: #bff1e9;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.report-header h1,
+.report-section h2 {
+    font-weight: 800;
+}
+
+.report-form {
+    padding: 24px;
+}
+
+.report-section {
+    height: 100%;
+    padding: 20px;
+}

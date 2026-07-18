@@ -34,13 +34,6 @@ namespace R_SS.DAL.Configurations
             builder.Property(x => x.Address)
                 .HasMaxLength(255);
 
-            builder.Property(x => x.Specialization)
-                .HasMaxLength(100);
-
-            builder.Property(x => x.WorkStatus)
-                .HasMaxLength(30)
-                .HasDefaultValue("Working");
-
             builder.Property(x => x.IsActive)
                 .HasDefaultValue(true);
 

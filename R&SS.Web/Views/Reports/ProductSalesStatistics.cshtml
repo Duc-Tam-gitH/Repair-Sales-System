@@ -1,0 +1,19 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Product Sales Statistics";
+    ViewData["ActiveRole"] = "Reports";
+    ViewData["RoleDisplay"] = "Reports Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ProductSalesStatistics.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IProductSalesReportService.GetProductSalesStatistics() -->
+<section class="report-page product-sales-page">
+    <div class="report-hero"><div><span>Product Analytics</span><h1>Product Sales Statistics</h1><p>Analyze top products, product revenue, category sales, and product performance.</p></div></div>
+    <div class="filter-panel"><select class="form-select"><option>Today</option><option>This Week</option><option>This Month</option><option>This Quarter</option><option>This Year</option><option>Custom Range</option></select><select class="form-select"><option>All Categories</option><option>Laptops</option><option>Phones</option><option>Accessories</option></select><button class="btn btn-primary">Generate Report</button><div class="dropdown"><button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">Export Report</button><ul class="dropdown-menu"><li><a class="dropdown-item" href="#">Export as PDF</a></li><li><a class="dropdown-item" href="#">Export as Excel</a></li><li><a class="dropdown-item" href="#">Export as CSV</a></li></ul></div></div>
+    <div class="row g-4"><div class="col-md-4"><article class="summary-card"><span>Total Products Sold</span><strong>1,248</strong></article></div><div class="col-md-4"><article class="summary-card revenue"><span>Total Product Revenue</span><strong>$31,440</strong></article></div><div class="col-md-4"><article class="summary-card avg"><span>Average Price / Product</span><strong>$25.19</strong></article></div></div>
+    <section class="table-card mt-4 table-responsive"><h2>Top 5 Best-Selling Products</h2><table class="table align-middle"><thead><tr><th>Rank</th><th>Product Name</th><th>Category</th><th>Quantity Sold</th><th>Revenue</th></tr></thead><tbody><tr><td><span class="rank">1</span></td><td>Wireless Mouse</td><td>Accessories</td><td>160</td><td>$3,840</td></tr><tr><td><span class="rank">2</span></td><td>ProBook 14</td><td>Laptops</td><td>48</td><td>$40,752</td></tr><tr><td><span class="rank">3</span></td><td>SSD 1TB</td><td>Components</td><td>74</td><td>$6,808</td></tr></tbody></table></section>
+    <div class="row g-4 mt-1"><div class="col-lg-7"><section class="table-card table-responsive"><h2>Product Sales Table</h2><table class="table"><thead><tr><th>Product Code</th><th>Product Name</th><th>Category</th><th>Unit Price</th><th>Quantity Sold</th><th>Revenue</th></tr></thead><tbody><tr><td>PRD-001</td><td>ProBook 14</td><td>Laptops</td><td>$849</td><td>48</td><td>$40,752</td></tr><tr><td>PRD-004</td><td>Wireless Mouse</td><td>Accessories</td><td>$24</td><td>160</td><td>$3,840</td></tr></tbody></table></section></div><div class="col-lg-5"><section class="chart-card"><h2>Revenue by Product</h2><div class="bar-chart"><i style="height:92%"></i><i style="height:54%"></i><i style="height:48%"></i><i style="height:35%"></i></div></section></div></div>
+</section>

@@ -1,0 +1,35 @@
+.request-header,
+.request-tools,
+.table-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 12px 32px rgba(23, 32, 51, .08);
+}
+
+.request-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding: 24px;
+}
+
+.request-header h1 {
+    font-weight: 800;
+}
+
+.request-tools {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 18px;
+    padding: 18px;
+}
+
+.request-tools select {
+    max-width: 190px;
+}
+
+.table-card {
+    padding: 18px;
+}

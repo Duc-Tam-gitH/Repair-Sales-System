@@ -1,0 +1,57 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "Invoice Print";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice - Repair & Sales System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/InvoicePrint.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- Data fetched via IInvoiceService.GetPrintableInvoice() -->
+    <main class="invoice-page">
+        <section class="invoice-sheet">
+            <header class="invoice-header">
+                <div class="company-lockup"><div class="logo">R&SS</div><div><h1>Repair & Sales System</h1><p>123 Service Street, Operations District<br />Phone: 0123456789 • Email: billing@rss.local</p></div></div>
+                <div class="invoice-meta"><strong>Invoice #INV-2026-1001</strong><span>Date: 2026-07-18</span></div>
+            </header>
+
+            <section class="customer-box">
+                <h2>Customer Information</h2>
+                <p><strong>Name:</strong> Minh Tran</p>
+                <p><strong>Phone:</strong> 0901112222</p>
+                <p><strong>Address:</strong> 45 Nguyen Street, District 1</p>
+            </section>
+
+            <table class="table invoice-table">
+                <thead><tr><th>Description</th><th>Quantity</th><th>Unit Price</th><th>Total</th></tr></thead>
+                <tbody><tr><td>Phone Repair - Nova X Model</td><td>1</td><td>$40</td><td>$40</td></tr><tr><td>OLED Screen Assembly</td><td>1</td><td>$89</td><td>$89</td></tr></tbody>
+            </table>
+
+            <section class="invoice-totals">
+                <div><span>Subtotal</span><strong>$129</strong></div>
+                <div><span>Tax/VAT</span><strong>$0</strong></div>
+                <div class="grand-total"><span>Total Amount</span><strong>$129</strong></div>
+            </section>
+
+            <section class="payment-info">
+                <h2>Payment Information</h2>
+                <p><strong>Payment Method:</strong> Cash</p>
+                <p><strong>Payment Date:</strong> 2026-07-18</p>
+                <p><strong>Status:</strong> Paid</p>
+            </section>
+
+            <footer class="invoice-footer">
+                <p>Thank you for choosing Repair & Sales System. Terms & Conditions: Warranty and refund policies follow company service guidelines.</p>
+                <div class="print-actions"><button class="btn btn-primary" onclick="window.print()">Print</button><button class="btn btn-outline-secondary" onclick="window.close()">Close</button></div>
+            </footer>
+        </section>
+    </main>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

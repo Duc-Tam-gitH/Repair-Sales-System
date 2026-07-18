@@ -1,0 +1,103 @@
+/* Phase 15 MVC interface hooks. Replace or extend these per-interface styles later. */
+
+.rss-login-interface {
+    max-width: 100%;
+}
+
+.rss-login-form {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 24px;
+    background: #ffffff;
+}
+
+.rss-role-home {
+    display: block;
+}
+
+.rss-customer-home,
+.rss-reception-home,
+.rss-technician-home,
+.rss-manager-home,
+.rss-administrator-home {
+    width: 100%;
+}
+
+.rss-role-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.rss-role-menu a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 6px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+.rss-metric {
+    min-height: 88px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 14px;
+    background: #ffffff;
+}
+
+.rss-metric span {
+    display: block;
+    color: #6c757d;
+}
+
+.rss-metric strong {
+    display: block;
+    margin-top: 4px;
+    font-size: 1.5rem;
+}
+
+.rss-action {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 112px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 16px;
+    text-decoration: none;
+    background: #ffffff;
+}
+
+.rss-action span {
+    margin-top: 6px;
+    color: #6c757d;
+}
+
+.rss-action-primary {
+    border-color: #0d6efd;
+}
+
+.rss-panel {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 16px;
+    background: #ffffff;
+}
+
+.rss-panel header {
+    margin-bottom: 12px;
+}
+
+.rss-panel h2 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 576px) {
+    .rss-login-form,
+    .rss-panel {
+        padding: 16px;
+    }
+}

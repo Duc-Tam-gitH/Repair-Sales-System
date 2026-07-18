@@ -1,0 +1,33 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Task Details";
+    ViewData["ActiveRole"] = "Technician";
+    ViewData["RoleDisplay"] = "Technician User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/TaskDetails.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via ITechnicianService.GetTaskDetails() -->
+<section class="task-details-page">
+    <div class="task-hero">
+        <div><span>TASK-2041</span><h1>Dell Inspiron 15 Repair</h1><p>Status: Pending • Deadline: 2026-07-19 10:00</p></div>
+        <div class="action-stack">
+            <a class="btn btn-light" asp-controller="Technician" asp-action="RecordFaults">Start Processing</a>
+            <a class="btn btn-outline-light" asp-controller="Technician" asp-action="UpdateProgress">Update Progress</a>
+            <a class="btn btn-outline-light" asp-controller="Technician" asp-action="RecordResults">Record Results</a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4"><section class="detail-card"><h2>Customer Info</h2><p><strong>Name:</strong> Minh Tran</p><p><strong>Phone:</strong> 0901112222</p><p><strong>Address:</strong> 45 Nguyen Street, District 1</p></section></div>
+        <div class="col-lg-4"><section class="detail-card"><h2>Device Info</h2><p><strong>Name:</strong> Dell Inspiron 15</p><p><strong>Type:</strong> Laptop</p><p><strong>Brand/Model:</strong> Dell / Inspiron 15</p></section></div>
+        <div class="col-lg-4"><section class="detail-card"><h2>Initial Fault</h2><p>Keyboard not working. Customer reports intermittent key failure after liquid exposure.</p></section></div>
+    </div>
+
+    <section class="progress-log mt-4">
+        <h2>Repair History / Progress Log</h2>
+        <div class="timeline"><div><span>2026-07-18</span><p>Reception created technical report and assigned task.</p></div><div><span>2026-07-18</span><p>Device received with charger and laptop bag.</p></div></div>
+    </section>
+</section>

@@ -20,3 +20,80 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.rss-app-header {
+  background: linear-gradient(135deg, #12315f, #0f766e);
+  color: #ffffff;
+  padding: 18px 0;
+}
+
+.rss-app-header .container-fluid {
+  align-items: center;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+}
+
+.rss-brand-lockup {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.rss-logo {
+  align-items: center;
+  background: #ffffff;
+  border-radius: 10px;
+  color: #12315f;
+  display: inline-flex;
+  font-weight: 800;
+  height: 48px;
+  justify-content: center;
+  text-decoration: none;
+  width: 64px;
+}
+
+.rss-brand-lockup span {
+  color: #d8f3ef;
+  display: block;
+  font-size: .88rem;
+}
+
+.rss-user-box {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.rss-main-navbar {
+  background: #172033;
+}
+
+.rss-main-navbar .nav-link {
+  color: #e8edf5;
+  font-weight: 500;
+}
+
+.rss-main-navbar .nav-link:hover,
+.rss-main-navbar .nav-link:focus {
+  color: #ffffff;
+}
+
+.footer {
+  background: #172033;
+  color: #cbd5e1 !important;
+  padding: 16px 0;
+}
+
+.footer a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+@media (max-width: 576px) {
+  .rss-app-header .container-fluid,
+  .rss-user-box {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

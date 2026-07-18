@@ -6,24 +6,134 @@
     <title>@ViewData["Title"] - R_SS.Web</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/phase15-mvc.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/R_SS.Web.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
+    @{
+        var activeRole = ViewData["ActiveRole"]?.ToString();
+        var roleDisplay = ViewData["RoleDisplay"]?.ToString() ?? "Admin User";
+        var roleMenu = activeRole switch
+        {
+            "Customer" => new[] { "Dashboard", "Products", "Cart", "Orders", "Repairs", "Logout" },
+            "Reception" => new[] { "Dashboard", "Customers", "Repair Requests", "Technical Reports", "Handover" },
+            "Technician" => new[] { "Dashboard", "My Tasks", "Component Search", "Work Schedule" },
+            "Manager" => new[] { "Dashboard", "Repair Progress", "Accounts", "Employees", "Customers", "Requests", "Approvals" },
+            "Administrator" => new[] { "Dashboard", "Repair Progress", "Accounts", "Employees", "Customers", "Requests", "Approvals" },
+            "Warehouse" => new[] { "Dashboard", "Stock List", "Inventory Management", "Inventory Tracking", "Suppliers" },
+            "ProductManagement" => new[] { "Categories", "Products", "Orders" },
+            "Payment" => new[] { "Transactions", "Repair Payment", "Invoices" },
+            "Reports" => new[] { "Revenue", "Repairs", "Inventory", "Customers", "Products" },
+            "SystemAdmin" => new[] { "Audit Logs", "Process Configuration" },
+            _ => new[] { "Dashboard", "Customers", "Products", "Reports", "Administration" }
+        };
+    }
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="rss-app-header">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">R_SS.Web</a>
+                <div class="rss-brand-lockup">
+                    <a class="rss-logo" asp-area="" asp-controller="Home" asp-action="Home">R&SS</a>
+                    <div>
+                        <strong>Repair & Sales System</strong>
+                        <span>Service, inventory, and sales operations</span>
+                    </div>
+                </div>
+                <div class="rss-user-box">
+                    <span>@roleDisplay</span>
+                    <a class="btn btn-outline-light btn-sm" asp-controller="Account" asp-action="Login">Logout</a>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-dark rss-main-navbar mb-4">
+            <div class="container-fluid">
+                <a class="navbar-brand d-lg-none" asp-area="" asp-controller="Home" asp-action="Home">Menu</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Home">Home</a>
                         </li>
+                        @if (activeRole == "Customer")
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Customer" asp-action="CustomerHome">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Customer" asp-action="ProductList">Products</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Customer" asp-action="Cart">Cart</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Customer" asp-action="MyOrders">Orders</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Customer" asp-action="RepairProgress">Repairs</a></li>
+                        }
+                        else if (activeRole == "Reception")
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Reception" asp-action="ReceptionDashboard">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Reception" asp-action="CustomerList">Customers</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Reception" asp-action="RepairRequestList">Repair Requests</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Reception" asp-action="TechnicalReportList">Technical Reports</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Reception" asp-action="DeviceHandover">Handover</a></li>
+                        }
+                        else if (activeRole == "Technician")
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Technician" asp-action="TechnicianDashboard">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Technician" asp-action="AssignedTasks">My Tasks</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Technician" asp-action="ComponentSearch">Component Search</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Technician" asp-action="WorkSchedule">Work Schedule</a></li>
+                        }
+                        else if (activeRole == "Manager" || activeRole == "Administrator")
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Management" asp-action="ManagementDashboard">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Management" asp-action="RepairProgressDashboard">Repair Progress</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Management" asp-action="SystemAccountManagement">Accounts</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Management" asp-action="EmployeeManagement">Employees</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Management" asp-action="CustomerManagement">Customers</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Management" asp-action="TechnicalRequestManagement">Requests</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Management" asp-action="ApproveQuotes">Approvals</a></li>
+                        }
+                        else if (activeRole == "Warehouse")
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Warehouse" asp-action="WarehouseDashboard">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Warehouse" asp-action="StockList">Stock List</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Warehouse" asp-action="InventoryManagement">Inventory Management</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Warehouse" asp-action="InventoryTracking">Inventory Tracking</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Warehouse" asp-action="SupplierManagement">Suppliers</a></li>
+                        }
+                        else if (activeRole == "ProductManagement")
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="ProductManagement" asp-action="CategoryManagement">Categories</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="ProductManagement" asp-action="ProductList">Products</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="ProductManagement" asp-action="OrderList">Orders</a></li>
+                        }
+                        else if (activeRole == "Payment")
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Payment" asp-action="TransactionList">Transactions</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Payment" asp-action="RepairPayment">Repair Payment</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Payment" asp-action="InvoicePrint">Invoices</a></li>
+                        }
+                        else if (activeRole == "Reports")
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Reports" asp-action="RevenueReport">Revenue</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Reports" asp-action="RepairReport">Repairs</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Reports" asp-action="InventoryReport">Inventory</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Reports" asp-action="CustomerStatistics">Customers</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Reports" asp-action="ProductSalesStatistics">Products</a></li>
+                        }
+                        else if (activeRole == "SystemAdmin")
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="SystemAdmin" asp-action="AuditLog">Audit Logs</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="SystemAdmin" asp-action="ProcessManagement">Process Configuration</a></li>
+                        }
+                        else
+                        {
+                            @foreach (var item in roleMenu)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">@item</a>
+                                </li>
+                            }
+                        }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-controller="Account" asp-action="PersonalInfo">Personal Info</a>
                         </li>
                     </ul>
                 </div>
@@ -38,7 +148,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2026 - R_SS.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2026 - Repair & Sales System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> - <a href="#">Terms</a> - <a href="#">Support</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

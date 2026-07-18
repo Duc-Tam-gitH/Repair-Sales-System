@@ -1,0 +1,29 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Technical Report Details";
+    ViewData["ActiveRole"] = "Reception";
+    ViewData["RoleDisplay"] = "Reception Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/TechnicalReportDetails.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IReportService.GetTechnicalReportDetails() -->
+<section class="technical-details-page">
+    <div class="details-hero">
+        <div><span>TECH-2026-001</span><h1>Technical Report Details</h1><p>Status: In-Progress</p></div>
+        <button class="btn btn-light">Edit Progress / Status</button>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4"><section class="detail-box"><h2>Customer Information</h2><p><strong>Name:</strong> Minh Tran</p><p><strong>Phone:</strong> 0901112222</p><p><strong>Address:</strong> 45 Nguyen Street, District 1</p></section></div>
+        <div class="col-lg-4"><section class="detail-box"><h2>Equipment Information</h2><p><strong>Name:</strong> Dell Inspiron 15</p><p><strong>Type:</strong> Laptop</p><p><strong>Status:</strong> Scratched</p><p><strong>Accessories:</strong> Charger, bag</p></section></div>
+        <div class="col-lg-4"><section class="detail-box"><h2>Assignment</h2><p><strong>Technician:</strong> Huy Nguyen</p><p><strong>Initial Fault:</strong> Keyboard not working</p><p><strong>Repair Result:</strong> Repaired successfully</p></section></div>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-lg-6"><section class="detail-box"><h2>Repair Progress</h2><div class="timeline"><div><span>2026-07-18</span><p>Device received and report created.</p></div><div><span>2026-07-19</span><p>Keyboard module fault confirmed.</p></div><div><span>2026-07-20</span><p>Replacement part installed and final testing started.</p></div></div></section></div>
+        <div class="col-lg-6"><section class="detail-box"><h2>Components Used</h2><ul><li>Laptop keyboard module - $45</li><li>Cleaning kit - $8</li></ul><h2>Update History</h2><p>2026-07-20: Reception notified customer about expected pickup date.</p></section></div>
+    </div>
+</section>

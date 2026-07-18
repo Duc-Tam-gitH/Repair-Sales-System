@@ -1,0 +1,26 @@
+.task-list-header, .task-tools, .task-table {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 12px 32px rgba(23, 32, 51, .08);
+}
+.task-list-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding: 24px;
+}
+.task-list-header h1 { font-weight: 800; }
+.task-list-header p { color: #64748b; margin: 0; }
+.task-tools {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 18px;
+    padding: 18px;
+}
+.task-tools select { max-width: 200px; }
+.task-table { padding: 18px; }
+@media (max-width: 576px) {
+    .task-list-header, .task-tools { align-items: stretch; flex-direction: column; }
+}

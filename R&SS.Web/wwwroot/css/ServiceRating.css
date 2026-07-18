@@ -1,0 +1,44 @@
+.rating-page {
+    display: grid;
+    min-height: 62vh;
+    place-items: center;
+}
+
+.rating-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 18px 52px rgba(23, 32, 51, .11);
+    max-width: 680px;
+    padding: 32px;
+    width: 100%;
+}
+
+.rating-card h1 {
+    font-weight: 800;
+}
+
+.rating-card p {
+    color: #64748b;
+}
+
+.stars {
+    display: flex;
+    gap: 8px;
+}
+
+.stars button {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 10px;
+    color: #f59e0b;
+    font-size: 1.8rem;
+    height: 48px;
+    line-height: 1;
+    transition: transform .15s ease;
+    width: 48px;
+}
+
+.stars button:hover {
+    transform: translateY(-2px);
+}

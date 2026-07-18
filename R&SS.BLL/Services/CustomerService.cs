@@ -48,12 +48,18 @@ public class CustomerService : ICustomerService
         EnsureCustomerManagerRole(request.ActorRole);
 
         var customers = await _unitOfWork.Customers.SearchAsync(request.Keyword);
-        var mappedCustomers = _mapper.Map<IReadOnlyCollection<CustomerResponse>>(customers);
+        var mappedCustomers = customers
+            .Select(customer => new CustomerSummaryResponse
+            {
+                CustomerId = customer.CustomerId,
+                FullName = customer.FullName
+            })
+            .ToArray();
 
         return new CustomerListResponse
         {
             Customers = mappedCustomers,
-            Message = mappedCustomers.Count == 0 ? "No customers found." : "Customers retrieved successfully."
+            Message = mappedCustomers.Length == 0 ? "No customers found." : "Customers retrieved successfully."
         };
     }
 

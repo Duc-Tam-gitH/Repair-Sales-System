@@ -1,0 +1,33 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Online Repair Requests";
+    ViewData["ActiveRole"] = "Reception";
+    ViewData["RoleDisplay"] = "Reception Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/RepairRequestList.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IReceptionService.GetPendingRequests() -->
+<section class="repair-request-page">
+    <div class="request-header">
+        <h1>Online Repair Request List</h1>
+        <a class="btn btn-primary" asp-controller="Reception" asp-action="EquipmentReception">Create Intake</a>
+    </div>
+    <div class="alert alert-danger" role="alert">Cannot reject: request is already processed.</div>
+    <div class="request-tools">
+        <input class="form-control" type="search" placeholder="Search request or customer..." />
+        <select class="form-select"><option>All Status</option><option>Pending</option><option>Accepted</option><option>Rejected</option></select>
+    </div>
+    <div class="table-card table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>Request ID</th><th>Customer Name</th><th>Device Type</th><th>Fault Description</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+                <tr><td>REQ-1001</td><td>Minh Tran</td><td>Laptop</td><td>Keyboard not working</td><td><span class="badge text-bg-warning">Pending</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <a class="btn btn-sm btn-success" asp-controller="Reception" asp-action="EquipmentReception">Accept Request</a> <button class="btn btn-sm btn-outline-danger">Reject Request</button></td></tr>
+                <tr><td>REQ-1002</td><td>Anya Pham</td><td>Phone</td><td>Screen cracked</td><td><span class="badge text-bg-success">Accepted</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button></td></tr>
+                <tr><td>REQ-1003</td><td>David Lee</td><td>Tablet</td><td>Battery drains quickly</td><td><span class="badge text-bg-danger">Rejected</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>

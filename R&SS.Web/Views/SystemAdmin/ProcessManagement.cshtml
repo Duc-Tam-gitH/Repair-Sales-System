@@ -1,0 +1,57 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Process Management";
+    ViewData["ActiveRole"] = "SystemAdmin";
+    ViewData["RoleDisplay"] = "System Administrator";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ProcessManagement.css" asp-append-version="true" />
+}
+
+<!-- Data fetched and saved via IWorkflowConfigurationService.GetRepairWorkflow() -->
+<section class="process-management-page">
+    <div class="admin-hero">
+        <div><span>Workflow Configuration</span><h1>Repair Process Management</h1><p>Configure repair states, ordering, allowed transitions, and required workflow rules.</p></div>
+    </div>
+
+    <div class="alert alert-success" role="status">Workflow updated successfully!</div>
+    <div class="alert alert-warning" role="alert">Cannot delete: step is currently in use!</div>
+
+    <div class="row g-4">
+        <div class="col-md-4"><article class="summary-card"><span>Current Process Status</span><strong class="status-active">Active</strong></article></div>
+        <div class="col-md-4"><article class="summary-card"><span>Total Steps</span><strong>7</strong></article></div>
+        <div class="col-md-4"><article class="summary-card"><span>Total States</span><strong>7</strong></article></div>
+    </div>
+
+    <section class="workflow-panel mt-4">
+        <h2>State / Step Order Configuration</h2>
+        <div class="workflow-steps">
+            <article><span>1</span><strong>Pending</strong><small>Active</small><div><button>Move Down</button><button>Edit</button></div></article>
+            <article><span>2</span><strong>Inspection</strong><small>Active</small><div><button>Move Up</button><button>Move Down</button><button>Edit</button></div></article>
+            <article><span>3</span><strong>In-Repair</strong><small>Active</small><div><button>Move Up</button><button>Move Down</button><button>Edit</button></div></article>
+            <article><span>4</span><strong>Awaiting Parts</strong><small>Active</small><div><button>Move Up</button><button>Move Down</button><button>Edit</button></div></article>
+            <article><span>5</span><strong>Quality Check</strong><small>Active</small><div><button>Move Up</button><button>Move Down</button><button>Edit</button></div></article>
+            <article><span>6</span><strong>Completed</strong><small>Active</small><div><button>Move Up</button><button>Move Down</button><button>Edit</button></div></article>
+            <article><span>7</span><strong>Handed Over</strong><small>Active</small><div><button>Move Up</button><button>Enable/Disable</button><button>Edit</button></div></article>
+        </div>
+    </section>
+
+    <section class="edit-panel mt-4">
+        <h2>Step Details Editing</h2>
+        <div class="row g-3">
+            <div class="col-md-4"><label class="form-label" for="stepName">Step Name</label><input class="form-control" id="stepName" value="Quality Check" /></div>
+            <div class="col-md-2"><label class="form-label" for="sequence">Order / Sequence</label><input class="form-control" id="sequence" type="number" value="5" /></div>
+            <div class="col-md-2 d-flex align-items-end"><label class="form-check"><input class="form-check-input" type="checkbox" checked /> Is Active?</label></div>
+            <div class="col-md-4"><label class="form-label">Allowed Transitions</label><div class="transition-list"><label><input type="checkbox" checked /> Completed</label><label><input type="checkbox" /> Awaiting Parts</label></div></div>
+            <div class="col-12"><label class="form-label" for="description">Description</label><textarea class="form-control" id="description" rows="3">Final quality validation before customer handover.</textarea></div>
+        </div>
+        <button class="btn btn-primary mt-4">Save Changes</button>
+    </section>
+
+    <section class="rules-panel mt-4 table-responsive">
+        <h2>Workflow Rules</h2>
+        <table class="table align-middle"><thead><tr><th>From State</th><th>To State</th><th>Allowed Roles</th><th>Required Actions</th></tr></thead><tbody><tr><td>Inspection</td><td>In-Repair</td><td>Technician, Manager</td><td>Must attach repair plan</td></tr><tr><td>Completed</td><td>Handed Over</td><td>Reception, Payment</td><td>Must confirm payment and customer receipt</td></tr></tbody></table>
+        <div class="d-flex flex-wrap gap-2"><button class="btn btn-outline-danger">Reset to Default Workflow</button><button class="btn btn-success">Apply Changes</button></div>
+    </section>
+</section>

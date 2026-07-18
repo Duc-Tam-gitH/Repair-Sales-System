@@ -1,0 +1,37 @@
+.search-card,
+.result-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
+    padding: 28px;
+}
+
+.search-card {
+    background: linear-gradient(135deg, #f8fafc, #eef6ff);
+    margin-bottom: 22px;
+}
+
+.search-card h1 {
+    font-weight: 800;
+}
+
+.search-card p {
+    color: #64748b;
+}
+
+.result-card span {
+    color: #0f766e;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.result-card h2 {
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.result-card p {
+    color: #64748b;
+    margin-bottom: 0;
+}

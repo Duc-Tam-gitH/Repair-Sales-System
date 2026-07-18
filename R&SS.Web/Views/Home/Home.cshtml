@@ -1,0 +1,95 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Dashboard";
+    ViewData["ActiveRole"] = "Administrator";
+    ViewData["RoleDisplay"] = "Admin User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Home.css" asp-append-version="true" />
+}
+
+<section class="dashboard-page" aria-labelledby="dashboard-title">
+    <div class="dashboard-hero">
+        <div>
+            <span>Post-login homepage</span>
+            <h1 id="dashboard-title">General Dashboard</h1>
+            <p>Quick access to role-based functions, operational statistics, and common workflows.</p>
+        </div>
+        <a class="btn btn-light" asp-controller="Account" asp-action="PersonalInfo">My Profile</a>
+    </div>
+
+    <div class="row g-3 dashboard-stats">
+        <div class="col-md-3"><div class="stat-card"><span>Total Orders</span><strong>1,248</strong><small>+18 today</small></div></div>
+        <div class="col-md-3"><div class="stat-card"><span>Total Customers</span><strong>642</strong><small>+7 this week</small></div></div>
+        <div class="col-md-3"><div class="stat-card"><span>Open Services</span><strong>86</strong><small>14 urgent</small></div></div>
+        <div class="col-md-3"><div class="stat-card"><span>Products</span><strong>312</strong><small>22 low stock</small></div></div>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-md-6 col-xl-3">
+            <article class="role-card customer-card">
+                <span>Customer</span>
+                <h2>View products</h2>
+                <p>Browse available items, compare options, and request purchases.</p>
+                <a href="#">Open products</a>
+            </article>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <article class="role-card customer-card">
+                <span>Customer</span>
+                <h2>Book services</h2>
+                <p>Create technical orders for diagnostics, repairs, or maintenance.</p>
+                <a href="#">Book service</a>
+            </article>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <article class="role-card reception-card">
+                <span>Receptionist</span>
+                <h2>Manage customers</h2>
+                <p>Search customer profiles, update contact details, and review history.</p>
+                <a href="#">Manage customers</a>
+            </article>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <article class="role-card reception-card">
+                <span>Receptionist</span>
+                <h2>Create orders</h2>
+                <p>Register sales or service orders from front-desk requests.</p>
+                <a href="#">Create order</a>
+            </article>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <article class="role-card technician-card">
+                <span>Technician</span>
+                <h2>View schedule</h2>
+                <p>Check assigned repairs, appointments, priorities, and due dates.</p>
+                <a href="#">View schedule</a>
+            </article>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <article class="role-card technician-card">
+                <span>Technician</span>
+                <h2>Update status</h2>
+                <p>Post repair progress, parts notes, and completion updates.</p>
+                <a href="#">Update status</a>
+            </article>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <article class="role-card admin-card">
+                <span>Admin</span>
+                <h2>Manage users</h2>
+                <p>Create users, assign roles, and review account access.</p>
+                <a href="#">Manage users</a>
+            </article>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <article class="role-card admin-card">
+                <span>Admin</span>
+                <h2>System settings</h2>
+                <p>Configure system defaults, permissions, and operational settings.</p>
+                <a href="#">Open settings</a>
+            </article>
+        </div>
+    </div>
+</section>

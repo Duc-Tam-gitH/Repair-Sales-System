@@ -66,6 +66,7 @@ namespace R_SS.DAL.Repositories
         public async Task<IReadOnlyCollection<User>> GetTechniciansAsync()
         {
             return await _context.Users
+                .Include(user => user.EmployeeProfile)
                 .Include(user => user.UserRoles)
                 .ThenInclude(userRole => userRole.Role)
                 .Where(user => user.UserRoles.Any(userRole => userRole.Role != null && userRole.Role.RoleName == "Technician"))

@@ -1,0 +1,41 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Personal Information";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/PersonalInfo.css" asp-append-version="true" />
+}
+
+<section class="profile-page" aria-labelledby="profile-title">
+    <div class="profile-header">
+        <div>
+            <span>Account</span>
+            <h1 id="profile-title">Personal Information</h1>
+            <p>Review and update your contact information.</p>
+        </div>
+        <a class="btn btn-outline-primary" asp-controller="Account" asp-action="ChangePassword">Change Password</a>
+    </div>
+
+    <form class="profile-card" method="post">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <label class="form-label" for="fullName">Full Name</label>
+                <input class="form-control" id="fullName" name="FullName" type="text" value="Admin User" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" id="email" name="Email" type="email" value="admin@rss.local" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="phone">Phone Number</label>
+                <input class="form-control" id="phone" name="PhoneNumber" type="tel" value="0123456789" />
+            </div>
+            <div class="col-12">
+                <label class="form-label" for="address">Address</label>
+                <textarea class="form-control" id="address" name="Address" rows="4">123 Service Street, Operations District</textarea>
+            </div>
+        </div>
+        <button class="btn btn-primary mt-4" type="submit">Update</button>
+    </form>
+</section>

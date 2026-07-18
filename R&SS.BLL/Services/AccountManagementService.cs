@@ -45,7 +45,11 @@ public class AccountManagementService : IAccountManagementService
             UpdatedAt = DateTime.UtcNow
         };
         await _unitOfWork.Users.AddAsync(user);
-        await _unitOfWork.UserRoles.AddAsync(new UserRole { User = user, Role = role });
+        await _unitOfWork.SaveChangesAsync();
+
+        await EnsureUserRoleAsync(user, role);
+        await EnsureCustomerProfileAsync(user, role.RoleName);
+        await EnsureEmployeeProfileAsync(user, role);
         await _unitOfWork.SaveChangesAsync();
         await _activityLogService.LogAsync(request.ActorUserId, null, "System Account Management", "Add", user.Username, "Success");
         return Map(user, role.RoleName, "Account added successfully.");
@@ -69,6 +73,9 @@ public class AccountManagementService : IAccountManagementService
         user.IsActive = request.IsActive;
         user.UpdatedAt = DateTime.UtcNow;
         _unitOfWork.Users.Update(user);
+        await EnsureUserRoleAsync(user, role);
+        await EnsureCustomerProfileAsync(user, role.RoleName);
+        await EnsureEmployeeProfileAsync(user, role);
         await _unitOfWork.SaveChangesAsync();
         await _activityLogService.LogAsync(request.ActorUserId, null, "System Account Management", "Update", user.Username, "Success");
         return Map(user, role.RoleName, "Account updated successfully.");
@@ -111,6 +118,107 @@ public class AccountManagementService : IAccountManagementService
     {
         var roles = await _unitOfWork.UserRoles.GetByUserIdAsync(user.UserId);
         return roles.Any(role => role.Role?.RoleName == RoleConstants.Manager) && await _unitOfWork.Users.CountManagersAsync() <= 1;
+    }
+
+    private async Task EnsureUserRoleAsync(User user, Role role)
+    {
+        var userRoles = await _unitOfWork.UserRoles.GetByUserIdAsync(user.UserId) ?? Array.Empty<UserRole>();
+        var existingRole = userRoles.FirstOrDefault();
+        if (existingRole is null)
+        {
+            await _unitOfWork.UserRoles.AddAsync(new UserRole
+            {
+                UserId = user.UserId,
+                RoleId = role.RoleId,
+                User = user,
+                Role = role
+            });
+            return;
+        }
+
+        existingRole.RoleId = role.RoleId;
+        existingRole.Role = role;
+        _unitOfWork.UserRoles.Update(existingRole);
+    }
+
+    private async Task EnsureCustomerProfileAsync(User user, string roleName)
+    {
+        if (!roleName.Equals(RoleConstants.Customer, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        var customerCode = user.Username.Trim();
+        var existingCustomer = await _unitOfWork.Customers.GetByCodeAsync(customerCode);
+        if (existingCustomer is not null)
+        {
+            return;
+        }
+
+        await _unitOfWork.Customers.AddAsync(new Customer
+        {
+            UserId = user.UserId,
+            User = user,
+            CustomerCode = customerCode,
+            FullName = user.FullName.Trim(),
+            Phone = Normalize(user.Phone),
+            Email = user.Email.Trim(),
+            IsActive = user.IsActive,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        });
+    }
+
+    private async Task EnsureEmployeeProfileAsync(User user, Role role)
+    {
+        if (role.RoleName.Equals(RoleConstants.Customer, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        if (!IsEmployeeRole(role.RoleName))
+        {
+            return;
+        }
+
+        var existingEmployee = await _unitOfWork.Employees.GetByUserIdAsync(user.UserId);
+        if (existingEmployee is not null)
+        {
+            existingEmployee.RoleId = role.RoleId;
+            existingEmployee.EmployeeCode = user.Username.Trim();
+            existingEmployee.FullName = user.FullName.Trim();
+            existingEmployee.Email = user.Email.Trim();
+            existingEmployee.Phone = Normalize(user.Phone);
+            existingEmployee.WorkStatus = string.IsNullOrWhiteSpace(existingEmployee.WorkStatus) ? "Working" : existingEmployee.WorkStatus;
+            existingEmployee.IsActive = user.IsActive;
+            existingEmployee.UpdatedAt = DateTime.UtcNow;
+            _unitOfWork.Employees.Update(existingEmployee);
+            return;
+        }
+
+        await _unitOfWork.Employees.AddAsync(new Employee
+        {
+            UserId = user.UserId,
+            User = user,
+            RoleId = role.RoleId,
+            Role = role,
+            EmployeeCode = user.Username.Trim(),
+            FullName = user.FullName.Trim(),
+            Email = user.Email.Trim(),
+            Phone = Normalize(user.Phone),
+            WorkStatus = "Working",
+            IsActive = user.IsActive,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        });
+    }
+
+    private static bool IsEmployeeRole(string roleName)
+    {
+        return roleName.Equals(RoleConstants.Admin, StringComparison.OrdinalIgnoreCase) ||
+            roleName.Equals(RoleConstants.Manager, StringComparison.OrdinalIgnoreCase) ||
+            roleName.Equals(RoleConstants.Receptionist, StringComparison.OrdinalIgnoreCase) ||
+            roleName.Equals(RoleConstants.Technician, StringComparison.OrdinalIgnoreCase);
     }
 
     private static AccountResponse Map(User user, string roleName, string message) => new()

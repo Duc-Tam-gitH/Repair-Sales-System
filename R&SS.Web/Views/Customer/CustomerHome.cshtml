@@ -1,0 +1,47 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Customer Home";
+    ViewData["ActiveRole"] = "Customer";
+    ViewData["RoleDisplay"] = "Customer User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/CustomerHome.css" asp-append-version="true" />
+}
+
+@* Static prototype data represents values returned from Customer/Product/Repair services, never DAL queries. *@
+<section class="customer-home-page">
+    <div class="customer-hero">
+        <div>
+            <span>Repair & Sales Store</span>
+            <h1>Reliable repairs, genuine parts, and everyday tech essentials.</h1>
+            <p>Book technical services, browse featured products, and track every order from one customer workspace.</p>
+            <div class="hero-actions">
+                <a class="btn btn-light" asp-controller="Customer" asp-action="ProductList">Browse Product Catalog</a>
+                <a class="btn btn-outline-light" asp-controller="Customer" asp-action="SubmitRepair">Submit Repair Request</a>
+                <a class="btn btn-outline-light" asp-controller="Customer" asp-action="SearchRepair">Check Repair Progress</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-heading">
+        <h2>Featured Products</h2>
+        <a asp-controller="Customer" asp-action="ProductList">View all</a>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4"><article class="product-card"><div class="product-image">Laptop</div><h3>ProBook 14</h3><p>Business laptop with SSD storage and warranty support.</p><strong>$849</strong></article></div>
+        <div class="col-md-4"><article class="product-card"><div class="product-image">Phone</div><h3>Nova X Phone</h3><p>Bright display, fast charging, and dual SIM support.</p><strong>$499</strong></article></div>
+        <div class="col-md-4"><article class="product-card"><div class="product-image">Accessory</div><h3>USB-C Service Kit</h3><p>Adapters and cables selected by our technicians.</p><strong>$39</strong></article></div>
+    </div>
+
+    <div class="section-heading mt-5">
+        <h2>Best-Selling Products</h2>
+        <span>Popular with repair customers this month</span>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-3"><article class="mini-card"><h3>Wireless Mouse</h3><p>In Stock</p><strong>$24</strong></article></div>
+        <div class="col-md-3"><article class="mini-card"><h3>16GB RAM Module</h3><p>In Stock</p><strong>$68</strong></article></div>
+        <div class="col-md-3"><article class="mini-card"><h3>Phone Charger</h3><p>In Stock</p><strong>$19</strong></article></div>
+        <div class="col-md-3"><article class="mini-card"><h3>SSD 1TB</h3><p>Limited Stock</p><strong>$92</strong></article></div>
+    </div>
+</section>

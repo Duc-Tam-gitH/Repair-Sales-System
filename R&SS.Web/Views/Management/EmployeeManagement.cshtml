@@ -1,0 +1,20 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Employee Management";
+    ViewData["ActiveRole"] = "Administrator";
+    ViewData["RoleDisplay"] = "Management User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/EmployeeManagement.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IEmployeeService.GetEmployees() -->
+<section class="employee-page">
+    <div class="page-header"><div><h1>Employee Management</h1><p>Review all staff records, job titles, and employment status.</p></div><input class="form-control" placeholder="Search by Name or ID..." /></div>
+    <div class="table-card table-responsive"><table class="table align-middle"><thead><tr><th>Employee ID</th><th>Full Name</th><th>Phone</th><th>Email</th><th>Job Title</th><th>Job Status</th><th>Actions</th></tr></thead><tbody>
+        <tr><td>EMP-001</td><td>Mai Nguyen</td><td>0901112222</td><td>mai@rss.local</td><td>Manager</td><td><span class="badge text-bg-success">Active</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <button class="btn btn-sm btn-outline-secondary">Update Information</button></td></tr>
+        <tr><td>EMP-002</td><td>Huy Nguyen</td><td>0903334444</td><td>huy@rss.local</td><td>Technician</td><td><span class="badge text-bg-warning">On Leave</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <button class="btn btn-sm btn-outline-secondary">Update Information</button></td></tr>
+        <tr><td>EMP-003</td><td>Anya Pham</td><td>0905556666</td><td>anya@rss.local</td><td>Receptionist</td><td><span class="badge text-bg-danger">Terminated</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <button class="btn btn-sm btn-outline-secondary">Update Information</button></td></tr>
+    </tbody></table></div>
+</section>

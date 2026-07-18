@@ -1,0 +1,80 @@
+@{
+    ViewData["Title"] = "Customer Home";
+    ViewData["ActiveRole"] = "Customer";
+    ViewData["RoleDisplay"] = "Signed in as Customer";
+}
+
+<section class="rss-role-home rss-customer-home" aria-labelledby="customer-home-title">
+    <header class="mb-4">
+        <p class="text-muted mb-1">Customer portal</p>
+        <h1 id="customer-home-title">Customer Home</h1>
+        <p class="text-muted mb-0">Create service tickets, shop products, track orders, and review repair updates.</p>
+    </header>
+
+    <nav class="rss-role-menu mb-4" aria-label="Customer menu">
+        <a href="#">My Tickets</a>
+        <a href="#">New Service Ticket</a>
+        <a href="#">Products</a>
+        <a href="#">Cart</a>
+        <a href="#">My Orders</a>
+        <a href="#">Feedback</a>
+    </nav>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><div class="rss-metric"><span>Active Tickets</span><strong>2</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Orders In Progress</span><strong>1</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Cart Items</span><strong>3</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Unread Updates</span><strong>4</strong></div></div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <a class="rss-action rss-action-primary" href="#">
+                <strong>Create Service Ticket</strong>
+                <span>Request repair or diagnostics for a device.</span>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a class="rss-action" href="#">
+                <strong>Make Purchase</strong>
+                <span>Browse products and add items to the cart.</span>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a class="rss-action" href="#">
+                <strong>Track Orders</strong>
+                <span>Check purchase and repair order progress.</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <section class="rss-panel" aria-labelledby="customer-work-title">
+                <header><h2 id="customer-work-title">Recent Tickets and Orders</h2></header>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr><th>Reference</th><th>Item</th><th>Status</th><th>Next Step</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>TT-1042</td><td>Laptop repair</td><td>Diagnosing</td><td>Await technician update</td></tr>
+                            <tr><td>SO-8821</td><td>Wireless mouse</td><td>Packed</td><td>Delivery confirmation</td></tr>
+                            <tr><td>TT-1036</td><td>Phone screen</td><td>Payment due</td><td>Confirm repair payment</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="col-lg-4">
+            <section class="rss-panel" aria-labelledby="customer-notifications-title">
+                <header><h2 id="customer-notifications-title">Notifications</h2></header>
+                <ul>
+                    <li>Repair update available for TT-1042.</li>
+                    <li>Payment confirmation required for TT-1036.</li>
+                    <li>Feedback request for completed order SO-8795.</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</section>

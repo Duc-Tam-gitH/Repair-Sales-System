@@ -50,7 +50,7 @@ public class RevenueReportServiceTests
     {
         var service = CreateService(CreateMocks());
         var request = BuildRequest();
-        request.ActorRole = RoleConstants.Client;
+        request.ActorRole = RoleConstants.Customer;
 
         var act = async () => await service.GenerateAsync(request);
 

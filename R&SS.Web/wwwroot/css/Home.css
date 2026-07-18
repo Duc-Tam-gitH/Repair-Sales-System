@@ -1,0 +1,105 @@
+.dashboard-page {
+    padding-bottom: 34px;
+}
+
+.dashboard-hero {
+    align-items: center;
+    background: linear-gradient(135deg, #12315f, #0f766e);
+    border-radius: 18px;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    padding: 30px;
+}
+
+.dashboard-hero span {
+    color: #bff1e9;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.dashboard-hero h1 {
+    font-weight: 800;
+    margin: 6px 0;
+}
+
+.dashboard-hero p {
+    color: #e5f5f2;
+    margin: 0;
+}
+
+.stat-card,
+.role-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: 0 12px 34px rgba(23, 32, 51, .08);
+    height: 100%;
+    padding: 20px;
+}
+
+.stat-card span,
+.role-card span {
+    color: #64748b;
+    font-weight: 700;
+}
+
+.stat-card strong {
+    display: block;
+    font-size: 2rem;
+    margin-top: 4px;
+}
+
+.stat-card small {
+    color: #0f766e;
+    font-weight: 700;
+}
+
+.role-card {
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.role-card:hover {
+    box-shadow: 0 18px 46px rgba(23, 32, 51, .14);
+    transform: translateY(-3px);
+}
+
+.role-card h2 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin: 8px 0;
+}
+
+.role-card p {
+    color: #64748b;
+}
+
+.role-card a {
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.customer-card {
+    border-top: 4px solid #0d6efd;
+}
+
+.reception-card {
+    border-top: 4px solid #0f766e;
+}
+
+.technician-card {
+    border-top: 4px solid #f59e0b;
+}
+
+.admin-card {
+    border-top: 4px solid #7c3aed;
+}
+
+@media (max-width: 576px) {
+    .dashboard-hero {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 18px;
+    }
+}

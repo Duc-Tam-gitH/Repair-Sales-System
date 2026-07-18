@@ -1,0 +1,39 @@
+.orders-header {
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 22px;
+}
+
+.orders-header h1 {
+    font-weight: 800;
+    margin: 0;
+}
+
+.orders-header input {
+    max-width: 360px;
+}
+
+.orders-panel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
+    padding: 18px;
+}
+
+@media (max-width: 576px) {
+    .orders-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .orders-header input {
+        max-width: none;
+    }
+}

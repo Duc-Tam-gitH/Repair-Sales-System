@@ -1,0 +1,19 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Customer Statistics";
+    ViewData["ActiveRole"] = "Reports";
+    ViewData["RoleDisplay"] = "Reports Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/CustomerStatistics.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via ICustomerStatisticsService.GetCustomerStatistics() -->
+<section class="report-page customer-statistics-page">
+    <div class="report-hero"><div><span>Customer Analytics</span><h1>Customer Statistics</h1><p>Measure customer growth, activity, repairs, orders, and spending.</p></div></div>
+    <div class="filter-panel"><select class="form-select"><option>Today</option><option>This Week</option><option>This Month</option><option>This Year</option><option>Custom Range</option></select><button class="btn btn-primary">Generate Report</button><div class="dropdown"><button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">Export Report</button><ul class="dropdown-menu"><li><a class="dropdown-item" href="#">Export as PDF</a></li><li><a class="dropdown-item" href="#">Export as Excel</a></li><li><a class="dropdown-item" href="#">Export as CSV</a></li></ul></div></div>
+    <div class="row g-4"><div class="col-md-3"><article class="summary-card"><span>Total Customers</span><strong>642</strong></article></div><div class="col-md-3"><article class="summary-card"><span>New Customers</span><strong>38</strong></article></div><div class="col-md-3"><article class="summary-card active"><span>Active Customers</span><strong>420</strong></article></div><div class="col-md-3"><article class="summary-card inactive"><span>Inactive Customers</span><strong>84</strong></article></div></div>
+    <section class="table-card mt-4 table-responsive"><h2>Customer Statistics</h2><table class="table align-middle"><thead><tr><th>Customer Name</th><th>Total Orders</th><th>Total Repairs</th><th>Total Spent</th><th>Last Activity</th></tr></thead><tbody><tr><td>Minh Tran</td><td>18</td><td>4</td><td>$4,920</td><td>2026-07-18</td></tr><tr><td>Anya Pham</td><td>9</td><td>2</td><td>$1,340</td><td>2026-07-15</td></tr></tbody></table></section>
+    <div class="row g-4 mt-1"><div class="col-lg-6"><section class="chart-card"><h2>New Customers Over Time</h2><div class="line-chart"><i style="height:30%"></i><i style="height:45%"></i><i style="height:42%"></i><i style="height:66%"></i><i style="height:74%"></i></div></section></div><div class="col-lg-6"><section class="table-card"><h2>Additional Statistics</h2><p><strong>Average spending/customer:</strong> $312</p><p><strong>Highest spender:</strong> Minh Tran</p><p><strong>Most repairs by customer:</strong> Minh Tran - 4 repairs</p></section></div></div>
+</section>

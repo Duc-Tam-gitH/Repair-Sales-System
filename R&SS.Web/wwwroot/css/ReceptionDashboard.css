@@ -1,0 +1,55 @@
+.reception-hero {
+    align-items: center;
+    background: linear-gradient(135deg, #17315f, #0f766e);
+    border-radius: 20px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding: 32px;
+}
+
+.reception-hero span {
+    color: #bff1e9;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.reception-hero h1,
+.dashboard-panel h2 {
+    font-weight: 800;
+}
+
+.reception-hero p {
+    color: #e5f5f2;
+    margin: 0;
+}
+
+.metric-card,
+.dashboard-panel {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
+    padding: 22px;
+}
+
+.metric-card {
+    border-top: 5px solid #0d6efd;
+    display: grid;
+    gap: 10px;
+    height: 100%;
+}
+
+.metric-card strong {
+    font-size: 2.4rem;
+}
+
+.metric-card a {
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.processing { border-top-color: #0f766e; }
+.handover { border-top-color: #f59e0b; }
+.tasks { border-top-color: #7c3aed; }

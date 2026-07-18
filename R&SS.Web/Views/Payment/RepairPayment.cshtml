@@ -1,0 +1,47 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Repair Payment";
+    ViewData["ActiveRole"] = "Payment";
+    ViewData["RoleDisplay"] = "Payment Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/RepairPayment.css" asp-append-version="true" />
+}
+
+<!-- Data fetched and saved via IPaymentService.ProcessRepairPayment() -->
+<section class="repair-payment-page">
+    <div class="repair-payment-header">
+        <span>Repair Payment Processing</span>
+        <h1>Process Completed Repair Payment</h1>
+        <p>Load the technical report, confirm repair costs, collect payment, and generate invoice.</p>
+    </div>
+
+    <div class="alert alert-success" role="status">Payment confirmed successfully! Invoice generated!</div>
+    <div class="alert alert-danger" role="alert">Payment method not selected!</div>
+
+    <section class="step-card">
+        <h2>Step 1: Search / Load Repair Report</h2>
+        <div class="input-group input-group-lg"><input class="form-control" value="TECH-2026-003" /><button class="btn btn-primary" type="button">Search</button></div>
+    </section>
+
+    <section class="step-card">
+        <h2>Step 2: Repair Cost Summary</h2>
+        <table class="table align-middle"><thead><tr><th>Description</th><th>Quantity</th><th>Unit Price</th><th>Subtotal</th></tr></thead><tbody><tr><td>Service Fee</td><td>1</td><td>$40</td><td>$40</td></tr><tr><td>OLED Screen Assembly</td><td>1</td><td>$89</td><td>$89</td></tr></tbody></table>
+        <div class="total-box"><span>Total Amount</span><strong>$129</strong></div>
+    </section>
+
+    <section class="step-card">
+        <h2>Step 3: Payment Processing</h2>
+        <div class="row g-3">
+            <div class="col-md-4"><label class="form-label" for="method">Payment Method</label><select class="form-select" id="method"><option>Cash</option><option>Credit Card</option><option>e-Wallet</option><option>Bank Transfer</option></select></div>
+            <div class="col-md-4"><label class="form-label" for="amount">Amount Paid</label><input class="form-control" id="amount" type="number" value="129" /></div>
+            <div class="col-md-4"><label class="form-label" for="notes">Notes</label><input class="form-control" id="notes" placeholder="Optional notes" /></div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-4">
+            <button class="btn btn-success" type="button">Confirm Payment</button>
+            <a class="btn btn-primary" asp-controller="Payment" asp-action="InvoicePrint">Print Invoice</a>
+            <a class="btn btn-outline-secondary" asp-controller="Payment" asp-action="TransactionList">Cancel</a>
+        </div>
+    </section>
+</section>

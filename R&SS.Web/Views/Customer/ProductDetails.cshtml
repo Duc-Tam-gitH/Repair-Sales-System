@@ -1,0 +1,54 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Product Details";
+    ViewData["ActiveRole"] = "Customer";
+    ViewData["RoleDisplay"] = "Customer User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ProductDetails.css" asp-append-version="true" />
+}
+
+@* Product detail content simulates IProductService.GetProductDetailsAsync. *@
+<section class="product-detail-page">
+    <div class="alert alert-success" role="status">Added to cart! This is a static UI message.</div>
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div id="productCarousel" class="carousel slide product-carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active"><div class="product-slide">Product Image 1</div></div>
+                    <div class="carousel-item"><div class="product-slide">Product Image 2</div></div>
+                    <div class="carousel-item"><div class="product-slide">Product Image 3</div></div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="detail-panel">
+                <span class="availability">In Stock</span>
+                <h1>ProBook 14 Business Laptop</h1>
+                <p>A reliable laptop for daily productivity, repair tracking, and business workflows.</p>
+                <strong class="price">$849</strong>
+                <label class="form-label mt-3" for="quantity">Quantity</label>
+                <input class="form-control quantity-input" id="quantity" type="number" min="1" value="1" />
+                <div class="d-flex gap-2 mt-4">
+                    <a class="btn btn-primary flex-fill" asp-controller="Customer" asp-action="Cart">Add to Cart</a>
+                    <a class="btn btn-success flex-fill" asp-controller="Customer" asp-action="Checkout">Buy Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="spec-panel mt-4">
+        <h2>Specifications</h2>
+        <table class="table">
+            <tbody>
+                <tr><th>CPU</th><td>Intel Core i5</td></tr>
+                <tr><th>Memory</th><td>16GB RAM</td></tr>
+                <tr><th>Storage</th><td>512GB SSD</td></tr>
+                <tr><th>Warranty</th><td>12 months service warranty</td></tr>
+            </tbody>
+        </table>
+    </section>
+</section>

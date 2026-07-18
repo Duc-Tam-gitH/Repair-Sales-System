@@ -1,0 +1,20 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Repair Report";
+    ViewData["ActiveRole"] = "Reports";
+    ViewData["RoleDisplay"] = "Reports Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/RepairReport.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IRepairStatisticsService.GetRepairReport() -->
+<section class="report-page repair-report-page">
+    <div class="report-hero"><div><span>Repair Analytics</span><h1>Repair Report</h1><p>Track repair counts, status distribution, technician workload, and completion rates.</p></div></div>
+    <div class="filter-panel"><select class="form-select"><option>Today</option><option>This Week</option><option>This Month</option><option>Custom Range</option></select><select class="form-select"><option>All Technicians</option><option>Huy Nguyen</option><option>Lan Ho</option></select><button class="btn btn-primary">Generate Report</button><div class="dropdown"><button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">Export Report</button><ul class="dropdown-menu"><li><a class="dropdown-item" href="#">Export as PDF</a></li><li><a class="dropdown-item" href="#">Export as Excel</a></li><li><a class="dropdown-item" href="#">Export as CSV</a></li></ul></div></div>
+    <div class="row g-4"><div class="col-md-3"><article class="summary-card"><span>Total Repairs</span><strong>124</strong></article></div><div class="col-md-3"><article class="summary-card pending"><span>Pending Repairs</span><strong>22</strong></article></div><div class="col-md-3"><article class="summary-card progress"><span>In-Progress Repairs</span><strong>41</strong></article></div><div class="col-md-3"><article class="summary-card complete"><span>Completion Rate</span><strong>87%</strong></article></div></div>
+    <div class="row g-4 mt-1"><div class="col-lg-4"><section class="chart-card"><h2>Status Distribution</h2><div class="donut"></div></section></div><div class="col-lg-4"><section class="chart-card"><h2>Repairs by Technician</h2><div class="bar-chart"><i style="height:82%"></i><i style="height:68%"></i><i style="height:54%"></i></div></section></div><div class="col-lg-4"><section class="chart-card"><h2>Repairs by Period</h2><div class="bar-chart"><i style="height:42%"></i><i style="height:70%"></i><i style="height:64%"></i><i style="height:88%"></i></div></section></div></div>
+    <section class="table-card mt-4 table-responsive"><h2>Repair Details</h2><table class="table align-middle"><thead><tr><th>Report Code</th><th>Customer</th><th>Device</th><th>Technician</th><th>Status</th><th>Completion Date</th></tr></thead><tbody><tr><td>TECH-2026-001</td><td>Minh Tran</td><td>Laptop</td><td>Huy Nguyen</td><td>Completed</td><td>2026-07-18</td></tr><tr><td>TECH-2026-002</td><td>Anya Pham</td><td>Phone</td><td>Lan Ho</td><td>In-Progress</td><td>Pending</td></tr></tbody></table></section>
+    <section class="table-card mt-4 table-responsive"><h2>Technician Performance</h2><table class="table"><thead><tr><th>Technician</th><th>Tasks Assigned</th><th>Tasks Completed</th><th>Avg. Time</th><th>Completion Rate</th></tr></thead><tbody><tr><td>Huy Nguyen</td><td>42</td><td>38</td><td>2.1 days</td><td>90%</td></tr><tr><td>Lan Ho</td><td>35</td><td>31</td><td>2.6 days</td><td>89%</td></tr></tbody></table></section>
+</section>

@@ -1,0 +1,42 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Transaction List";
+    ViewData["ActiveRole"] = "Payment";
+    ViewData["RoleDisplay"] = "Payment Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/TransactionList.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IPaymentService.GetTransactionList() -->
+<section class="transaction-list-page">
+    <div class="payment-hero">
+        <div><span>Payment Management</span><h1>Transaction List</h1><p>Track order payments, repair payments, payment methods, status, and revenue activity.</p></div>
+        <a class="btn btn-light" asp-controller="Payment" asp-action="RepairPayment">Process Repair Payment</a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4"><article class="summary-card"><span>Total Transactions</span><strong>148</strong><small>This month</small></article></div>
+        <div class="col-md-4"><article class="summary-card revenue"><span>Total Revenue</span><strong>$32,480</strong><small>This month</small></article></div>
+        <div class="col-md-4"><article class="summary-card pending"><span>Pending Payments</span><strong>12</strong><small>Awaiting confirmation</small></article></div>
+    </div>
+
+    <div class="transaction-tools">
+        <input class="form-control" placeholder="Search by Transaction ID or Customer Name..." />
+        <select class="form-select"><option>All Payment Methods</option><option>Cash</option><option>Credit Card</option><option>e-Wallet</option><option>Bank Transfer</option></select>
+        <select class="form-select"><option>All Status</option><option>Pending</option><option>Completed</option><option>Failed</option><option>Refunded</option></select>
+    </div>
+
+    <div class="table-card table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>Transaction ID</th><th>Customer Name</th><th>Transaction Type</th><th>Amount</th><th>Payment Method</th><th>Status</th><th>Date</th><th></th></tr></thead>
+            <tbody>
+                <tr><td>TXN-2026-1001</td><td>Minh Tran</td><td>Repair Payment</td><td>$129</td><td>Cash</td><td><span class="badge text-bg-success">Completed</span></td><td>2026-07-18</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Payment" asp-action="TransactionDetails">View Details</a></td></tr>
+                <tr><td>TXN-2026-1002</td><td>Anya Pham</td><td>Order Payment</td><td>$936</td><td>Credit Card</td><td><span class="badge text-bg-warning">Pending</span></td><td>2026-07-18</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Payment" asp-action="TransactionDetails">View Details</a></td></tr>
+                <tr><td>TXN-2026-1003</td><td>David Lee</td><td>Order Payment</td><td>$54</td><td>e-Wallet</td><td><span class="badge text-bg-danger">Failed</span></td><td>2026-07-17</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Payment" asp-action="TransactionDetails">View Details</a></td></tr>
+                <tr><td>TXN-2026-1004</td><td>Lan Vu</td><td>Repair Payment</td><td>$74</td><td>Bank Transfer</td><td><span class="badge text-bg-secondary">Refunded</span></td><td>2026-07-16</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Payment" asp-action="TransactionDetails">View Details</a></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>

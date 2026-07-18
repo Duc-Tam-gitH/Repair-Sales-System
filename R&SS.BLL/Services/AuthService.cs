@@ -81,7 +81,11 @@ public class AuthService : IAuthService
         try
         {
             var user = await CreateUserAsync(request);
-            await AssignDefaultRoleAsync(user);
+            var customerRole = await GetOrCreateCustomerRoleAsync();
+            await _unitOfWork.SaveChangesAsync();
+
+            await AssignDefaultRoleAsync(user, customerRole);
+            await EnsureCustomerProfileAsync(user);
 
             await _unitOfWork.SaveChangesAsync();
             await _unitOfWork.CommitAsync();
@@ -580,33 +584,57 @@ public class AuthService : IAuthService
         };
     }
 
-    private async Task AssignDefaultRoleAsync(User user)
+    private async Task AssignDefaultRoleAsync(User user, Role customerRole)
     {
-        var clientRole = await GetOrCreateClientRoleAsync();
-
         await _unitOfWork.UserRoles.AddAsync(new UserRole
         {
+            UserId = user.UserId,
+            RoleId = customerRole.RoleId,
             User = user,
-            Role = clientRole
+            Role = customerRole
         });
     }
 
-    private async Task<Role> GetOrCreateClientRoleAsync()
+    private async Task EnsureCustomerProfileAsync(User user)
     {
-        var clientRole = await _unitOfWork.Roles.GetByNameAsync(RoleConstants.Client);
-        if (clientRole is not null)
+        var customerCode = user.Username.Trim();
+        var existingCustomer = await _unitOfWork.Customers.GetByCodeAsync(customerCode);
+        if (existingCustomer is not null)
         {
-            return clientRole;
+            return;
         }
 
-        clientRole = new Role
+        await _unitOfWork.Customers.AddAsync(new Customer
         {
-            RoleName = RoleConstants.Client,
-            Description = "Default client role."
+            UserId = user.UserId,
+            User = user,
+            CustomerCode = customerCode,
+            FullName = user.FullName.Trim(),
+            Phone = string.IsNullOrWhiteSpace(user.Phone) ? null : user.Phone.Trim(),
+            Email = string.IsNullOrWhiteSpace(user.Email) ? null : user.Email.Trim(),
+            Address = string.IsNullOrWhiteSpace(user.Address) ? null : user.Address.Trim(),
+            IsActive = user.IsActive,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        });
+    }
+
+    private async Task<Role> GetOrCreateCustomerRoleAsync()
+    {
+        var customerRole = await _unitOfWork.Roles.GetByNameAsync(RoleConstants.Customer);
+        if (customerRole is not null)
+        {
+            return customerRole;
+        }
+
+        customerRole = new Role
+        {
+            RoleName = RoleConstants.Customer,
+            Description = "Default customer role."
         };
 
-        await _unitOfWork.Roles.AddAsync(clientRole);
-        return clientRole;
+        await _unitOfWork.Roles.AddAsync(customerRole);
+        return customerRole;
     }
 
     private static string? GetPrimaryRoleName(User user)

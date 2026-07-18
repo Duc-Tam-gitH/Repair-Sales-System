@@ -1,0 +1,68 @@
+@{
+    ViewData["Title"] = "Administrator Home";
+    ViewData["ActiveRole"] = "Administrator";
+    ViewData["RoleDisplay"] = "Signed in as Administrator";
+}
+
+<section class="rss-role-home rss-administrator-home" aria-labelledby="administrator-home-title">
+    <header class="mb-4">
+        <p class="text-muted mb-1">Administration console</p>
+        <h1 id="administrator-home-title">Administrator Home</h1>
+        <p class="text-muted mb-0">Monitor the full system, manage users and roles, configure operations, and review activity.</p>
+    </header>
+
+    <nav class="rss-role-menu mb-4" aria-label="Administrator menu">
+        <a href="#">Dashboard</a>
+        <a href="#">Users</a>
+        <a href="#">Roles & Permissions</a>
+        <a href="#">Tickets</a>
+        <a href="#">Staff Assignment</a>
+        <a href="#">Reports</a>
+        <a href="#">Inventory</a>
+        <a href="#">System Configuration</a>
+        <a href="#">Activity Log</a>
+    </nav>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><div class="rss-metric"><span>Active Users</span><strong>86</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Open Tickets</span><strong>31</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Pending Role Changes</span><strong>2</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>System Alerts</span><strong>1</strong></div></div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><a class="rss-action rss-action-primary" href="#"><strong>Manage Users</strong><span>Create, edit, disable, and review access.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Manage Roles</strong><span>Maintain permissions and assignments.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>System Configuration</strong><span>Update operational settings.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>View Reports</strong><span>Review business and system activity.</span></a></div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <section class="rss-panel" aria-labelledby="admin-queue-title">
+                <header><h2 id="admin-queue-title">Administration Queue</h2></header>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead><tr><th>Item</th><th>Type</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>New employee account</td><td>User</td><td>Review</td><td><a href="#">Open</a></td></tr>
+                            <tr><td>Technician permission update</td><td>Role</td><td>Draft</td><td><a href="#">Edit</a></td></tr>
+                            <tr><td>Email template audit</td><td>Config</td><td>Current</td><td><a href="#">View</a></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="col-lg-4">
+            <section class="rss-panel" aria-labelledby="admin-monitor-title">
+                <header><h2 id="admin-monitor-title">System Monitoring</h2></header>
+                <ul>
+                    <li>User management queue</li>
+                    <li>Role and permission shortcuts</li>
+                    <li>System activity log</li>
+                    <li>Operational overview</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,25 @@
+.tech-hero {
+    align-items: center;
+    background: linear-gradient(135deg, #172033, #0f766e);
+    border-radius: 20px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding: 32px;
+}
+.tech-hero span { color: #bff1e9; font-weight: 800; text-transform: uppercase; }
+.tech-hero h1, .urgent-panel h2 { font-weight: 800; }
+.tech-hero p { color: #e5f5f2; margin: 0; }
+.tech-metric, .urgent-panel {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
+    padding: 22px;
+}
+.tech-metric { border-top: 5px solid #0d6efd; height: 100%; }
+.tech-metric strong { display: block; font-size: 2.4rem; }
+.pending { border-top-color: #f59e0b; }
+.progress { border-top-color: #0f766e; }
+.due { border-top-color: #dc2626; }

@@ -1,0 +1,42 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Service Rating";
+    ViewData["ActiveRole"] = "Customer";
+    ViewData["RoleDisplay"] = "Customer User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ServiceRating.css" asp-append-version="true" />
+}
+
+@* Rating options simulate completed repairs returned from IRepairService. *@
+<section class="rating-page">
+    <div class="rating-card">
+        <h1>Service Rating</h1>
+        <p>Select a completed repair report and share your feedback.</p>
+
+        <div class="alert alert-success" role="status">Thank you! Your rating has been submitted.</div>
+
+        <form>
+            <label class="form-label" for="report">Completed Repair Report</label>
+            <select class="form-select form-select-lg" id="report">
+                <option>#REP-2026-0008 - Nova X Phone</option>
+                <option>#REP-2026-0004 - Office Printer</option>
+            </select>
+
+            <label class="form-label mt-4">Rating</label>
+            <div class="stars" aria-label="5 star rating selector">
+                <button type="button">★</button>
+                <button type="button">★</button>
+                <button type="button">★</button>
+                <button type="button">★</button>
+                <button type="button">☆</button>
+            </div>
+
+            <label class="form-label mt-4" for="comment">Comment / Feedback</label>
+            <textarea class="form-control" id="comment" rows="5" placeholder="Tell us what went well or what we can improve."></textarea>
+
+            <button class="btn btn-primary btn-lg mt-4" type="button">Submit Rating</button>
+        </form>
+    </div>
+</section>

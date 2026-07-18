@@ -1,0 +1,16 @@
+.repair-plan-page {
+    display: grid;
+    min-height: 62vh;
+    place-items: center;
+}
+.plan-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    box-shadow: 0 18px 52px rgba(23, 32, 51, .1);
+    max-width: 820px;
+    padding: 30px;
+    width: 100%;
+}
+.plan-card h1 { color: #172033; font-weight: 800; }
+.plan-card p { color: #64748b; }

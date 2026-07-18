@@ -1,0 +1,26 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Record Results";
+    ViewData["ActiveRole"] = "Technician";
+    ViewData["RoleDisplay"] = "Technician User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/RecordResults.css" asp-append-version="true" />
+}
+
+<!-- Data saved via ITechnicianService.RecordRepairResults() -->
+<section class="record-results-page">
+    <div class="results-card">
+        <h1>Record Repair Results</h1>
+        <p>Complete the technical work and prepare the device for reception handover.</p>
+        <div class="alert alert-success" role="status">Task completed and ready for handover!</div>
+        <form>
+            <label class="form-label" for="results">Repair Results</label><textarea class="form-control" id="results" rows="4">Successfully repaired keyboard fault and passed final hardware tests.</textarea>
+            <label class="form-label mt-3" for="resolved">Faults Resolved</label><textarea class="form-control" id="resolved" rows="3">Keyboard input failure, moisture residue near connector.</textarea>
+            <label class="form-label mt-3" for="status">Equipment Status After Repair</label><select class="form-select" id="status"><option>Working</option><option>Partially Working</option><option>Not Repairable</option></select>
+            <label class="form-label mt-3" for="notes">Technical Notes</label><textarea class="form-control" id="notes" rows="4" placeholder="Final observations and recommendations."></textarea>
+            <a class="btn btn-primary mt-4" asp-controller="Technician" asp-action="AssignedTasks">Confirm Completion of Technical Work</a>
+        </form>
+    </div>
+</section>

@@ -1,0 +1,43 @@
+.order-banner {
+    align-items: center;
+    background: linear-gradient(135deg, #10315f, #0f766e);
+    border-radius: 18px;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    padding: 26px;
+}
+
+.order-banner span {
+    color: #bff1e9;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.order-banner h1 {
+    font-weight: 800;
+    margin: 4px 0 0;
+}
+
+.status {
+    background: #fef3c7;
+    border-radius: 999px;
+    color: #92400e !important;
+    padding: 8px 14px;
+}
+
+.detail-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
+    height: 100%;
+    padding: 22px;
+}
+
+.detail-card h2 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+}

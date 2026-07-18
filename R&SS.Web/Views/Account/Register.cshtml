@@ -1,0 +1,69 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "Register";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Repair & Sales System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/Register.css" asp-append-version="true" />
+</head>
+<body>
+    <main class="register-page">
+        <section class="register-card" aria-labelledby="register-title">
+            <div class="register-heading">
+                <span>R&SS</span>
+                <div>
+                    <h1 id="register-title">Create account</h1>
+                    <p>Register to access service requests, sales, and customer support.</p>
+                </div>
+            </div>
+
+            <div class="alert alert-warning" role="alert">
+                Username or email already exists.
+            </div>
+
+            <form method="post" asp-controller="Account" asp-action="Register">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="fullName">Full Name</label>
+                        <input class="form-control" id="fullName" name="FullName" type="text" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="email">Email</label>
+                        <input class="form-control" id="email" name="Email" type="email" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="phone">Phone Number</label>
+                        <input class="form-control" id="phone" name="PhoneNumber" type="tel" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="username">Username</label>
+                        <input class="form-control" id="username" name="Username" type="text" required />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="address">Address <span class="text-muted">(optional)</span></label>
+                        <textarea class="form-control" id="address" name="Address" rows="2"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="password">Password</label>
+                        <input class="form-control" id="password" name="Password" type="password" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="confirmPassword">Confirm Password</label>
+                        <input class="form-control" id="confirmPassword" name="ConfirmPassword" type="password" required />
+                    </div>
+                </div>
+                <button class="btn btn-success btn-lg w-100 mt-4" type="submit">Register</button>
+            </form>
+
+            <p class="register-footer">Already have an account? <a asp-controller="Account" asp-action="Login">Back to Login</a></p>
+        </section>
+    </main>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

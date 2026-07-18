@@ -168,8 +168,10 @@ public class TechnicalTicketService : ITechnicalTicketService
             {
                 TechnicianId = technician.UserId,
                 FullName = technician.FullName,
-                Specialization = technician.Specialization,
-                WorkStatus = technician.AccountLockedUntilUtc > DateTime.UtcNow ? "Temporarily Locked" : technician.WorkStatus,
+                Specialization = technician.EmployeeProfile?.Specialization,
+                WorkStatus = technician.AccountLockedUntilUtc > DateTime.UtcNow
+                    ? "Temporarily Locked"
+                    : technician.EmployeeProfile?.WorkStatus ?? "Working",
                 ActiveTicketCount = await _unitOfWork.RepairOrders.CountActiveByTechnicianAsync(technician.UserId)
             });
         }
@@ -567,7 +569,7 @@ public class TechnicalTicketService : ITechnicalTicketService
 
     private static TechnicalTicketResponse MapTicket(RepairOrder ticket, string actorRole, int? viewerCustomerId)
     {
-        var isOwner = actorRole.Equals(RoleConstants.Client, StringComparison.OrdinalIgnoreCase) &&
+        var isOwner = actorRole.Equals(RoleConstants.Customer, StringComparison.OrdinalIgnoreCase) &&
             viewerCustomerId == ticket.CustomerId;
         var isStaffOtpViewer = actorRole.Equals(RoleConstants.Receptionist, StringComparison.OrdinalIgnoreCase) ||
             actorRole.Equals(RoleConstants.Manager, StringComparison.OrdinalIgnoreCase);
@@ -599,7 +601,7 @@ public class TechnicalTicketService : ITechnicalTicketService
 
     private static bool CanView(RepairOrder ticket, ViewTechnicalTicketsRequest viewer)
     {
-        if (viewer.ActorRole.Equals(RoleConstants.Client, StringComparison.OrdinalIgnoreCase))
+        if (viewer.ActorRole.Equals(RoleConstants.Customer, StringComparison.OrdinalIgnoreCase))
         {
             return viewer.CustomerId == ticket.CustomerId;
         }

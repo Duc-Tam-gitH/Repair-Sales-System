@@ -1,0 +1,26 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Component Search";
+    ViewData["ActiveRole"] = "Technician";
+    ViewData["RoleDisplay"] = "Technician User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ComponentSearch.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IComponentService.SearchComponents() -->
+<section class="component-search-page">
+    <div class="component-header"><h1>Component Search / Inventory Lookup</h1><p>Find replacement parts and select components to use for the current task.</p></div>
+    <div class="component-tools"><input class="form-control" placeholder="Search by Component Name or Code..." /><select class="form-select"><option>All Types</option><option>Screen</option><option>Battery</option><option>Charging Port</option><option>Camera</option><option>Keyboard</option></select></div>
+    <div class="component-table table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>Component Code</th><th>Name</th><th>Type</th><th>Current Inventory Quantity</th><th>Location/Bin</th><th></th></tr></thead>
+            <tbody>
+                <tr><td>CMP-KB-014</td><td>Dell Keyboard Module</td><td>Keyboard</td><td>8</td><td>BIN-A12</td><td><a class="btn btn-sm btn-primary" asp-controller="Technician" asp-action="UpdateComponents">Select to Use</a></td></tr>
+                <tr><td>CMP-BAT-022</td><td>Nova X Battery</td><td>Battery</td><td>3</td><td>BIN-B04</td><td><a class="btn btn-sm btn-primary" asp-controller="Technician" asp-action="UpdateComponents">Select to Use</a></td></tr>
+                <tr><td>CMP-SCR-118</td><td>OLED Screen Assembly</td><td>Screen</td><td>0</td><td>BIN-C02</td><td><a class="btn btn-sm btn-primary" asp-controller="Technician" asp-action="UpdateComponents">Select to Use</a></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>

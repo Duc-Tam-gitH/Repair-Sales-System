@@ -1,0 +1,32 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Inventory Tracking";
+    ViewData["ActiveRole"] = "Warehouse";
+    ViewData["RoleDisplay"] = "Warehouse Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/InventoryTracking.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IWarehouseService.GetInventoryMovements() -->
+<section class="inventory-tracking-page">
+    <div class="tracking-header"><h1>Inventory Tracking / History</h1><p>Track inbound receipts, outbound repair usage, current stock, and recent movement trends.</p></div>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#history" type="button">Inventory History</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#repair" type="button">Components Shipped for Repair</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#current" type="button">Current Inventory View</button></li>
+    </ul>
+    <div class="tab-content tracking-tabs">
+        <div class="tab-pane fade show active" id="history">
+            <div class="tracking-tools"><input class="form-control" placeholder="Search by Item Name or Document Code..." /><input class="form-control" type="date" /><input class="form-control" type="date" /></div>
+            <table class="table align-middle"><thead><tr><th>Date</th><th>Transaction Type</th><th>Item Name</th><th>Quantity Changed</th><th>Related Document</th></tr></thead><tbody><tr><td>2026-07-18</td><td>Inbound</td><td>Dell Keyboard Module</td><td>+10</td><td>REC-2026-001</td></tr><tr><td>2026-07-18</td><td>Outbound - Repair</td><td>OLED Screen Assembly</td><td>-1</td><td>TECH-2026-003</td></tr></tbody></table>
+        </div>
+        <div class="tab-pane fade" id="repair">
+            <table class="table align-middle"><thead><tr><th>Technical Report Code</th><th>Component Name</th><th>Quantity Shipped/Used</th><th>Date Used</th></tr></thead><tbody><tr><td>TECH-2026-003</td><td>OLED Screen Assembly</td><td>1</td><td>2026-07-18</td></tr><tr><td>TECH-2026-001</td><td>Dell Keyboard Module</td><td>1</td><td>2026-07-17</td></tr></tbody></table>
+        </div>
+        <div class="tab-pane fade" id="current">
+            <table class="table align-middle"><thead><tr><th>Item Name</th><th>Current Quantity</th><th>Minimum Stock Level</th><th>Status</th><th>Trend</th></tr></thead><tbody><tr class="low-row"><td>Dell Keyboard Module</td><td>3</td><td>10</td><td>Low Stock</td><td><span class="spark down"></span></td></tr><tr class="low-row"><td>OLED Screen Assembly</td><td>0</td><td>6</td><td>Out of Stock</td><td><span class="spark down"></span></td></tr><tr><td>USB-C Service Kit</td><td>42</td><td>15</td><td>In Stock</td><td><span class="spark up"></span></td></tr></tbody></table>
+        </div>
+    </div>
+</section>

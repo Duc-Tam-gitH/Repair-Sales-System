@@ -1,0 +1,29 @@
+.form-shell {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    box-shadow: 0 16px 44px rgba(23, 32, 51, .09);
+    padding: 30px;
+}
+
+.form-heading {
+    background: linear-gradient(135deg, #f8fafc, #e0f2fe);
+    border-radius: 16px;
+    margin-bottom: 22px;
+    padding: 22px;
+}
+
+.form-heading span {
+    color: #0f766e;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.form-heading h1 {
+    font-weight: 800;
+}
+
+.form-heading p {
+    color: #64748b;
+    margin: 0;
+}

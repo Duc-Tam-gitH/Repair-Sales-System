@@ -1,0 +1,33 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Warehouse Dashboard";
+    ViewData["ActiveRole"] = "Warehouse";
+    ViewData["RoleDisplay"] = "Warehouse Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/WarehouseDashboard.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IWarehouseService.GetInventorySummary() -->
+<section class="warehouse-dashboard-page">
+    <div class="warehouse-hero">
+        <div><span>Inventory Control</span><h1>Warehouse Dashboard</h1><p>Monitor stock levels, inventory value, low-stock alerts, and warehouse actions.</p></div>
+        <a class="btn btn-light" asp-controller="Warehouse" asp-action="InventoryManagement">Receive Goods</a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-xl-3"><article class="warehouse-card"><span>Total Items</span><strong>12,480</strong><small>Products and components</small></article></div>
+        <div class="col-md-6 col-xl-3"><article class="warehouse-card low"><span>Items Running Low</span><strong>28</strong><small>Below minimum stock</small></article></div>
+        <div class="col-md-6 col-xl-3"><article class="warehouse-card empty"><span>Out-of-Stock Items</span><strong>7</strong><small>Need urgent reorder</small></article></div>
+        <div class="col-md-6 col-xl-3"><article class="warehouse-card value"><span>Total Inventory Value</span><strong>$184,650</strong><small>Estimated value</small></article></div>
+    </div>
+
+    <section class="alerts-panel mt-4">
+        <h2>Inventory Alerts</h2>
+        <div class="alert alert-warning" role="alert">Low inventory alert: please reorder soon!</div>
+        <div class="alert-row"><div><strong>Dell Keyboard Module is running low!</strong><p>Quantity: 3, minimum stock: 10</p></div><a class="btn btn-sm btn-outline-primary" asp-controller="Warehouse" asp-action="StockList">View</a></div>
+        <div class="alert-row danger"><div><strong>OLED Screen Assembly is out of stock!</strong><p>Quantity: 0, minimum stock: 6</p></div><a class="btn btn-sm btn-outline-danger" asp-controller="Warehouse" asp-action="InventoryTracking">View</a></div>
+        <div class="alert-row"><div><strong>Nova X Battery is running low!</strong><p>Quantity: 4, minimum stock: 12</p></div><a class="btn btn-sm btn-outline-primary" asp-controller="Warehouse" asp-action="StockList">View</a></div>
+    </section>
+</section>

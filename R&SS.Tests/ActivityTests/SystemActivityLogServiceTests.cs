@@ -31,7 +31,7 @@ public class SystemActivityLogServiceTests
     {
         var service = CreateService(CreateMocks());
 
-        var act = async () => await service.SearchAsync(new SystemActivityLogSearchRequest { ActorRole = RoleConstants.Client });
+        var act = async () => await service.SearchAsync(new SystemActivityLogSearchRequest { ActorRole = RoleConstants.Customer });
 
         await act.Should().ThrowAsync<UnauthorizedException>().WithMessage("Only Managers can access activity history.");
     }

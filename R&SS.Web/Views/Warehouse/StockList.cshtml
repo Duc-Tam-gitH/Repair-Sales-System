@@ -1,0 +1,33 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Stock List";
+    ViewData["ActiveRole"] = "Warehouse";
+    ViewData["RoleDisplay"] = "Warehouse Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/StockList.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IWarehouseService.GetStockItems() -->
+<section class="stock-list-page">
+    <div class="stock-header">
+        <div><h1>Stock List</h1><p>Products and repair components currently tracked in warehouse inventory.</p></div>
+        <a class="btn btn-primary" asp-controller="Warehouse" asp-action="InventoryManagement">Incoming Goods</a>
+    </div>
+    <div class="stock-tools">
+        <input class="form-control" type="search" placeholder="Search by Item Name or Code..." />
+        <select class="form-select"><option>All Categories</option><option>Phone</option><option>Laptop</option><option>Accessory</option><option>Component</option></select>
+    </div>
+    <div class="stock-table table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Quantity in Stock</th><th>Minimum Stock Level</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+                <tr><td>ITM-001</td><td>ProBook 14</td><td>Laptop</td><td>24</td><td>5</td><td><span class="badge text-bg-success">In Stock</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Warehouse" asp-action="InventoryDetails">View Details</a> <button class="btn btn-sm btn-outline-secondary">Update Information</button></td></tr>
+                <tr><td>CMP-014</td><td>Dell Keyboard Module</td><td>Component</td><td>3</td><td>10</td><td><span class="badge text-bg-warning">Low Stock</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Warehouse" asp-action="InventoryDetails">View Details</a> <button class="btn btn-sm btn-outline-secondary">Update Information</button></td></tr>
+                <tr><td>CMP-118</td><td>OLED Screen Assembly</td><td>Component</td><td>0</td><td>6</td><td><span class="badge text-bg-danger">Out of Stock</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Warehouse" asp-action="InventoryDetails">View Details</a> <button class="btn btn-sm btn-outline-secondary">Update Information</button></td></tr>
+                <tr><td>ACC-022</td><td>USB-C Service Kit</td><td>Accessory</td><td>42</td><td>15</td><td><span class="badge text-bg-success">In Stock</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Warehouse" asp-action="InventoryDetails">View Details</a> <button class="btn btn-sm btn-outline-secondary">Update Information</button></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>

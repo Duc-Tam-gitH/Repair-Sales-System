@@ -1,0 +1,29 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Transaction Details";
+    ViewData["ActiveRole"] = "Payment";
+    ViewData["RoleDisplay"] = "Payment Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/TransactionDetails.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IPaymentService.GetTransactionDetails() -->
+<section class="transaction-details-page">
+    <div class="details-hero">
+        <div><span>Transaction ID</span><h1>TXN-2026-1001</h1><p>Date: 2026-07-18</p></div>
+        <strong>Completed</strong>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4"><section class="detail-card"><h2>Customer Information</h2><p><strong>Name:</strong> Minh Tran</p><p><strong>Phone:</strong> 0901112222</p><p><strong>Email:</strong> minh@example.com</p></section></div>
+        <div class="col-lg-4"><section class="detail-card"><h2>Transaction Details</h2><p><strong>Type:</strong> Repair Payment</p><p><strong>Amount:</strong> $129</p><p><strong>Payment Method:</strong> Cash</p><p><strong>Payment Reference:</strong> CASH-COUNTER-01</p></section></div>
+        <div class="col-lg-4"><section class="detail-card"><h2>Related Documents</h2><p><strong>Order Code:</strong> N/A</p><p><strong>Technical Report Code:</strong> TECH-2026-003</p></section></div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mt-4">
+        <a class="btn btn-primary" asp-controller="Payment" asp-action="InvoicePrint">Print Receipt</a>
+        <a class="btn btn-outline-secondary" asp-controller="Payment" asp-action="TransactionList">Back to List</a>
+    </div>
+</section>

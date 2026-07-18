@@ -51,7 +51,7 @@ public class TechnicalTicketServiceTests
     {
         var service = CreateService(CreateMocks());
         var request = BuildCreateRequest();
-        request.ActorRole = RoleConstants.Client;
+        request.ActorRole = RoleConstants.Customer;
 
         var act = async () => await service.CreateAsync(request);
 
@@ -85,7 +85,7 @@ public class TechnicalTicketServiceTests
         var response = await service.GetDetailsAsync(ticket.RepairOrderId, new ViewTechnicalTicketsRequest
         {
             ActorUserId = 1,
-            ActorRole = RoleConstants.Client,
+            ActorRole = RoleConstants.Customer,
             CustomerId = ticket.CustomerId
         });
 
@@ -103,7 +103,7 @@ public class TechnicalTicketServiceTests
         var act = async () => await service.GetDetailsAsync(ticket.RepairOrderId, new ViewTechnicalTicketsRequest
         {
             ActorUserId = 99,
-            ActorRole = RoleConstants.Client,
+            ActorRole = RoleConstants.Customer,
             CustomerId = 99
         });
 
@@ -517,8 +517,18 @@ public class TechnicalTicketServiceTests
         PasswordHash = "hash",
         Email = "tech@example.com",
         FullName = "Tech One",
-        Specialization = "Laptop",
-        WorkStatus = "Working",
+        EmployeeProfile = new Employee
+        {
+            EmployeeId = 3,
+            UserId = 7,
+            RoleId = 4,
+            EmployeeCode = "tech",
+            Email = "tech@example.com",
+            FullName = "Tech One",
+            Specialization = "Laptop",
+            WorkStatus = "Working",
+            IsActive = true
+        },
         IsActive = true
     };
 

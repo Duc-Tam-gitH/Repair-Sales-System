@@ -1,0 +1,18 @@
+.component-header, .component-tools, .component-table {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 12px 32px rgba(23, 32, 51, .08);
+}
+.component-header { margin-bottom: 18px; padding: 24px; }
+.component-header h1 { font-weight: 800; }
+.component-header p { color: #64748b; margin: 0; }
+.component-tools {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 1fr 240px;
+    margin-bottom: 18px;
+    padding: 18px;
+}
+.component-table { padding: 18px; }
+@media (max-width: 768px) { .component-tools { grid-template-columns: 1fr; } }

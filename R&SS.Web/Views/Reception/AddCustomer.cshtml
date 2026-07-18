@@ -1,0 +1,37 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Add Customer";
+    ViewData["ActiveRole"] = "Reception";
+    ViewData["RoleDisplay"] = "Reception Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/AddCustomer.css" asp-append-version="true" />
+}
+
+<!-- Data saved via IReceptionService.CreateCustomer() -->
+<section class="add-customer-page">
+    <div class="form-shell">
+        <div class="form-heading">
+            <span>Customer Profile</span>
+            <h1>Add Customer</h1>
+            <p>Create a new customer profile for intake, orders, and repair reports.</p>
+        </div>
+
+        <div class="alert alert-success" role="status">Customer added successfully!</div>
+        <form>
+            <div class="row g-3">
+                <div class="col-md-6"><label class="form-label" for="code">Customer Code</label><input class="form-control" id="code" value="CUS-004" /></div>
+                <div class="col-md-6"><label class="form-label" for="name">Full Name</label><input class="form-control" id="name" placeholder="Customer full name" /></div>
+                <div class="col-md-6"><label class="form-label" for="phone">Phone Number</label><input class="form-control" id="phone" placeholder="Phone number" /></div>
+                <div class="col-md-6"><label class="form-label" for="email">Email Address</label><input class="form-control" id="email" type="email" placeholder="Email address" /></div>
+                <div class="col-12"><label class="form-label" for="address">Address</label><textarea class="form-control" id="address" rows="3"></textarea></div>
+                <div class="col-12"><label class="form-label" for="notes">Notes</label><textarea class="form-control" id="notes" rows="3"></textarea></div>
+            </div>
+            <div class="d-flex gap-2 mt-4">
+                <button class="btn btn-primary" type="button">Save Customer</button>
+                <a class="btn btn-outline-secondary" asp-controller="Reception" asp-action="CustomerList">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>

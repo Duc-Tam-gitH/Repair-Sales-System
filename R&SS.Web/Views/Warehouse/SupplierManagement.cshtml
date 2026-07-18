@@ -1,0 +1,24 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Supplier Management";
+    ViewData["ActiveRole"] = "Warehouse";
+    ViewData["RoleDisplay"] = "Warehouse Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/SupplierManagement.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via ISupplierService.GetSuppliers() -->
+<section class="supplier-page">
+    <div class="supplier-header">
+        <div><h1>Supplier Management</h1><p>Manage active and disabled suppliers, contacts, and recent purchasing activity.</p></div>
+        <button class="btn btn-primary">Add Supplier</button>
+    </div>
+    <div class="alert alert-danger" role="alert">Supplier has been disabled!</div>
+    <div class="supplier-tools"><input class="form-control" placeholder="Search by Name or ID..." /></div>
+    <div class="supplier-table table-responsive">
+        <table class="table align-middle"><thead><tr><th>Supplier ID</th><th>Supplier Name</th><th>Contact Person</th><th>Phone</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr><td>SUP-001</td><td>TechParts Co.</td><td>Nam Ho</td><td>0907778888</td><td>sales@techparts.local</td><td><span class="badge text-bg-success">Active</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <button class="btn btn-sm btn-outline-secondary">Edit</button> <button class="btn btn-sm btn-outline-danger">Disable Supplier</button></td></tr><tr><td>SUP-002</td><td>Mobile Supply Ltd.</td><td>Lan Vu</td><td>0909990000</td><td>orders@mobilesupply.local</td><td><span class="badge text-bg-secondary">Disabled</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <button class="btn btn-sm btn-outline-secondary">Edit</button></td></tr></tbody></table>
+    </div>
+    <section class="supplier-detail mt-4"><h2>Supplier Detail Preview</h2><div class="row g-3"><div class="col-md-4"><strong>Address</strong><p>88 Component Road, District 7</p></div><div class="col-md-4"><strong>Payment Terms</strong><p>Net 30, bank transfer</p></div><div class="col-md-4"><strong>Recent Orders</strong><p>REC-2026-001, REC-2026-0009</p></div></div></section>
+</section>

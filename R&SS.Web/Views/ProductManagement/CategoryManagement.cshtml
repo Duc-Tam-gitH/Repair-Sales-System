@@ -1,0 +1,51 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Category Management";
+    ViewData["ActiveRole"] = "ProductManagement";
+    ViewData["RoleDisplay"] = "Product Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/CategoryManagement.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IProductService.GetCategories() -->
+<section class="category-management-page">
+    <div class="product-admin-header">
+        <div><span>Catalog Setup</span><h1>Product Category Management</h1><p>Manage active and discontinued sales categories used by the product catalog.</p></div>
+        <button class="btn btn-primary">Add Category</button>
+    </div>
+
+    <div class="alert alert-warning" role="alert">Cannot delete category: products are linked to this category! Reassign linked products before discontinuing.</div>
+
+    <div class="category-tools">
+        <input class="form-control" type="search" placeholder="Search by Category Name..." />
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="table-card table-responsive">
+                <table class="table align-middle">
+                    <thead><tr><th>Category ID</th><th>Category Name</th><th>Description</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        <tr><td>CAT-001</td><td>Laptops</td><td>Business and consumer laptops.</td><td><span class="badge text-bg-success">Active</span></td><td><button class="btn btn-sm btn-outline-secondary">Edit Category</button> <button class="btn btn-sm btn-outline-danger">Delete/Discontinue Category</button></td></tr>
+                        <tr><td>CAT-002</td><td>Phones</td><td>Smartphones and related retail devices.</td><td><span class="badge text-bg-success">Active</span></td><td><button class="btn btn-sm btn-outline-secondary">Edit Category</button> <button class="btn btn-sm btn-outline-danger">Delete/Discontinue Category</button></td></tr>
+                        <tr><td>CAT-003</td><td>Legacy Accessories</td><td>Discontinued accessories.</td><td><span class="badge text-bg-secondary">Discontinued</span></td><td><button class="btn btn-sm btn-outline-secondary">Edit Category</button></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <form class="category-form">
+                <h2>Add / Edit Category</h2>
+                <label class="form-label" for="categoryName">Category Name</label>
+                <input class="form-control" id="categoryName" value="Accessories" />
+                <label class="form-label mt-3" for="description">Description</label>
+                <textarea class="form-control" id="description" rows="4">Retail accessories for customers.</textarea>
+                <label class="form-label mt-3" for="status">Status</label>
+                <select class="form-select" id="status"><option>Active</option><option>Discontinued</option></select>
+                <button class="btn btn-primary w-100 mt-4" type="button">Save</button>
+            </form>
+        </div>
+    </div>
+</section>

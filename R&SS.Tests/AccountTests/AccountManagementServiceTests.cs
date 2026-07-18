@@ -20,6 +20,8 @@ public class AccountManagementServiceTests
     {
         var mocks = CreateMocks();
         mocks.Roles.Setup(repo => repo.GetByNameAsync(RoleConstants.Technician)).ReturnsAsync(new Role { RoleId = 3, RoleName = RoleConstants.Technician });
+        mocks.Employees.Setup(repo => repo.GetByUserIdAsync(It.IsAny<int>())).ReturnsAsync((Employee?)null);
+        mocks.Employees.Setup(repo => repo.AddAsync(It.IsAny<Employee>())).Returns(Task.CompletedTask);
         mocks.Hasher.Setup(hasher => hasher.Hash("Password123!")).Returns("hash");
         var service = CreateService(mocks);
 
@@ -28,6 +30,32 @@ public class AccountManagementServiceTests
         response.Message.Should().Be("Account added successfully.");
         mocks.Users.Verify(repo => repo.AddAsync(It.Is<User>(user => user.PasswordHash == "hash")), Times.Once);
         mocks.UserRoles.Verify(repo => repo.AddAsync(It.IsAny<UserRole>()), Times.Once);
+        mocks.Employees.Verify(repo => repo.AddAsync(It.Is<Employee>(employee =>
+            employee.EmployeeCode == "tech01" &&
+            employee.RoleId == 3 &&
+            employee.FullName == "Tech One")), Times.Once);
+    }
+
+    [Fact]
+    public async Task AddAsync_ShouldCreateCustomerProfile_WhenRoleIsCustomer()
+    {
+        var mocks = CreateMocks();
+        var request = BuildRequest();
+        request.RoleName = RoleConstants.Customer;
+        mocks.Roles.Setup(repo => repo.GetByNameAsync(RoleConstants.Customer)).ReturnsAsync(new Role { RoleId = 4, RoleName = RoleConstants.Customer });
+        mocks.Customers.Setup(repo => repo.GetByCodeAsync(request.Username)).ReturnsAsync((Customer?)null);
+        mocks.Customers.Setup(repo => repo.AddAsync(It.IsAny<Customer>())).Returns(Task.CompletedTask);
+        mocks.Hasher.Setup(hasher => hasher.Hash("Password123!")).Returns("hash");
+        var service = CreateService(mocks);
+
+        var response = await service.AddAsync(request);
+
+        response.RoleName.Should().Be(RoleConstants.Customer);
+        mocks.Customers.Verify(repo => repo.AddAsync(It.Is<Customer>(customer =>
+            customer.CustomerCode == request.Username &&
+            customer.FullName == request.FullName &&
+            customer.Email == request.Email &&
+            customer.Phone == request.Phone)), Times.Once);
     }
 
     [Fact]
@@ -65,6 +93,8 @@ public class AccountManagementServiceTests
         mocks.UnitOfWork.SetupGet(unit => unit.Users).Returns(mocks.Users.Object);
         mocks.UnitOfWork.SetupGet(unit => unit.Roles).Returns(mocks.Roles.Object);
         mocks.UnitOfWork.SetupGet(unit => unit.UserRoles).Returns(mocks.UserRoles.Object);
+        mocks.UnitOfWork.SetupGet(unit => unit.Customers).Returns(mocks.Customers.Object);
+        mocks.UnitOfWork.SetupGet(unit => unit.Employees).Returns(mocks.Employees.Object);
         mocks.UnitOfWork.Setup(unit => unit.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
         mocks.Logs.Setup(log => log.LogAsync(It.IsAny<int?>(), It.IsAny<string?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<string>(), It.IsAny<string?>())).Returns(Task.CompletedTask);
         return mocks;
@@ -85,6 +115,8 @@ public class AccountManagementServiceTests
         public Mock<IUserRp> Users { get; } = new();
         public Mock<IRoleRp> Roles { get; } = new();
         public Mock<IUserRoleRp> UserRoles { get; } = new();
+        public Mock<ICustomerRp> Customers { get; } = new();
+        public Mock<IEmployeeRp> Employees { get; } = new();
         public Mock<IPasswordHasher> Hasher { get; } = new();
         public Mock<ISystemActivityLogService> Logs { get; } = new();
     }

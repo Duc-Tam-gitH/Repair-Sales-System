@@ -1,0 +1,35 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Order Management";
+    ViewData["ActiveRole"] = "ProductManagement";
+    ViewData["RoleDisplay"] = "Product Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ProductManagementOrderList.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IOrderService.GetCustomerOrdersForManagement() -->
+<section class="order-management-page">
+    <div class="product-admin-header">
+        <div><span>Customer Orders</span><h1>Order Management</h1><p>Review orders, confirm processing, and update shipping status.</p></div>
+        <div class="d-flex gap-2"><button class="btn btn-outline-primary">Refresh</button><button class="btn btn-primary">Export</button></div>
+    </div>
+
+    <div class="alert alert-info" role="status">Order status updated to Shipped!</div>
+    <div class="order-tools">
+        <input class="form-control" placeholder="Search by Order Code or Customer Name..." />
+        <select class="form-select"><option>All Status</option><option>Pending</option><option>Processing</option><option>Shipped</option><option>Delivered</option><option>Cancelled</option></select>
+    </div>
+
+    <div class="table-card table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>Order Code</th><th>Customer Name</th><th>Order Date</th><th>Total Amount</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+                <tr><td>SO-2026-1042</td><td>Minh Tran</td><td>2026-07-18</td><td>$936</td><td><span class="badge text-bg-warning">Pending</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <select class="form-select form-select-sm inline-status"><option>Processing</option><option>Shipped</option><option>Delivered</option></select> <button class="btn btn-sm btn-success">Confirm Order</button></td></tr>
+                <tr><td>SO-2026-1038</td><td>Anya Pham</td><td>2026-07-15</td><td>$128</td><td><span class="badge text-bg-info">Processing</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <select class="form-select form-select-sm inline-status"><option>Shipped</option><option>Delivered</option><option>Cancelled</option></select></td></tr>
+                <tr><td>SO-2026-1011</td><td>David Lee</td><td>2026-06-29</td><td>$499</td><td><span class="badge text-bg-success">Delivered</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>

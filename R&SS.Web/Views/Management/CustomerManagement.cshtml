@@ -1,0 +1,20 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Customer Management";
+    ViewData["ActiveRole"] = "Administrator";
+    ViewData["RoleDisplay"] = "Management User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/CustomerManagement.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IManagementService.GetCustomerOverview() -->
+<section class="customer-management-page">
+    <div class="page-header"><div><h1>Customer Management</h1><p>Administrative customer oversight with transaction and repair totals.</p></div><div class="filters"><input class="form-control" placeholder="Search customers..." /><select class="form-select"><option>All</option><option>High Value</option><option>Inactive</option></select></div></div>
+    <div class="table-card table-responsive"><table class="table align-middle"><thead><tr><th>Customer Code</th><th>Full Name</th><th>Phone</th><th>Email</th><th>Total Orders</th><th>Total Spent</th><th>Actions</th></tr></thead><tbody>
+        <tr><td>CUS-001</td><td>Minh Tran</td><td>0901112222</td><td>minh@example.com</td><td>18</td><td>$4,920</td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <button class="btn btn-sm btn-outline-secondary">Update</button></td></tr>
+        <tr><td>CUS-002</td><td>Anya Pham</td><td>0903334444</td><td>anya@example.com</td><td>9</td><td>$1,340</td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <button class="btn btn-sm btn-outline-secondary">Update</button></td></tr>
+    </tbody></table></div>
+    <div class="detail-preview mt-4"><h2>Customer Details Preview</h2><div class="row g-3"><div class="col-md-4"><strong>Personal Information</strong><p>Editable name, phone, email, address.</p></div><div class="col-md-4"><strong>Transaction History</strong><p>All product purchases and payment statuses.</p></div><div class="col-md-4"><strong>Repair History</strong><p>All technical reports and service outcomes.</p></div></div></div>
+</section>

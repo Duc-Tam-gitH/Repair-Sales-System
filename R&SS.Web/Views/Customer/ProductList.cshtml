@@ -1,0 +1,43 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Product Catalog";
+    ViewData["ActiveRole"] = "Customer";
+    ViewData["RoleDisplay"] = "Customer User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ProductList.css" asp-append-version="true" />
+}
+
+@* Product rows simulate data from IProductService. *@
+<section class="catalog-page">
+    <div class="catalog-header">
+        <div>
+            <h1>Product Catalog</h1>
+            <p>Search products, filter by category, and open product details before purchase.</p>
+        </div>
+        <a class="btn btn-primary" asp-controller="Customer" asp-action="Cart">View Cart</a>
+    </div>
+
+    <div class="catalog-tools">
+        <input class="form-control form-control-lg" type="search" placeholder="Search products by name..." />
+        <div class="btn-group">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">Category</button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">All Categories</a></li>
+                <li><a class="dropdown-item" href="#">Laptops</a></li>
+                <li><a class="dropdown-item" href="#">Phones</a></li>
+                <li><a class="dropdown-item" href="#">Accessories</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-xl-4"><article class="catalog-card"><span class="stock in-stock">In Stock</span><h2>ProBook 14</h2><p>Laptop</p><strong>$849</strong><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails">View Details</a></article></div>
+        <div class="col-md-6 col-xl-4"><article class="catalog-card"><span class="stock in-stock">In Stock</span><h2>Nova X Phone</h2><p>Phone</p><strong>$499</strong><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails">View Details</a></article></div>
+        <div class="col-md-6 col-xl-4"><article class="catalog-card"><span class="stock out-stock">Out of Stock</span><h2>Gaming Keyboard</h2><p>Accessory</p><strong>$74</strong><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails">View Details</a></article></div>
+        <div class="col-md-6 col-xl-4"><article class="catalog-card"><span class="stock in-stock">In Stock</span><h2>SSD 1TB</h2><p>Components</p><strong>$92</strong><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails">View Details</a></article></div>
+        <div class="col-md-6 col-xl-4"><article class="catalog-card"><span class="stock in-stock">In Stock</span><h2>Wireless Mouse</h2><p>Accessory</p><strong>$24</strong><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails">View Details</a></article></div>
+        <div class="col-md-6 col-xl-4"><article class="catalog-card"><span class="stock out-stock">Out of Stock</span><h2>Tablet Air 10</h2><p>Tablet</p><strong>$329</strong><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails">View Details</a></article></div>
+    </div>
+</section>

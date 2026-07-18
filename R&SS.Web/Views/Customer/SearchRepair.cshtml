@@ -1,0 +1,35 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Search Technical Order";
+    ViewData["ActiveRole"] = "Customer";
+    ViewData["RoleDisplay"] = "Customer User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/SearchRepair.css" asp-append-version="true" />
+}
+
+@* Search results simulate data from IRepairService.SearchTechnicalOrderAsync. *@
+<section class="search-repair-page">
+    <div class="search-card">
+        <h1>Search Technical Order</h1>
+        <p>Enter your technical order code to check repair status and estimated completion.</p>
+        <div class="input-group input-group-lg">
+            <input class="form-control" placeholder="Technical Order Code, e.g., REP-2026-001" />
+            <button class="btn btn-primary" type="button">Search</button>
+        </div>
+    </div>
+
+    <div class="result-card">
+        <div>
+            <span>Repair Status</span>
+            <h2>In-Progress</h2>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6"><strong>Device Information</strong><p>Dell Inspiron 15 - Laptop</p></div>
+            <div class="col-md-6"><strong>Assigned Technician</strong><p>Huy Nguyen</p></div>
+            <div class="col-md-6"><strong>Estimated Completion</strong><p>2026-07-22 16:00</p></div>
+            <div class="col-md-6"><strong>Latest Note</strong><p>Diagnostics completed, waiting for keyboard replacement part.</p></div>
+        </div>
+    </div>
+</section>

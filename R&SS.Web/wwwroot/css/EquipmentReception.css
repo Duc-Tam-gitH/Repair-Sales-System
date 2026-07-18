@@ -1,0 +1,40 @@
+.step-banner,
+.form-section {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
+    padding: 26px;
+}
+
+.step-banner {
+    background: linear-gradient(135deg, #f8fafc, #e0f2fe);
+    margin-bottom: 18px;
+}
+
+.step-banner span {
+    color: #0f766e;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.step-banner h1,
+.form-section h2 {
+    font-weight: 800;
+}
+
+.form-section {
+    margin-bottom: 18px;
+}
+
+.check-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.check-grid label {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 10px 14px;
+}

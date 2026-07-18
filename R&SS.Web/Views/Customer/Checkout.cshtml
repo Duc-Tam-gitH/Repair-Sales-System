@@ -1,0 +1,44 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Checkout";
+    ViewData["ActiveRole"] = "Customer";
+    ViewData["RoleDisplay"] = "Customer User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Checkout.css" asp-append-version="true" />
+}
+
+@* Checkout summary simulates data from IOrderService and ICartService. *@
+<section class="checkout-page">
+    <h1>Checkout</h1>
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <form class="checkout-form">
+                <h2>Customer Information</h2>
+                <div class="row g-3">
+                    <div class="col-md-6"><label class="form-label" for="name">Name</label><input class="form-control" id="name" value="Customer User" /></div>
+                    <div class="col-md-6"><label class="form-label" for="phone">Phone</label><input class="form-control" id="phone" value="0123456789" /></div>
+                    <div class="col-12"><label class="form-label" for="email">Email</label><input class="form-control" id="email" value="customer@rss.local" /></div>
+                    <div class="col-12"><label class="form-label" for="address">Delivery Address</label><textarea class="form-control" id="address" rows="4">123 Customer Avenue</textarea></div>
+                    <div class="col-12">
+                        <label class="form-label" for="payment">Payment Method</label>
+                        <select class="form-select" id="payment"><option>Cash</option><option>Credit Card</option><option>e-Wallet</option></select>
+                    </div>
+                </div>
+                <button class="btn btn-success mt-4" type="button">Confirm Order</button>
+            </form>
+        </div>
+        <div class="col-lg-5">
+            <aside class="order-summary">
+                <h2>Order Summary</h2>
+                <ul>
+                    <li><span>ProBook 14 x 1</span><strong>$849</strong></li>
+                    <li><span>Wireless Mouse x 2</span><strong>$48</strong></li>
+                    <li><span>USB-C Service Kit x 1</span><strong>$39</strong></li>
+                </ul>
+                <div class="summary-total"><span>Total</span><strong>$936</strong></div>
+            </aside>
+        </div>
+    </div>
+</section>

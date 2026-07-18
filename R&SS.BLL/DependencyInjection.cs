@@ -41,7 +41,7 @@ public static class DependencyInjection
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IOtpGenerator, OtpGenerator>();
-        services.AddAutoMapper(typeof(DependencyInjection).Assembly);
+        services.AddAutoMapper(_ => { }, typeof(DependencyInjection).Assembly);
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
         return services;

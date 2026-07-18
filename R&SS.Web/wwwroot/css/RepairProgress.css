@@ -1,0 +1,72 @@
+.progress-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.progress-header h1 {
+    font-weight: 800;
+}
+
+.repair-ticket {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
+    margin-bottom: 20px;
+    padding: 24px;
+}
+
+.ticket-top {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.ticket-top span {
+    color: #0f766e;
+    font-weight: 800;
+}
+
+.ticket-top h2 {
+    font-weight: 800;
+    margin: 0;
+}
+
+.state {
+    border-radius: 999px;
+    padding: 8px 12px;
+}
+
+.progress-state {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.complete-state {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.timeline {
+    border-left: 3px solid #0f766e;
+    display: grid;
+    gap: 14px;
+    margin: 18px 0;
+    padding-left: 18px;
+}
+
+.timeline span {
+    color: #64748b;
+    font-weight: 800;
+}
+
+.parts-box,
+.result-box {
+    background: #f8fafc;
+    border-radius: 12px;
+    margin-top: 10px;
+    padding: 12px;
+}

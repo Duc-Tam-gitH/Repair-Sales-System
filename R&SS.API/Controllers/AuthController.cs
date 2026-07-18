@@ -138,11 +138,11 @@ public class AuthController : ControllerBase
         });
     }
 
-    [Authorize(Roles = "Client")]
-    [HttpGet("client-only")]
-    public IActionResult ClientOnly()
+    [Authorize(Roles = "Customer")]
+    [HttpGet("customer-only")]
+    public IActionResult CustomerOnly()
     {
-        return Ok("Client access granted.");
+        return Ok("Customer access granted.");
     }
 
     [Authorize]

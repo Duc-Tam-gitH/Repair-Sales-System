@@ -1,0 +1,16 @@
+.workflow-header, .workflow-form, .readonly-box {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
+}
+.workflow-header {
+    background: linear-gradient(135deg, #f8fafc, #e0f2fe);
+    margin-bottom: 18px;
+    padding: 26px;
+}
+.workflow-header span { color: #0f766e; font-weight: 800; text-transform: uppercase; }
+.workflow-header h1, .readonly-box h2 { font-weight: 800; }
+.workflow-header p { color: #64748b; margin: 0; }
+.workflow-form { padding: 24px; }
+.readonly-box { background: #f8fafc; margin-bottom: 18px; padding: 18px; }

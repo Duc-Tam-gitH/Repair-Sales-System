@@ -1,0 +1,67 @@
+@{
+    ViewData["Title"] = "Technician Home";
+    ViewData["ActiveRole"] = "Technician";
+    ViewData["RoleDisplay"] = "Signed in as Technician";
+}
+
+<section class="rss-role-home rss-technician-home" aria-labelledby="technician-home-title">
+    <header class="mb-4">
+        <p class="text-muted mb-1">Technician workspace</p>
+        <h1 id="technician-home-title">Technician Workbench</h1>
+        <p class="text-muted mb-0">Review assigned repairs, update progress, and manage technical notes.</p>
+    </header>
+
+    <nav class="rss-role-menu mb-4" aria-label="Technician menu">
+        <a href="#">Assigned Tickets</a>
+        <a href="#">Progress Updates</a>
+        <a href="#">Repair History</a>
+    </nav>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><div class="rss-metric"><span>Assigned</span><strong>7</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>In Progress</span><strong>4</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Waiting Parts</span><strong>2</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Ready Today</span><strong>1</strong></div></div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><a class="rss-action rss-action-primary" href="#"><strong>View Assigned Tickets</strong><span>Open repairs assigned to you.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Update Progress</strong><span>Change status and add notes.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Waiting Parts</strong><span>Review blocked repairs.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Repair History</strong><span>Check completed work.</span></a></div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <section class="rss-panel" aria-labelledby="assigned-title">
+                <header><h2 id="assigned-title">Assigned Tickets</h2></header>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead><tr><th>Ticket</th><th>Device</th><th>Priority</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>TT-1042</td><td>Laptop</td><td>High</td><td>Diagnosing</td><td><a href="#">Update</a></td></tr>
+                            <tr><td>TT-1039</td><td>Gaming PC</td><td>Normal</td><td>Waiting Parts</td><td><a href="#">Add note</a></td></tr>
+                            <tr><td>TT-1034</td><td>Phone</td><td>Normal</td><td>Ready</td><td><a href="#">Close</a></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="col-lg-4">
+            <section class="rss-panel" aria-labelledby="quick-status-title">
+                <header><h2 id="quick-status-title">Quick Status Update</h2></header>
+                <form>
+                    <label class="form-label" for="status">Status</label>
+                    <select class="form-select" id="status">
+                        <option>Diagnosing</option>
+                        <option>Waiting Parts</option>
+                        <option>Repairing</option>
+                        <option>Ready for Pickup</option>
+                    </select>
+                    <label class="form-label mt-3" for="note">Technician note</label>
+                    <textarea class="form-control" id="note" rows="4"></textarea>
+                </form>
+            </section>
+        </div>
+    </div>
+</section>

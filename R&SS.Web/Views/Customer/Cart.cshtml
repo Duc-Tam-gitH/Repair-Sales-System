@@ -1,0 +1,36 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Shopping Cart";
+    ViewData["ActiveRole"] = "Customer";
+    ViewData["RoleDisplay"] = "Customer User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Cart.css" asp-append-version="true" />
+}
+
+@* Cart rows simulate data from ICartService. *@
+<section class="cart-page">
+    <div class="cart-header">
+        <h1>Shopping Cart</h1>
+        <a class="btn btn-outline-primary" asp-controller="Customer" asp-action="ProductList">Continue Shopping</a>
+    </div>
+
+    <div class="alert alert-danger" role="alert">Order cancelled! This alert is only a static prototype message.</div>
+    <div class="cart-panel table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>Product</th><th>Quantity</th><th>Unit Price</th><th>Subtotal</th><th></th></tr></thead>
+            <tbody>
+                <tr><td>ProBook 14</td><td><input class="form-control qty" type="number" value="1" min="1" /></td><td>$849</td><td>$849</td><td><button class="btn btn-sm btn-outline-danger">Delete</button></td></tr>
+                <tr><td>Wireless Mouse</td><td><input class="form-control qty" type="number" value="2" min="1" /></td><td>$24</td><td>$48</td><td><button class="btn btn-sm btn-outline-danger">Delete</button></td></tr>
+                <tr><td>USB-C Service Kit</td><td><input class="form-control qty" type="number" value="1" min="1" /></td><td>$39</td><td>$39</td><td><button class="btn btn-sm btn-outline-danger">Delete</button></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="cart-summary">
+        <span>Total Amount</span>
+        <strong>$936</strong>
+        <a class="btn btn-primary btn-lg" asp-controller="Customer" asp-action="Checkout">Proceed to Checkout</a>
+    </div>
+</section>

@@ -1,0 +1,48 @@
+.list-header,
+.list-tools,
+.table-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 12px 32px rgba(23, 32, 51, .08);
+}
+
+.list-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding: 24px;
+}
+
+.list-header h1 {
+    font-weight: 800;
+}
+
+.list-header p {
+    color: #64748b;
+    margin: 0;
+}
+
+.list-tools {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 18px;
+    padding: 18px;
+}
+
+.list-tools select {
+    max-width: 180px;
+}
+
+.table-card {
+    padding: 18px;
+}
+
+@media (max-width: 576px) {
+    .list-header,
+    .list-tools {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,41 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Reception Dashboard";
+    ViewData["ActiveRole"] = "Reception";
+    ViewData["RoleDisplay"] = "Reception Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ReceptionDashboard.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IReceptionService.GetDashboardMetrics() -->
+<section class="reception-dashboard-page">
+    <div class="reception-hero">
+        <div>
+            <span>Front Desk</span>
+            <h1>Reception Dashboard</h1>
+            <p>Track online requests, device intake, repair slips, and handover work from one operational view.</p>
+        </div>
+        <a class="btn btn-light" asp-controller="Reception" asp-action="EquipmentReception">Receive Device</a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-xl-3"><article class="metric-card pending"><span>Total Pending Requests</span><strong>18</strong><a asp-controller="Reception" asp-action="RepairRequestList">View Pending Requests</a></article></div>
+        <div class="col-md-6 col-xl-3"><article class="metric-card processing"><span>Total Processing Slips</span><strong>42</strong><a asp-controller="Reception" asp-action="TechnicalReportList">View Processing Slips</a></article></div>
+        <div class="col-md-6 col-xl-3"><article class="metric-card handover"><span>Total Handover Slips</span><strong>9</strong><a asp-controller="Reception" asp-action="DeviceHandover">View Handover Slips</a></article></div>
+        <div class="col-md-6 col-xl-3"><article class="metric-card tasks"><span>Total Tasks to be Processed</span><strong>27</strong><a asp-controller="Reception" asp-action="EquipmentReception">Process Incoming Devices</a></article></div>
+    </div>
+
+    <div class="dashboard-panel mt-4">
+        <h2>Today's Front Desk Queue</h2>
+        <table class="table align-middle">
+            <thead><tr><th>Task</th><th>Customer</th><th>Priority</th><th>Status</th></tr></thead>
+            <tbody>
+                <tr><td>Approve online request</td><td>Minh Tran</td><td>High</td><td><span class="badge text-bg-warning">Pending</span></td></tr>
+                <tr><td>Receive laptop</td><td>Anya Pham</td><td>Normal</td><td><span class="badge text-bg-info">Waiting</span></td></tr>
+                <tr><td>Handover phone</td><td>David Lee</td><td>Normal</td><td><span class="badge text-bg-success">Ready</span></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>

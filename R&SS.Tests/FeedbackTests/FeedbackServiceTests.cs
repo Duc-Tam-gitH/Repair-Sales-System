@@ -127,7 +127,7 @@ public class FeedbackServiceTests
     {
         var service = CreateService(CreateMocks());
 
-        var act = async () => await service.GetStatisticsAsync(RoleConstants.Client);
+        var act = async () => await service.GetStatisticsAsync(RoleConstants.Customer);
 
         await act.Should().ThrowAsync<UnauthorizedException>()
             .WithMessage("Only Managers can view feedback statistics.");

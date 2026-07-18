@@ -1,0 +1,39 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Repair History";
+    ViewData["ActiveRole"] = "Customer";
+    ViewData["RoleDisplay"] = "Customer User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/RepairHistory.css" asp-append-version="true" />
+}
+
+@* Repair history simulates data from IRepairService.GetRepairHistoryAsync. *@
+<section class="repair-history-page">
+    <div class="history-header">
+        <h1>Repair History</h1>
+        <p>Completed service reports for your previously repaired devices.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <article class="history-card">
+                <span>Nova X Phone</span>
+                <h2>Screen cracked and touch failure</h2>
+                <p><strong>Repair Solution:</strong> Replaced OLED screen assembly and recalibrated touch panel.</p>
+                <p><strong>Replaced Parts:</strong> OLED screen assembly, adhesive seal</p>
+                <p><strong>Repair Cost:</strong> $129</p>
+            </article>
+        </div>
+        <div class="col-lg-6">
+            <article class="history-card">
+                <span>Office Printer</span>
+                <h2>Paper jam and faded output</h2>
+                <p><strong>Repair Solution:</strong> Cleaned roller path, replaced feed roller, calibrated print head.</p>
+                <p><strong>Replaced Parts:</strong> Feed roller kit</p>
+                <p><strong>Repair Cost:</strong> $74</p>
+            </article>
+        </div>
+    </div>
+</section>

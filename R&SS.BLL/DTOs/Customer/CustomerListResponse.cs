@@ -2,6 +2,6 @@ namespace R_SS.BLL.DTOs.Customer;
 
 public class CustomerListResponse
 {
-    public IReadOnlyCollection<CustomerResponse> Customers { get; set; } = Array.Empty<CustomerResponse>();
+    public IReadOnlyCollection<CustomerSummaryResponse> Customers { get; set; } = Array.Empty<CustomerSummaryResponse>();
     public string Message { get; set; } = string.Empty;
 }

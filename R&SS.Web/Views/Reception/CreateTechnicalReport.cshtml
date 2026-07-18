@@ -1,0 +1,45 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Create Technical Report";
+    ViewData["ActiveRole"] = "Reception";
+    ViewData["RoleDisplay"] = "Reception Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/CreateTechnicalReport.css" asp-append-version="true" />
+}
+
+<!-- Data saved via IReportService.CreateTechnicalReport() -->
+<section class="technical-report-page">
+    <div class="report-header">
+        <div><span>Step 2</span><h1>Create Technical Report</h1><p>Confirm intake information, assign technician, and save the report.</p></div>
+        <strong>#TECH-2026-001</strong>
+    </div>
+
+    <div class="alert alert-success" role="status">Report saved! This is a static UI prototype alert.</div>
+    <form class="report-form">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <section class="report-section">
+                    <h2>Customer Information</h2>
+                    <label class="form-label" for="customerName">Customer</label><input class="form-control" id="customerName" value="Minh Tran - 0901112222" />
+                    <label class="form-label mt-3" for="customerAddress">Address</label><input class="form-control" id="customerAddress" value="45 Nguyen Street, District 1" />
+                </section>
+            </div>
+            <div class="col-lg-6">
+                <section class="report-section">
+                    <h2>Equipment Information</h2>
+                    <label class="form-label" for="equipment">Equipment</label><input class="form-control" id="equipment" value="Dell Inspiron 15 - Laptop" />
+                    <label class="form-label mt-3" for="fault">Fault Description</label><textarea class="form-control" id="fault" rows="2">Keyboard not working</textarea>
+                </section>
+            </div>
+            <div class="col-md-4"><label class="form-label" for="receiptDate">Receipt Date</label><input class="form-control" id="receiptDate" type="date" value="2026-07-18" /></div>
+            <div class="col-md-4"><label class="form-label" for="appointment">Appointment Schedule</label><input class="form-control" id="appointment" type="datetime-local" /></div>
+            <div class="col-md-4"><label class="form-label" for="technician">Assign Technician</label><select class="form-select" id="technician"><option>Huy Nguyen</option><option>Lan Ho</option><option>Son Vo</option></select></div>
+        </div>
+        <div class="d-flex gap-2 mt-4">
+            <a class="btn btn-primary" asp-controller="Reception" asp-action="TechnicalReportList">Save Report</a>
+            <button class="btn btn-outline-secondary" type="button">Print Preview</button>
+        </div>
+    </form>
+</section>

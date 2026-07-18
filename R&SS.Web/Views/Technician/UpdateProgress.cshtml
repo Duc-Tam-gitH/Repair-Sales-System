@@ -1,0 +1,28 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Update Progress";
+    ViewData["ActiveRole"] = "Technician";
+    ViewData["RoleDisplay"] = "Technician User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/UpdateProgress.css" asp-append-version="true" />
+}
+
+<!-- Data saved via ITechnicianService.SaveProgressUpdate() -->
+<section class="update-progress-page">
+    <div class="status-banner"><span>Current Status</span><h1>In Progress - 30%</h1></div>
+    <form class="progress-form">
+        <h2>Update Section</h2>
+        <div class="row g-3">
+            <div class="col-md-4"><label class="form-label" for="status">New Status</label><select class="form-select" id="status"><option>In-Progress</option><option>On-Hold</option><option>Completed</option></select></div>
+            <div class="col-md-8"><label class="form-label" for="work">Work Details / Tasks Performed</label><input class="form-control" id="work" placeholder="Removed faulty keyboard module" /></div>
+            <div class="col-12"><label class="form-label" for="notes">Progress Notes</label><textarea class="form-control" id="notes" rows="4" placeholder="What was done today, issues encountered, and next steps."></textarea></div>
+        </div>
+        <button class="btn btn-primary mt-4" type="button">Save Update History</button>
+    </form>
+    <section class="timeline-panel mt-4">
+        <h2>Previous Updates</h2>
+        <div class="timeline"><div><span>2026-07-18</span><p>Inspection started and moisture damage found.</p></div><div><span>2026-07-19</span><p>Repair plan submitted and approved by customer.</p></div></div>
+    </section>
+</section>

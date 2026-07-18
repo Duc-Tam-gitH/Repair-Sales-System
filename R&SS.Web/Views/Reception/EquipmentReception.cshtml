@@ -1,0 +1,50 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Equipment Reception";
+    ViewData["ActiveRole"] = "Reception";
+    ViewData["RoleDisplay"] = "Reception Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/EquipmentReception.css" asp-append-version="true" />
+}
+
+<!-- Data submitted via IReceptionService.CreateEquipmentReceptionDraft() -->
+<section class="equipment-reception-page">
+    <div class="step-banner">
+        <span>Step 1</span>
+        <h1>Equipment Reception</h1>
+        <p>Select or add the customer, then record the equipment condition and initial fault description.</p>
+    </div>
+
+    <form class="intake-form">
+        <section class="form-section">
+            <h2>Select/Add Customer</h2>
+            <div class="row g-3">
+                <div class="col-md-8"><label class="form-label" for="customer">Existing Customer</label><select class="form-select" id="customer"><option>Minh Tran - CUS-001</option><option>Anya Pham - CUS-002</option><option>David Lee - CUS-003</option></select></div>
+                <div class="col-md-4 d-flex align-items-end"><a class="btn btn-outline-primary w-100" asp-controller="Reception" asp-action="AddCustomer">Add New Customer</a></div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>Equipment Information</h2>
+            <div class="row g-3">
+                <div class="col-md-4"><label class="form-label" for="equipmentName">Equipment Name</label><input class="form-control" id="equipmentName" placeholder="Dell Inspiron 15" /></div>
+                <div class="col-md-4"><label class="form-label" for="equipmentType">Equipment Type</label><select class="form-select" id="equipmentType"><option>Phone</option><option>Laptop</option><option>Tablet</option><option>Printer</option><option>Other</option></select></div>
+                <div class="col-md-4"><label class="form-label" for="brandModel">Brand/Model</label><input class="form-control" id="brandModel" placeholder="Dell / Inspiron 15" /></div>
+                <div class="col-12">
+                    <label class="form-label">Equipment Status</label>
+                    <div class="check-grid">
+                        <label><input type="checkbox" /> Good</label>
+                        <label><input type="checkbox" /> Scratched</label>
+                        <label><input type="checkbox" /> Broken</label>
+                        <label><input type="checkbox" /> Missing screws</label>
+                    </div>
+                </div>
+                <div class="col-12"><label class="form-label" for="accessories">Included Accessories</label><textarea class="form-control" id="accessories" rows="3" placeholder="Charger, box, cable, case..."></textarea></div>
+                <div class="col-12"><label class="form-label" for="fault">Initial Fault Description</label><textarea class="form-control" id="fault" rows="4"></textarea></div>
+            </div>
+            <a class="btn btn-primary mt-4" asp-controller="Reception" asp-action="CreateTechnicalReport">Create Technical Report</a>
+        </section>
+    </form>
+</section>

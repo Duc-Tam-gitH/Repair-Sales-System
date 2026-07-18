@@ -1,0 +1,42 @@
+.checkout-page h1 {
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.checkout-form,
+.order-summary {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
+    padding: 26px;
+}
+
+.checkout-form h2,
+.order-summary h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 18px;
+}
+
+.order-summary ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.order-summary li,
+.summary-total {
+    align-items: center;
+    border-bottom: 1px solid #edf2f7;
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+}
+
+.summary-total {
+    border-bottom: 0;
+    color: #0f766e;
+    font-size: 1.5rem;
+    font-weight: 800;
+}

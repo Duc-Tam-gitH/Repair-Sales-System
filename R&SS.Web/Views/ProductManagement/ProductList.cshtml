@@ -1,0 +1,35 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Product Management";
+    ViewData["ActiveRole"] = "ProductManagement";
+    ViewData["RoleDisplay"] = "Product Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ProductManagementProductList.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IProductService.GetAllProducts() -->
+<section class="product-management-list-page">
+    <div class="product-admin-header">
+        <div><span>Product Catalog</span><h1>Product Management</h1><p>Maintain sellable products, prices, stock quantities, and catalog status.</p></div>
+        <a class="btn btn-primary" asp-controller="ProductManagement" asp-action="AddUpdateProduct">Add Product</a>
+    </div>
+
+    <div class="alert alert-success" role="status">Product updated successfully!</div>
+    <div class="product-tools">
+        <input class="form-control" placeholder="Search by Product Name or Code..." />
+        <select class="form-select"><option>All Categories</option><option>Laptops</option><option>Phones</option><option>Accessories</option></select>
+    </div>
+
+    <div class="table-card table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>Product Code</th><th>Product Name</th><th>Category</th><th>Price</th><th>Stock Quantity</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+                <tr><td>PRD-001</td><td>ProBook 14</td><td>Laptops</td><td>$849</td><td>24</td><td><span class="badge text-bg-success">Active</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="ProductManagement" asp-action="ProductDetails">View Details</a> <a class="btn btn-sm btn-outline-secondary" asp-controller="ProductManagement" asp-action="AddUpdateProduct">Edit Product</a> <button class="btn btn-sm btn-outline-warning">Discontinue</button></td></tr>
+                <tr><td>PRD-002</td><td>Nova X Phone</td><td>Phones</td><td>$499</td><td>18</td><td><span class="badge text-bg-success">Active</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="ProductManagement" asp-action="ProductDetails">View Details</a> <a class="btn btn-sm btn-outline-secondary" asp-controller="ProductManagement" asp-action="AddUpdateProduct">Edit Product</a> <button class="btn btn-sm btn-outline-warning">Discontinue</button></td></tr>
+                <tr><td>PRD-003</td><td>Legacy Charger</td><td>Accessories</td><td>$12</td><td>0</td><td><span class="badge text-bg-secondary">Discontinued</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="ProductManagement" asp-action="ProductDetails">View Details</a> <a class="btn btn-sm btn-outline-secondary" asp-controller="ProductManagement" asp-action="AddUpdateProduct">Edit Product</a> <button class="btn btn-sm btn-outline-success">Activate</button></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>

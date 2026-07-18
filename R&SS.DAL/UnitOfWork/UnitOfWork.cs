@@ -23,6 +23,7 @@ public sealed class UnitOfWork : IUnitOfWork
         UserRoles = new UserRoleRp(_context);
         PasswordResetRequests = new PasswordResetRequestRp(_context);
         Customers = new CustomerRp(_context);
+        Employees = new EmployeeRp(_context);
         CustomerUpdateHistories = new CustomerUpdateHistoryRp(_context);
         Suppliers = new SupplierRp(_context);
         ProductCategories = new ProductCategoryRp(_context);
@@ -63,6 +64,8 @@ public sealed class UnitOfWork : IUnitOfWork
     public IPasswordResetRequestRp PasswordResetRequests { get; }
 
     public ICustomerRp Customers { get; }
+
+    public IEmployeeRp Employees { get; }
 
     public ICustomerUpdateHistoryRp CustomerUpdateHistories { get; }
 

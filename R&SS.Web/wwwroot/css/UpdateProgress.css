@@ -1,0 +1,16 @@
+.status-banner, .progress-form, .timeline-panel {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
+    padding: 24px;
+}
+.status-banner {
+    background: linear-gradient(135deg, #172033, #0f766e);
+    color: #fff;
+    margin-bottom: 18px;
+}
+.status-banner span { color: #bff1e9; font-weight: 800; text-transform: uppercase; }
+.status-banner h1, .progress-form h2, .timeline-panel h2 { font-weight: 800; }
+.timeline { border-left: 3px solid #0f766e; display: grid; gap: 12px; padding-left: 16px; }
+.timeline span { color: #0f766e; font-weight: 800; }

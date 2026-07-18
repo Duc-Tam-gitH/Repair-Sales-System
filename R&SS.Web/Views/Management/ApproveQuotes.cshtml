@@ -1,0 +1,28 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Approve Quotes";
+    ViewData["ActiveRole"] = "Administrator";
+    ViewData["RoleDisplay"] = "Management User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ApproveQuotes.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IApprovalService.GetPendingRepairPlans() -->
+<section class="approve-quotes-page">
+    <div class="approval-header"><h1>Approve Quotes / Repair Plans</h1><p>Review submitted technician plans, estimated parts, labor, and costs.</p></div>
+    <div class="alert alert-success" role="status">Quote approved and sent to technician!</div>
+    <div class="table-card table-responsive"><table class="table align-middle"><thead><tr><th>Report Code</th><th>Customer</th><th>Device</th><th>Estimated Cost</th><th>Estimated Time</th><th>Submitted Date</th><th></th></tr></thead><tbody>
+        <tr><td>TECH-2026-001</td><td>Minh Tran</td><td>Dell Inspiron 15</td><td>$85</td><td>1 day</td><td>2026-07-18</td><td><button class="btn btn-sm btn-outline-primary">View Plan</button></td></tr>
+        <tr><td>TECH-2026-004</td><td>David Lee</td><td>Tablet Air 10</td><td>$142</td><td>2 days</td><td>2026-07-17</td><td><button class="btn btn-sm btn-outline-primary">View Plan</button></td></tr>
+    </tbody></table></div>
+    <section class="plan-detail mt-4">
+        <h2>Plan Detail Preview</h2>
+        <p><strong>Technical Plan:</strong> Replace keyboard module, clean connector area, run final hardware test.</p>
+        <table class="table"><thead><tr><th>Part</th><th>Quantity</th><th>Cost</th></tr></thead><tbody><tr><td>Keyboard Module</td><td>1</td><td>$45</td></tr><tr><td>Labor</td><td>1</td><td>$40</td></tr></tbody></table>
+        <div class="estimate"><span>Parts + Labor Total</span><strong>$85</strong></div>
+        <div class="d-flex flex-wrap gap-2 mt-3"><button class="btn btn-success">Approve</button><button class="btn btn-danger">Reject</button><button class="btn btn-warning">Request Adjustments</button></div>
+        <textarea class="form-control mt-3" rows="3" placeholder="Required rejection reason or adjustment feedback"></textarea>
+    </section>
+</section>

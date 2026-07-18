@@ -1,0 +1,61 @@
+@{
+    ViewData["Title"] = "Reception Home";
+    ViewData["ActiveRole"] = "Reception";
+    ViewData["RoleDisplay"] = "Signed in as Reception";
+}
+
+<section class="rss-role-home rss-reception-home" aria-labelledby="reception-home-title">
+    <header class="mb-4">
+        <p class="text-muted mb-1">Front desk workspace</p>
+        <h1 id="reception-home-title">Reception Desk</h1>
+        <p class="text-muted mb-0">Create technical request tickets, manage customer profiles, and triage intake queues.</p>
+    </header>
+
+    <nav class="rss-role-menu mb-4" aria-label="Reception menu">
+        <a href="#">Tickets</a>
+        <a href="#">New Ticket</a>
+        <a href="#">Customers</a>
+        <a href="#">Service Queue</a>
+    </nav>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><div class="rss-metric"><span>New Tickets Today</span><strong>12</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Waiting Assignment</span><strong>5</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Customer Updates</span><strong>8</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Pending Confirmation</span><strong>3</strong></div></div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><a class="rss-action rss-action-primary" href="#"><strong>New Ticket</strong><span>Create a technical request ticket.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Find Customer</strong><span>Search by phone, email, name, or code.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Register Customer</strong><span>Add a profile before intake.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Service Queue</strong><span>Review today's pending handoffs.</span></a></div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <section class="rss-panel" aria-labelledby="intake-title">
+                <header><h2 id="intake-title">Intake Queue</h2></header>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead><tr><th>Ticket</th><th>Customer</th><th>Device</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>TT-1051</td><td>Minh Tran</td><td>Desktop PC</td><td>Unassigned</td><td><a href="#">Open</a></td></tr>
+                            <tr><td>TT-1050</td><td>Anya Pham</td><td>Printer</td><td>Created</td><td><a href="#">Open</a></td></tr>
+                            <tr><td>TT-1049</td><td>David Lee</td><td>Tablet</td><td>Info needed</td><td><a href="#">Edit</a></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="col-lg-4">
+            <section class="rss-panel" aria-labelledby="lookup-title">
+                <header><h2 id="lookup-title">Customer Lookup</h2></header>
+                <form>
+                    <label class="form-label" for="customerSearch">Search customer</label>
+                    <input class="form-control" id="customerSearch" type="search" placeholder="Name, phone, email, or code" />
+                </form>
+            </section>
+        </div>
+    </div>
+</section>

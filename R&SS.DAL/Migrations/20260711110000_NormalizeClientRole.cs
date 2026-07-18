@@ -26,45 +26,45 @@ namespace R_SS.DAL.Migrations
                 IF @ClientRoleId IS NULL AND @CustomerRoleId IS NULL
                 BEGIN
                     INSERT INTO [Roles] ([RoleName], [Description])
-                    VALUES (N'Client', N'Default client role.');
+                    VALUES (N'Customer', N'Default customer role.');
                 END
-                ELSE IF @ClientRoleId IS NULL AND @CustomerRoleId IS NOT NULL
+                ELSE IF @ClientRoleId IS NOT NULL AND @CustomerRoleId IS NULL
                 BEGIN
                     UPDATE [Roles]
-                    SET [RoleName] = N'Client',
-                        [Description] = COALESCE([Description], N'Default client role.')
-                    WHERE [RoleId] = @CustomerRoleId;
+                    SET [RoleName] = N'Customer',
+                        [Description] = COALESCE([Description], N'Default customer role.')
+                    WHERE [RoleId] = @ClientRoleId;
                 END
                 ELSE IF @ClientRoleId IS NOT NULL AND @CustomerRoleId IS NOT NULL AND @ClientRoleId <> @CustomerRoleId
                 BEGIN
                     UPDATE [UserRoles]
-                    SET [RoleId] = @ClientRoleId
-                    WHERE [RoleId] = @CustomerRoleId
+                    SET [RoleId] = @CustomerRoleId
+                    WHERE [RoleId] = @ClientRoleId
                       AND NOT EXISTS (
                           SELECT 1
                           FROM [UserRoles] AS [ExistingUserRole]
                           WHERE [ExistingUserRole].[UserId] = [UserRoles].[UserId]
-                            AND [ExistingUserRole].[RoleId] = @ClientRoleId
+                            AND [ExistingUserRole].[RoleId] = @CustomerRoleId
                       );
 
                     DELETE FROM [UserRoles]
-                    WHERE [RoleId] = @CustomerRoleId;
+                    WHERE [RoleId] = @ClientRoleId;
 
                     UPDATE [RolePermissions]
-                    SET [RoleId] = @ClientRoleId
-                    WHERE [RoleId] = @CustomerRoleId
+                    SET [RoleId] = @CustomerRoleId
+                    WHERE [RoleId] = @ClientRoleId
                       AND NOT EXISTS (
                           SELECT 1
                           FROM [RolePermissions] AS [ExistingRolePermission]
                           WHERE [ExistingRolePermission].[UseCaseId] = [RolePermissions].[UseCaseId]
-                            AND [ExistingRolePermission].[RoleId] = @ClientRoleId
+                            AND [ExistingRolePermission].[RoleId] = @CustomerRoleId
                       );
 
                     DELETE FROM [RolePermissions]
-                    WHERE [RoleId] = @CustomerRoleId;
+                    WHERE [RoleId] = @ClientRoleId;
 
                     DELETE FROM [Roles]
-                    WHERE [RoleId] = @CustomerRoleId;
+                    WHERE [RoleId] = @ClientRoleId;
                 END
                 """);
         }

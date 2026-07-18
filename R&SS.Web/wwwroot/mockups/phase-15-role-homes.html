@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>R&SS Phase 15 Role Home Mockups</title>
+    <link rel="stylesheet" href="../lib/bootstrap/dist/css/bootstrap.min.css">
+    <style>
+        :root {
+            --rss-ink: #18212f;
+            --rss-muted: #647084;
+            --rss-line: #d8dee8;
+            --rss-panel: #ffffff;
+            --rss-page: #f4f6f9;
+            --rss-blue: #2457a7;
+            --rss-teal: #087f83;
+            --rss-green: #2f7d4f;
+            --rss-gold: #9a6a15;
+            --rss-red: #b23b3b;
+        }
+
+        body {
+            margin: 0;
+            color: var(--rss-ink);
+            background: var(--rss-page);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .mock-shell {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 248px minmax(0, 1fr);
+        }
+
+        .sidebar {
+            background: #172033;
+            color: #f7f9fc;
+            padding: 20px 16px;
+        }
+
+        .brand {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .role-tabs {
+            display: grid;
+            gap: 8px;
+        }
+
+        .role-tabs a {
+            color: #dce4f2;
+            text-decoration: none;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid transparent;
+        }
+
+        .role-tabs a:hover,
+        .role-tabs a:focus {
+            background: #23314b;
+            border-color: #3a4a69;
+        }
+
+        .content {
+            padding: 24px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .topbar h1 {
+            font-size: 1.7rem;
+            margin: 0;
+        }
+
+        .role-pill {
+            border: 1px solid var(--rss-line);
+            background: var(--rss-panel);
+            color: var(--rss-muted);
+            padding: 7px 11px;
+            border-radius: 999px;
+            font-size: .9rem;
+        }
+
+        .mock-page {
+            margin-bottom: 42px;
+            padding-bottom: 36px;
+            border-bottom: 1px solid var(--rss-line);
+        }
+
+        .summary-grid,
+        .action-grid,
+        .work-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .summary-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            margin-bottom: 16px;
+        }
+
+        .action-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            margin-bottom: 16px;
+        }
+
+        .work-grid {
+            grid-template-columns: minmax(0, 1.4fr) minmax(280px, .8fr);
+            align-items: start;
+        }
+
+        .panel,
+        .metric,
+        .action-card {
+            background: var(--rss-panel);
+            border: 1px solid var(--rss-line);
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(24, 33, 47, .04);
+        }
+
+        .metric {
+            padding: 14px;
+        }
+
+        .metric span {
+            display: block;
+            color: var(--rss-muted);
+            font-size: .84rem;
+        }
+
+        .metric strong {
+            display: block;
+            margin-top: 4px;
+            font-size: 1.55rem;
+        }
+
+        .action-card {
+            display: block;
+            min-height: 112px;
+            padding: 16px;
+            text-decoration: none;
+            color: var(--rss-ink);
+        }
+
+        .action-card strong {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .action-card span {
+            color: var(--rss-muted);
+            font-size: .9rem;
+        }
+
+        .action-card.primary {
+            color: #fff;
+            background: var(--rss-blue);
+            border-color: var(--rss-blue);
+        }
+
+        .action-card.primary span {
+            color: #e8effb;
+        }
+
+        .panel {
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--rss-line);
+        }
+
+        .panel-header h2 {
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .panel-body {
+            padding: 14px 16px;
+        }
+
+        .table {
+            margin: 0;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: .78rem;
+            background: #eef2f7;
+            color: #3f4b5e;
+        }
+
+        .status.blue { background: #e8f0fc; color: var(--rss-blue); }
+        .status.teal { background: #e1f4f3; color: var(--rss-teal); }
+        .status.green { background: #e7f4ec; color: var(--rss-green); }
+        .status.gold { background: #fff4d8; color: var(--rss-gold); }
+        .status.red { background: #fde8e8; color: var(--rss-red); }
+
+        .nav-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .nav-preview li {
+            padding: 6px 10px;
+            border: 1px solid var(--rss-line);
+            border-radius: 999px;
+            background: #f8fafc;
+            font-size: .86rem;
+        }
+
+        .note-list {
+            display: grid;
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .note-list li {
+            display: grid;
+            gap: 2px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #edf1f6;
+        }
+
+        .note-list li:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .note-list small {
+            color: var(--rss-muted);
+        }
+
+        @media (max-width: 1080px) {
+            .mock-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: sticky;
+                top: 0;
+                z-index: 2;
+            }
+
+            .role-tabs {
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+            }
+
+            .summary-grid,
+            .action-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .work-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .content {
+                padding: 16px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .role-tabs {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-grid,
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mock-shell">
+        <aside class="sidebar">
+            <div class="brand">R&SS MVC Mockups</div>
+            <nav class="role-tabs" aria-label="Role mockup navigation">
+                <a href="#customer">Customer</a>
+                <a href="#receptionist">Receptionist</a>
+                <a href="#technician">Technician</a>
+                <a href="#manager">Manager</a>
+                <a href="#administrator">Administrator</a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <section id="customer" class="mock-page">
+                <div class="topbar">
+                    <div>
+                        <h1>Customer Home</h1>
+                        <p class="text-muted mb-0">Fast access to service tickets, shopping, orders, and repair updates.</p>
+                    </div>
+                    <span class="role-pill">Signed in as Customer</span>
+                </div>
+
+                <div class="summary-grid">
+                    <div class="metric"><span>Active Tickets</span><strong>2</strong></div>
+                    <div class="metric"><span>Orders In Progress</span><strong>1</strong></div>
+                    <div class="metric"><span>Cart Items</span><strong>3</strong></div>
+                    <div class="metric"><span>Unread Updates</span><strong>4</strong></div>
+                </div>
+
+                <div class="action-grid">
+                    <a class="action-card primary" href="#"><strong>Create Service Ticket</strong><span>Request repair or diagnostics for a device.</span></a>
+                    <a class="action-card" href="#"><strong>Shop Products</strong><span>Browse items and add products to cart.</span></a>
+                    <a class="action-card" href="#"><strong>Track My Tickets</strong><span>Check repair status and notes.</span></a>
+                    <a class="action-card" href="#"><strong>View Cart</strong><span>Review selected items before checkout.</span></a>
+                </div>
+
+                <div class="work-grid">
+                    <div class="panel">
+                        <div class="panel-header"><h2>Recent Tickets & Orders</h2><span class="status blue">Customer view</span></div>
+                        <div class="panel-body p-0">
+                            <table class="table table-sm align-middle">
+                                <thead><tr><th>Reference</th><th>Item</th><th>Status</th><th>Next Step</th></tr></thead>
+                                <tbody>
+                                    <tr><td>TT-1042</td><td>Laptop repair</td><td><span class="status teal">Diagnosing</span></td><td>Await technician update</td></tr>
+                                    <tr><td>SO-8821</td><td>Wireless mouse</td><td><span class="status green">Packed</span></td><td>Delivery confirmation</td></tr>
+                                    <tr><td>TT-1036</td><td>Phone screen</td><td><span class="status gold">Payment due</span></td><td>Confirm repair payment</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header"><h2>Menu Preview</h2></div>
+                        <div class="panel-body">
+                            <ul class="nav-preview">
+                                <li>My Tickets</li><li>New Service Ticket</li><li>Products</li><li>Cart</li><li>My Orders</li><li>Feedback</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="receptionist" class="mock-page">
+                <div class="topbar">
+                    <div>
+                        <h1>Reception Desk</h1>
+                        <p class="text-muted mb-0">Create tickets and keep customer records accurate during intake.</p>
+                    </div>
+                    <span class="role-pill">Signed in as Receptionist</span>
+                </div>
+
+                <div class="summary-grid">
+                    <div class="metric"><span>New Tickets Today</span><strong>12</strong></div>
+                    <div class="metric"><span>Waiting Assignment</span><strong>5</strong></div>
+                    <div class="metric"><span>Customer Updates</span><strong>8</strong></div>
+                    <div class="metric"><span>Pending Confirmation</span><strong>3</strong></div>
+                </div>
+
+                <div class="action-grid">
+                    <a class="action-card primary" href="#"><strong>New Ticket</strong><span>Create a service request for walk-in or phone customers.</span></a>
+                    <a class="action-card" href="#"><strong>Find Customer</strong><span>Search by phone, email, name, or customer code.</span></a>
+                    <a class="action-card" href="#"><strong>Register Customer</strong><span>Create a customer profile before ticket intake.</span></a>
+                    <a class="action-card" href="#"><strong>Service Queue</strong><span>Review today's intake and pending handoffs.</span></a>
+                </div>
+
+                <div class="work-grid">
+                    <div class="panel">
+                        <div class="panel-header"><h2>Intake Queue</h2><span class="status gold">Needs triage</span></div>
+                        <div class="panel-body p-0">
+                            <table class="table table-sm align-middle">
+                                <thead><tr><th>Ticket</th><th>Customer</th><th>Device</th><th>Status</th><th>Action</th></tr></thead>
+                                <tbody>
+                                    <tr><td>TT-1051</td><td>Minh Tran</td><td>Desktop PC</td><td><span class="status gold">Unassigned</span></td><td>Open</td></tr>
+                                    <tr><td>TT-1050</td><td>Anya Pham</td><td>Printer</td><td><span class="status blue">Created</span></td><td>Open</td></tr>
+                                    <tr><td>TT-1049</td><td>David Lee</td><td>Tablet</td><td><span class="status red">Info needed</span></td><td>Edit</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header"><h2>Menu Preview</h2></div>
+                        <div class="panel-body">
+                            <ul class="nav-preview">
+                                <li>Tickets</li><li>New Ticket</li><li>Customers</li><li>Service Queue</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="technician" class="mock-page">
+                <div class="topbar">
+                    <div>
+                        <h1>Technician Workbench</h1>
+                        <p class="text-muted mb-0">Assigned repairs, status updates, and progress notes in one workspace.</p>
+                    </div>
+                    <span class="role-pill">Signed in as Technician</span>
+                </div>
+
+                <div class="summary-grid">
+                    <div class="metric"><span>Assigned</span><strong>7</strong></div>
+                    <div class="metric"><span>In Progress</span><strong>4</strong></div>
+                    <div class="metric"><span>Waiting Parts</span><strong>2</strong></div>
+                    <div class="metric"><span>Ready Today</span><strong>1</strong></div>
+                </div>
+
+                <div class="action-grid">
+                    <a class="action-card primary" href="#"><strong>View Assigned Tickets</strong><span>Open the list of repairs assigned to you.</span></a>
+                    <a class="action-card" href="#"><strong>Update Progress</strong><span>Change status and add a technician note.</span></a>
+                    <a class="action-card" href="#"><strong>Waiting Parts</strong><span>Review blocked repairs and needed components.</span></a>
+                    <a class="action-card" href="#"><strong>Repair History</strong><span>Check completed work and prior notes.</span></a>
+                </div>
+
+                <div class="work-grid">
+                    <div class="panel">
+                        <div class="panel-header"><h2>Assigned Tickets</h2><span class="status teal">Technician queue</span></div>
+                        <div class="panel-body p-0">
+                            <table class="table table-sm align-middle">
+                                <thead><tr><th>Ticket</th><th>Device</th><th>Priority</th><th>Status</th><th>Action</th></tr></thead>
+                                <tbody>
+                                    <tr><td>TT-1042</td><td>Laptop</td><td>High</td><td><span class="status teal">Diagnosing</span></td><td>Update</td></tr>
+                                    <tr><td>TT-1039</td><td>Gaming PC</td><td>Normal</td><td><span class="status gold">Waiting Parts</span></td><td>Add note</td></tr>
+                                    <tr><td>TT-1034</td><td>Phone</td><td>Normal</td><td><span class="status green">Ready</span></td><td>Close</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header"><h2>Quick Status</h2></div>
+                        <div class="panel-body">
+                            <ul class="note-list">
+                                <li><strong>Diagnosing</strong><small>Initial inspection and fault isolation.</small></li>
+                                <li><strong>Waiting Parts</strong><small>Component request or stock check needed.</small></li>
+                                <li><strong>Repairing</strong><small>Work is actively being performed.</small></li>
+                                <li><strong>Ready for Pickup</strong><small>Repair complete and ready for customer.</small></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="manager" class="mock-page">
+                <div class="topbar">
+                    <div>
+                        <h1>Manager Overview</h1>
+                        <p class="text-muted mb-0">Operational workload, reports, staff assignment, and service health.</p>
+                    </div>
+                    <span class="role-pill">Signed in as Manager</span>
+                </div>
+
+                <div class="summary-grid">
+                    <div class="metric"><span>Open Tickets</span><strong>31</strong></div>
+                    <div class="metric"><span>Awaiting Assignment</span><strong>6</strong></div>
+                    <div class="metric"><span>Orders Today</span><strong>18</strong></div>
+                    <div class="metric"><span>Revenue Today</span><strong>$4.8k</strong></div>
+                </div>
+
+                <div class="action-grid">
+                    <a class="action-card primary" href="#"><strong>Assign Staff</strong><span>Balance new tickets across available technicians.</span></a>
+                    <a class="action-card" href="#"><strong>View Reports</strong><span>Open revenue, inventory, and activity reports.</span></a>
+                    <a class="action-card" href="#"><strong>Review Inventory</strong><span>Check stock movement and low inventory.</span></a>
+                    <a class="action-card" href="#"><strong>Ticket Backlog</strong><span>Monitor overdue and blocked work.</span></a>
+                </div>
+
+                <div class="work-grid">
+                    <div class="panel">
+                        <div class="panel-header"><h2>Technician Workload</h2><span class="status blue">Operations</span></div>
+                        <div class="panel-body p-0">
+                            <table class="table table-sm align-middle">
+                                <thead><tr><th>Technician</th><th>Assigned</th><th>In Progress</th><th>Waiting</th><th>Capacity</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Huy Nguyen</td><td>7</td><td>4</td><td>2</td><td><span class="status gold">High</span></td></tr>
+                                    <tr><td>Lan Ho</td><td>4</td><td>3</td><td>0</td><td><span class="status green">Available</span></td></tr>
+                                    <tr><td>Son Vo</td><td>6</td><td>4</td><td>1</td><td><span class="status blue">Normal</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header"><h2>Menu Preview</h2></div>
+                        <div class="panel-body">
+                            <ul class="nav-preview">
+                                <li>Dashboard</li><li>Tickets</li><li>Staff Assignment</li><li>Reports</li><li>Inventory</li><li>Activity History</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="administrator" class="mock-page">
+                <div class="topbar">
+                    <div>
+                        <h1>Administrator Console</h1>
+                        <p class="text-muted mb-0">User access, roles, system configuration, and operational oversight.</p>
+                    </div>
+                    <span class="role-pill">Signed in as Administrator</span>
+                </div>
+
+                <div class="summary-grid">
+                    <div class="metric"><span>Active Users</span><strong>86</strong></div>
+                    <div class="metric"><span>Open Tickets</span><strong>31</strong></div>
+                    <div class="metric"><span>Pending Role Changes</span><strong>2</strong></div>
+                    <div class="metric"><span>System Alerts</span><strong>1</strong></div>
+                </div>
+
+                <div class="action-grid">
+                    <a class="action-card primary" href="#"><strong>Manage Users</strong><span>Create, edit, disable, and review user access.</span></a>
+                    <a class="action-card" href="#"><strong>Manage Roles</strong><span>Maintain role permissions and assignments.</span></a>
+                    <a class="action-card" href="#"><strong>System Configuration</strong><span>Update operational settings and templates.</span></a>
+                    <a class="action-card" href="#"><strong>View Reports</strong><span>Review business and system activity reports.</span></a>
+                </div>
+
+                <div class="work-grid">
+                    <div class="panel">
+                        <div class="panel-header"><h2>Administration Queue</h2><span class="status red">Access control</span></div>
+                        <div class="panel-body p-0">
+                            <table class="table table-sm align-middle">
+                                <thead><tr><th>Item</th><th>Type</th><th>Status</th><th>Action</th></tr></thead>
+                                <tbody>
+                                    <tr><td>New employee account</td><td>User</td><td><span class="status gold">Review</span></td><td>Open</td></tr>
+                                    <tr><td>Technician permission update</td><td>Role</td><td><span class="status blue">Draft</span></td><td>Edit</td></tr>
+                                    <tr><td>Email template audit</td><td>Config</td><td><span class="status green">Current</span></td><td>View</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header"><h2>Menu Preview</h2></div>
+                        <div class="panel-body">
+                            <ul class="nav-preview">
+                                <li>Dashboard</li><li>Users</li><li>Roles & Permissions</li><li>Tickets</li><li>Reports</li><li>Inventory</li><li>System Configuration</li><li>Activity Log</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

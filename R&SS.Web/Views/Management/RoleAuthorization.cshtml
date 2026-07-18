@@ -1,0 +1,31 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Role Authorization";
+    ViewData["ActiveRole"] = "Administrator";
+    ViewData["RoleDisplay"] = "Management User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/RoleAuthorization.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IAuthorizationService.GetRolesAndPermissions() -->
+<section class="role-auth-page">
+    <div class="auth-header"><h1>Roles & Permissions Management</h1><p>Configure module permissions and assign roles to user accounts.</p></div>
+    <div class="row g-4">
+        <div class="col-lg-3"><aside class="role-list"><h2>Role List</h2><button class="active">Admin</button><button>Reception</button><button>Technician</button><button>Customer</button></aside></div>
+        <div class="col-lg-9">
+            <section class="permission-panel">
+                <h2>Admin Permissions</h2>
+                <div class="permission-grid">
+                    <label><input type="checkbox" checked /> Dashboard Access</label><label><input type="checkbox" checked /> Customer Management</label><label><input type="checkbox" checked /> Repair Management</label><label><input type="checkbox" checked /> Inventory</label><label><input type="checkbox" checked /> Reports</label><label><input type="checkbox" checked /> CanViewReports</label><label><input type="checkbox" checked /> CanEditUsers</label><label><input type="checkbox" checked /> CanApproveQuotes</label>
+                </div>
+                <button class="btn btn-primary mt-4">Save Permissions</button>
+            </section>
+        </div>
+    </div>
+    <section class="assign-panel mt-4 table-responsive">
+        <h2>Assign Roles to Accounts</h2>
+        <table class="table align-middle"><thead><tr><th>Username</th><th>Current Role</th><th>Assign New Role</th></tr></thead><tbody><tr><td>tech.huy</td><td>Technician</td><td><select class="form-select"><option>Technician</option><option>Reception</option><option>Admin</option></select></td></tr><tr><td>recep.anya</td><td>Reception</td><td><select class="form-select"><option>Reception</option><option>Technician</option><option>Admin</option></select></td></tr></tbody></table>
+    </section>
+</section>

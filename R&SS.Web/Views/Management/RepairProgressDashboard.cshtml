@@ -1,0 +1,25 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Repair Progress Dashboard";
+    ViewData["ActiveRole"] = "Administrator";
+    ViewData["RoleDisplay"] = "Management User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/RepairProgressDashboard.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IManagementService.GetRepairProgressDashboard() -->
+<section class="repair-monitor-page">
+    <div class="monitor-header"><h1>Repair Progress Monitoring</h1><p>Real-time tracking of repair orders across reception, technician, and handover workflows.</p></div>
+    <div class="row g-4">
+        <div class="col-md-6 col-xl-3"><a class="status-card" asp-controller="Management" asp-action="TechnicalRequestManagement"><span>Pending Orders</span><strong>22</strong><small>Awaiting assignment</small></a></div>
+        <div class="col-md-6 col-xl-3"><a class="status-card inspection" asp-controller="Management" asp-action="TechnicalRequestManagement"><span>Under Inspection</span><strong>17</strong><small>Diagnosing</small></a></div>
+        <div class="col-md-6 col-xl-3"><a class="status-card repair" asp-controller="Management" asp-action="TechnicalRequestManagement"><span>In Repair</span><strong>41</strong><small>Actively fixed</small></a></div>
+        <div class="col-md-6 col-xl-3"><a class="status-card delivery" asp-controller="Management" asp-action="TechnicalRequestManagement"><span>Awaiting Delivery</span><strong>13</strong><small>Ready for pickup</small></a></div>
+    </div>
+    <div class="row g-4 mt-1">
+        <div class="col-lg-6"><section class="panel overdue"><h2>Overdue Orders</h2><table class="table"><thead><tr><th>Report</th><th>Customer</th><th>Due</th></tr></thead><tbody><tr><td>TECH-2026-011</td><td>Minh Tran</td><td>2026-07-17</td></tr><tr><td>TECH-2026-014</td><td>Anya Pham</td><td>2026-07-18</td></tr></tbody></table></section></div>
+        <div class="col-lg-6"><section class="panel"><h2>Technician Performance</h2><table class="table"><thead><tr><th>Technician</th><th>Completed</th><th>Avg. Time</th><th>On-Time Rate</th></tr></thead><tbody><tr><td>Huy Nguyen</td><td>38</td><td>2.1 days</td><td>94%</td></tr><tr><td>Lan Ho</td><td>31</td><td>2.6 days</td><td>89%</td></tr></tbody></table></section></div>
+    </div>
+</section>

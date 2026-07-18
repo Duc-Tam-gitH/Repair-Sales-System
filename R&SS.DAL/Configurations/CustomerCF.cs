@@ -12,6 +12,8 @@ namespace R_SS.DAL.Configurations
 
             builder.HasKey(x => x.CustomerId);
 
+            builder.Property(x => x.UserId);
+
             builder.Property(x => x.CustomerCode)
                 .HasMaxLength(50)
                 .IsRequired();
@@ -42,6 +44,12 @@ namespace R_SS.DAL.Configurations
                 .HasDefaultValueSql("GETDATE()");
 
             builder.HasIndex(x => x.CustomerCode).IsUnique();
+            builder.HasIndex(x => x.UserId).IsUnique().HasFilter("[UserId] IS NOT NULL");
+
+            builder.HasOne(x => x.User)
+                .WithOne(x => x.CustomerProfile)
+                .HasForeignKey<Customer>(x => x.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

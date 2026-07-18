@@ -1,0 +1,25 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Add Account";
+    ViewData["ActiveRole"] = "Administrator";
+    ViewData["RoleDisplay"] = "Management User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/AddAccount.css" asp-append-version="true" />
+}
+
+<!-- Data saved via IAccountManagementService.CreateEmployeeAccount() -->
+<section class="add-account-page">
+    <div class="form-card">
+        <div class="form-title"><span>Employee Account</span><h1>Add Employee Account</h1><p>Create credentials, employee profile, role, and specialization.</p></div>
+        <div class="alert alert-success" role="status">Account created successfully!</div>
+        <form>
+            <h2>Account Credentials</h2>
+            <div class="row g-3"><div class="col-md-4"><label class="form-label">Username</label><input class="form-control" /></div><div class="col-md-4"><label class="form-label">Password</label><input class="form-control" type="password" /></div><div class="col-md-4"><label class="form-label">Confirm Password</label><input class="form-control" type="password" /></div></div>
+            <h2 class="mt-4">Employee Information</h2>
+            <div class="row g-3"><div class="col-md-6"><label class="form-label">Full Name</label><input class="form-control" /></div><div class="col-md-6"><label class="form-label">Phone Number</label><input class="form-control" /></div><div class="col-md-6"><label class="form-label">Email</label><input class="form-control" type="email" /></div><div class="col-md-6"><label class="form-label">Address</label><input class="form-control" /></div><div class="col-md-6"><label class="form-label">Select Role</label><select class="form-select"><option>Admin</option><option>Reception</option><option>Technician</option></select></div><div class="col-md-6"><label class="form-label">Select Specialization</label><select class="form-select"><option>Phone Repair</option><option>Laptop Repair</option><option>Tablet Repair</option><option>General Operations</option></select></div></div>
+            <div class="d-flex gap-2 mt-4"><button class="btn btn-primary" type="button">Create Account</button><a class="btn btn-outline-secondary" asp-controller="Management" asp-action="SystemAccountManagement">Cancel</a></div>
+        </form>
+    </div>
+</section>

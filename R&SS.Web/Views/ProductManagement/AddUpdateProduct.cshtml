@@ -1,0 +1,31 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Add / Update Product";
+    ViewData["ActiveRole"] = "ProductManagement";
+    ViewData["RoleDisplay"] = "Product Staff";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/AddUpdateProduct.css" asp-append-version="true" />
+}
+
+<!-- Data saved via IProductService.SaveProduct() -->
+<section class="add-update-product-page">
+    <div class="product-form-card">
+        <div class="form-title"><span>Catalog Product</span><h1>Add / Update Product</h1><p>Create a new product or update catalog information.</p></div>
+        <div class="alert alert-success" role="status">Product saved successfully!</div>
+        <form>
+            <div class="row g-3">
+                <div class="col-md-4"><label class="form-label" for="code">Product Code</label><input class="form-control" id="code" value="PRD-004" /></div>
+                <div class="col-md-8"><label class="form-label" for="name">Product Name</label><input class="form-control" id="name" value="Wireless Keyboard" /></div>
+                <div class="col-md-6"><label class="form-label" for="category">Select Category</label><select class="form-select" id="category"><option>Laptops</option><option>Phones</option><option>Accessories</option></select></div>
+                <div class="col-md-3"><label class="form-label" for="price">Price</label><input class="form-control" id="price" type="number" value="59" /></div>
+                <div class="col-md-3"><label class="form-label" for="stock">Stock Quantity</label><input class="form-control" id="stock" type="number" value="30" /></div>
+                <div class="col-12"><label class="form-label" for="description">Description</label><textarea class="form-control" id="description" rows="4">Compact wireless keyboard for office and home users.</textarea></div>
+                <div class="col-12"><label class="form-label" for="specs">Product Specifications</label><textarea class="form-control" id="specs" rows="4">Connectivity: Bluetooth / USB receiver&#10;Battery: AAA x2&#10;Warranty: 12 months</textarea></div>
+                <div class="col-md-6"><label class="form-label" for="status">Status</label><select class="form-select" id="status"><option>Active</option><option>Discontinued</option></select></div>
+            </div>
+            <div class="d-flex gap-2 mt-4"><a class="btn btn-primary" asp-controller="ProductManagement" asp-action="ProductList">Save Product</a><a class="btn btn-outline-secondary" asp-controller="ProductManagement" asp-action="ProductList">Cancel</a></div>
+        </form>
+    </div>
+</section>

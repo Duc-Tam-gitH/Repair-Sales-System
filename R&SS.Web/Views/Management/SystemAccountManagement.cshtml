@@ -1,0 +1,24 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "System Account Management";
+    ViewData["ActiveRole"] = "Administrator";
+    ViewData["RoleDisplay"] = "Management User";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/SystemAccountManagement.css" asp-append-version="true" />
+}
+
+<!-- Data fetched via IAccountManagementService.GetSystemAccounts() -->
+<section class="account-management-page">
+    <div class="page-header"><div><h1>System Account Management</h1><p>Manage login accounts, roles, permissions, and security status.</p></div><a class="btn btn-primary" asp-controller="Management" asp-action="AddAccount">Add Employee Account</a></div>
+    <div class="alert alert-warning" role="alert">Account locked due to security policy!</div>
+    <div class="tools"><input class="form-control" placeholder="Search by Username or Employee Name..." /></div>
+    <div class="table-card table-responsive">
+        <table class="table align-middle"><thead><tr><th>Username</th><th>Employee Name</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+            <tr><td>admin01</td><td>Mai Nguyen</td><td>Admin</td><td><span class="badge text-bg-success">Active</span></td><td><button class="btn btn-sm btn-outline-secondary">Edit</button> <a class="btn btn-sm btn-outline-primary" asp-controller="Management" asp-action="RoleAuthorization">Assign Permissions</a> <button class="btn btn-sm btn-outline-warning">Deactivate</button> <button class="btn btn-sm btn-outline-danger">Lock</button></td></tr>
+            <tr><td>tech.huy</td><td>Huy Nguyen</td><td>Technician</td><td><span class="badge text-bg-danger">Locked</span></td><td><button class="btn btn-sm btn-outline-secondary">Edit</button> <a class="btn btn-sm btn-outline-primary" asp-controller="Management" asp-action="RoleAuthorization">Assign Permissions</a> <button class="btn btn-sm btn-outline-success">Activate</button> <button class="btn btn-sm btn-outline-success">Unlock</button></td></tr>
+            <tr><td>recep.anya</td><td>Anya Pham</td><td>Reception</td><td><span class="badge text-bg-secondary">Inactive</span></td><td><button class="btn btn-sm btn-outline-secondary">Edit</button> <a class="btn btn-sm btn-outline-primary" asp-controller="Management" asp-action="RoleAuthorization">Assign Permissions</a> <button class="btn btn-sm btn-outline-success">Activate</button></td></tr>
+        </tbody></table>
+    </div>
+</section>
