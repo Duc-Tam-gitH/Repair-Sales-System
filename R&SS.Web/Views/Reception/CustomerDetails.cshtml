@@ -1,3 +1,4 @@
+@model CustomerResponse
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Customer Details";
@@ -9,34 +10,20 @@
     <link rel="stylesheet" href="~/css/CustomerDetails.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IReceptionService.GetCustomerDetails() -->
 <section class="customer-details-page">
     <div class="profile-panel">
         <div>
-            <span>CUS-001</span>
-            <h1>Minh Tran</h1>
-            <p>Preferred customer with active repair history.</p>
+            <span>@Model.CustomerCode</span>
+            <h1>@Model.FullName</h1>
+            <p>@(Model.IsActive ? "Active customer profile" : "Inactive customer profile")</p>
         </div>
-        <button class="btn btn-primary">Edit Information</button>
+        <a class="btn btn-primary" asp-controller="Reception" asp-action="EquipmentReception">Create Intake</a>
     </div>
 
     <div class="info-grid">
-        <div><strong>Phone</strong><p>0901112222</p></div>
-        <div><strong>Email</strong><p>minh@example.com</p></div>
-        <div><strong>Address</strong><p>45 Nguyen Street, District 1</p></div>
-        <div><strong>Notes</strong><p>Prefers afternoon pickup appointments.</p></div>
-    </div>
-
-    <ul class="nav nav-tabs mt-4" role="tablist">
-        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#repairs" type="button">Repair History</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#orders" type="button">Orders</button></li>
-    </ul>
-    <div class="tab-content details-tabs">
-        <div class="tab-pane fade show active" id="repairs">
-            <table class="table"><thead><tr><th>Report</th><th>Device</th><th>Status</th><th>Cost</th></tr></thead><tbody><tr><td>TECH-2026-001</td><td>Laptop</td><td>Completed</td><td>$120</td></tr><tr><td>TECH-2026-009</td><td>Phone</td><td>In-Progress</td><td>Pending</td></tr></tbody></table>
-        </div>
-        <div class="tab-pane fade" id="orders">
-            <table class="table"><thead><tr><th>Order</th><th>Date</th><th>Status</th><th>Total</th></tr></thead><tbody><tr><td>SO-2026-1042</td><td>2026-07-18</td><td>Pending</td><td>$936</td></tr><tr><td>SO-2026-1011</td><td>2026-06-29</td><td>Completed</td><td>$499</td></tr></tbody></table>
-        </div>
+        <div><strong>Phone</strong><p>@Model.Phone</p></div>
+        <div><strong>Email</strong><p>@Model.Email</p></div>
+        <div><strong>Address</strong><p>@Model.Address</p></div>
+        <div><strong>Notes</strong><p>@Model.Notes</p></div>
     </div>
 </section>

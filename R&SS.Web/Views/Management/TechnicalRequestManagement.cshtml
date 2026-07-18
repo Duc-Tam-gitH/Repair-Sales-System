@@ -1,20 +1,16 @@
+@model ManagementViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Technical Request Management";
-    ViewData["ActiveRole"] = "Administrator";
-    ViewData["RoleDisplay"] = "Management User";
+    ViewData["ActiveRole"] = "Management";
+    ViewData["RoleDisplay"] = "Manager";
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/TechnicalRequestManagement.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IManagementService.GetTechnicalRequests() -->
-<section class="technical-request-page">
-    <div class="page-header"><div><h1>Technical Request / Repair Order Management</h1><p>Master list of technical reports across the full system.</p></div></div>
-    <div class="tools"><input class="form-control" placeholder="Search by Code or Customer..." /><select class="form-select"><option>All Status</option><option>Pending</option><option>Inspection</option><option>In-Repair</option><option>Awaiting Parts</option><option>Completed</option><option>Delivered</option></select></div>
-    <div class="table-card table-responsive"><table class="table align-middle"><thead><tr><th>Report Code</th><th>Customer</th><th>Device</th><th>Assigned Technician</th><th>Status</th><th>Created Date</th><th>Actions</th></tr></thead><tbody>
-        <tr><td>TECH-2026-001</td><td>Minh Tran</td><td>Dell Inspiron 15</td><td><select class="form-select form-select-sm"><option>Huy Nguyen</option><option>Lan Ho</option></select></td><td><select class="form-select form-select-sm"><option>Inspection</option><option>In-Repair</option><option>Completed</option></select></td><td>2026-07-18</td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <button class="btn btn-sm btn-outline-secondary">Edit</button> <button class="btn btn-sm btn-outline-info">Track Progress</button></td></tr>
-        <tr><td>TECH-2026-002</td><td>Anya Pham</td><td>Nova X Phone</td><td><select class="form-select form-select-sm"><option>Lan Ho</option><option>Huy Nguyen</option></select></td><td><select class="form-select form-select-sm"><option>In-Repair</option><option>Awaiting Parts</option><option>Completed</option></select></td><td>2026-07-17</td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <button class="btn btn-sm btn-outline-secondary">Edit</button> <button class="btn btn-sm btn-outline-info">Track Progress</button></td></tr>
-    </tbody></table></div>
+<section class="technical-request-management-page">
+    <div class="admin-hero"><div><span>Technical Requests</span><h1>Technical Request Management</h1><p>Monitor customer service requests and conversion into repair tickets.</p></div></div>
+    <div class="table-card table-responsive mt-4"><table class="table align-middle"><thead><tr><th>Code</th><th>Customer</th><th>Service Type</th><th>Device</th><th>Status</th><th>Created</th></tr></thead><tbody>@foreach (var request in Model.ServiceRequests) { <tr><td>@request.RequestCode</td><td>@request.CustomerId</td><td>@request.ServiceType</td><td>@request.DeviceType @request.DeviceModel</td><td>@request.Status</td><td>@request.CreatedAtUtc.ToString("yyyy-MM-dd")</td></tr> } @if (!Model.ServiceRequests.Any()) { <tr><td colspan="6" class="text-center text-muted">No technical requests found.</td></tr> }</tbody></table></div>
 </section>

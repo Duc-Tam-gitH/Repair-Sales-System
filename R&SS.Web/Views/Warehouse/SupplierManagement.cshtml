@@ -1,3 +1,4 @@
+@model WarehouseSupplierListViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Supplier Management";
@@ -9,16 +10,92 @@
     <link rel="stylesheet" href="~/css/SupplierManagement.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via ISupplierService.GetSuppliers() -->
 <section class="supplier-page">
     <div class="supplier-header">
-        <div><h1>Supplier Management</h1><p>Manage active and disabled suppliers, contacts, and recent purchasing activity.</p></div>
-        <button class="btn btn-primary">Add Supplier</button>
+        <div><h1>Supplier Management</h1><p>Manage active and disabled suppliers, contacts, and warehouse purchasing references.</p></div>
+        <a class="btn btn-primary" asp-controller="Warehouse" asp-action="InventoryManagement">Receive Stock</a>
     </div>
-    <div class="alert alert-danger" role="alert">Supplier has been disabled!</div>
-    <div class="supplier-tools"><input class="form-control" placeholder="Search by Name or ID..." /></div>
-    <div class="supplier-table table-responsive">
-        <table class="table align-middle"><thead><tr><th>Supplier ID</th><th>Supplier Name</th><th>Contact Person</th><th>Phone</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr><td>SUP-001</td><td>TechParts Co.</td><td>Nam Ho</td><td>0907778888</td><td>sales@techparts.local</td><td><span class="badge text-bg-success">Active</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <button class="btn btn-sm btn-outline-secondary">Edit</button> <button class="btn btn-sm btn-outline-danger">Disable Supplier</button></td></tr><tr><td>SUP-002</td><td>Mobile Supply Ltd.</td><td>Lan Vu</td><td>0909990000</td><td>orders@mobilesupply.local</td><td><span class="badge text-bg-secondary">Disabled</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <button class="btn btn-sm btn-outline-secondary">Edit</button></td></tr></tbody></table>
+    @if (TempData["SuccessMessage"] is string success)
+    {
+        <div class="alert alert-success" role="status">@success</div>
+    }
+    @if (TempData["ErrorMessage"] is string error)
+    {
+        <div class="alert alert-danger" role="alert">@error</div>
+    }
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+    <form class="supplier-tools" method="get" asp-controller="Warehouse" asp-action="SupplierManagement">
+        <input class="form-control" name="keyword" value="@Model.Keyword" placeholder="Search by name, code, or contact..." />
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+    </form>
+
+    <section class="supplier-detail mt-4">
+        <h2>Add Supplier</h2>
+        <form method="post" asp-controller="Warehouse" asp-action="AddSupplier">
+            @Html.AntiForgeryToken()
+            <div class="row g-3">
+                <div class="col-md-3"><label class="form-label">Code</label><input class="form-control" name="SupplierCode" value="@Model.Supplier.SupplierCode" required maxlength="50" /></div>
+                <div class="col-md-3"><label class="form-label">Name</label><input class="form-control" name="SupplierName" value="@Model.Supplier.SupplierName" required maxlength="150" /></div>
+                <div class="col-md-3"><label class="form-label">Contact</label><input class="form-control" name="ContactName" value="@Model.Supplier.ContactName" maxlength="100" /></div>
+                <div class="col-md-3"><label class="form-label">Phone</label><input class="form-control" name="Phone" value="@Model.Supplier.Phone" maxlength="20" /></div>
+                <div class="col-md-4"><label class="form-label">Email</label><input class="form-control" name="Email" value="@Model.Supplier.Email" type="email" maxlength="100" /></div>
+                <div class="col-md-4"><label class="form-label">Tax Code</label><input class="form-control" name="TaxCode" value="@Model.Supplier.TaxCode" maxlength="50" /></div>
+                <div class="col-md-4"><label class="form-label">Address</label><input class="form-control" name="Address" value="@Model.Supplier.Address" maxlength="255" /></div>
+                <div class="col-12"><label class="form-label">Notes</label><textarea class="form-control" name="Notes" rows="2" maxlength="255">@Model.Supplier.Notes</textarea></div>
+                <div class="col-12"><button class="btn btn-primary" type="submit">Add Supplier</button></div>
+            </div>
+        </form>
+    </section>
+
+    <div class="supplier-table table-responsive mt-4">
+        <table class="table align-middle">
+            <thead><tr><th>Supplier</th><th>Contact</th><th>Phone</th><th>Email</th><th>Status</th><th>Notes</th><th>Actions</th></tr></thead>
+            <tbody>
+                @if (!Model.Suppliers.Any())
+                {
+                    <tr><td colspan="7" class="text-center text-muted">No suppliers found.</td></tr>
+                }
+                else
+                {
+                    @foreach (var supplier in Model.Suppliers)
+                    {
+                        var editFormId = $"edit-supplier-{supplier.SupplierId}";
+                        var disableFormId = $"disable-supplier-{supplier.SupplierId}";
+                        <tr>
+                            <td>
+                                <form id="@editFormId" method="post" asp-controller="Warehouse" asp-action="EditSupplier">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="SupplierId" value="@supplier.SupplierId" />
+                                    <input type="hidden" name="IsActive" value="@supplier.IsActive.ToString()" />
+                                    <input type="hidden" name="Address" value="@supplier.Address" />
+                                    <input type="hidden" name="TaxCode" value="@supplier.TaxCode" />
+                                </form>
+                                <input class="form-control mb-2" form="@editFormId" name="SupplierCode" value="@supplier.SupplierCode" required maxlength="50" />
+                                <input class="form-control" form="@editFormId" name="SupplierName" value="@supplier.SupplierName" required maxlength="150" />
+                            </td>
+                            <td><input class="form-control" form="@editFormId" name="ContactName" value="@supplier.ContactName" maxlength="100" /></td>
+                            <td><input class="form-control" form="@editFormId" name="Phone" value="@supplier.Phone" maxlength="20" /></td>
+                            <td><input class="form-control" form="@editFormId" name="Email" value="@supplier.Email" type="email" maxlength="100" /></td>
+                            <td><span class="badge @(supplier.IsActive ? "text-bg-success" : "text-bg-secondary")">@(supplier.IsActive ? "Active" : "Disabled")</span></td>
+                            <td><input class="form-control" form="@editFormId" name="Notes" value="@supplier.Notes" maxlength="255" /></td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-primary" form="@editFormId" type="submit">Edit</button>
+                                    @if (supplier.IsActive)
+                                    {
+                                        <form id="@disableFormId" method="post" asp-controller="Warehouse" asp-action="DisableSupplier">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="supplierId" value="@supplier.SupplierId" />
+                                        </form>
+                                        <button class="btn btn-sm btn-outline-danger" form="@disableFormId" type="submit">Disable</button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
     </div>
-    <section class="supplier-detail mt-4"><h2>Supplier Detail Preview</h2><div class="row g-3"><div class="col-md-4"><strong>Address</strong><p>88 Component Road, District 7</p></div><div class="col-md-4"><strong>Payment Terms</strong><p>Net 30, bank transfer</p></div><div class="col-md-4"><strong>Recent Orders</strong><p>REC-2026-001, REC-2026-0009</p></div></div></section>
 </section>

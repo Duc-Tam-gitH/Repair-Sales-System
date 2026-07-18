@@ -1,3 +1,4 @@
+@model TechnicalTicketListResponse
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Assigned Tasks";
@@ -9,26 +10,36 @@
     <link rel="stylesheet" href="~/css/AssignedTasks.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via ITechnicianService.GetAssignedTasks() -->
 <section class="assigned-tasks-page">
     <div class="task-list-header">
-        <div><h1>Assigned Tasks</h1><p>Search assigned repair requests and start work on pending tasks.</p></div>
+        <div><h1>Assigned Tasks</h1><p>Search assigned repair requests and continue technical work.</p></div>
         <a class="btn btn-primary" asp-controller="Technician" asp-action="WorkSchedule">View Schedule</a>
-    </div>
-
-    <div class="task-tools">
-        <input class="form-control" type="search" placeholder="Search by Task ID or Customer Name..." />
-        <select class="form-select"><option>All Status</option><option>Pending</option><option>In-Progress</option><option>Completed</option><option>On-Hold</option></select>
     </div>
 
     <div class="task-table table-responsive">
         <table class="table align-middle">
-            <thead><tr><th>Task ID</th><th>Customer Name</th><th>Device</th><th>Status</th><th>Deadline</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Task ID</th><th>Customer Name</th><th>Device</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody>
-                <tr><td>TASK-2041</td><td>Minh Tran</td><td>Dell Inspiron 15</td><td><span class="badge text-bg-warning">Pending</span></td><td>2026-07-19 10:00</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails">View Details</a> <a class="btn btn-sm btn-success" asp-controller="Technician" asp-action="RecordFaults">Start Processing</a></td></tr>
-                <tr><td>TASK-2038</td><td>Anya Pham</td><td>Nova X Phone</td><td><span class="badge text-bg-info">In-Progress</span></td><td>2026-07-20 15:00</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails">View Details</a></td></tr>
-                <tr><td>TASK-2032</td><td>David Lee</td><td>Tablet Air 10</td><td><span class="badge text-bg-secondary">On-Hold</span></td><td>2026-07-21 09:00</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails">View Details</a></td></tr>
-                <tr><td>TASK-2029</td><td>Lan Vu</td><td>Office Printer</td><td><span class="badge text-bg-success">Completed</span></td><td>2026-07-17 17:00</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails">View Details</a></td></tr>
+                @if (!Model.Tickets.Any())
+                {
+                    <tr><td colspan="5">@Model.Message</td></tr>
+                }
+                else
+                {
+                    @foreach (var ticket in Model.Tickets)
+                    {
+                        <tr>
+                            <td>@ticket.TicketCode</td>
+                            <td>@ticket.CustomerName</td>
+                            <td>@ticket.Brand @ticket.DeviceModel - @ticket.DeviceType</td>
+                            <td><span class="badge text-bg-info">@ticket.Status</span></td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@ticket.RepairOrderId">View Details</a>
+                                <a class="btn btn-sm btn-success" asp-controller="Technician" asp-action="RecordFaults" asp-route-id="@ticket.RepairOrderId">Start Processing</a>
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>

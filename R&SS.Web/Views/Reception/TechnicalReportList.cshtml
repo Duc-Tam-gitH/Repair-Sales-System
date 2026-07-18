@@ -1,3 +1,4 @@
+@model TechnicalTicketListResponse
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Technical Reports";
@@ -9,24 +10,37 @@
     <link rel="stylesheet" href="~/css/TechnicalReportList.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IReportService.GetTechnicalReports() -->
 <section class="technical-report-list-page">
     <div class="report-list-header">
         <h1>Technical Report List</h1>
         <a class="btn btn-primary" asp-controller="Reception" asp-action="EquipmentReception">New Technical Report</a>
     </div>
-    <div class="report-tools">
-        <input class="form-control" placeholder="Search by Report Code..." />
-        <input class="form-control" placeholder="Search by Customer Name..." />
-        <select class="form-select"><option>All Status</option><option>Pending</option><option>In-Progress</option><option>Completed</option><option>Handed Over</option></select>
-    </div>
+    @if (TempData["ErrorMessage"] is string errorMessage)
+    {
+        <div class="alert alert-danger" role="alert">@errorMessage</div>
+    }
     <div class="table-card table-responsive">
         <table class="table align-middle">
-            <thead><tr><th>Report Code</th><th>Customer Name</th><th>Equipment</th><th>Status</th><th>Receipt Date</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Report Code</th><th>Customer Name</th><th>Equipment</th><th>Status</th><th>Technician</th><th>Actions</th></tr></thead>
             <tbody>
-                <tr><td>TECH-2026-001</td><td>Minh Tran</td><td>Dell Inspiron 15</td><td><span class="badge text-bg-warning">Pending</span></td><td>2026-07-18</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="TechnicalReportDetails">View Details</a> <button class="btn btn-sm btn-outline-secondary">Update Information</button></td></tr>
-                <tr><td>TECH-2026-002</td><td>Anya Pham</td><td>Nova X Phone</td><td><span class="badge text-bg-info">In-Progress</span></td><td>2026-07-17</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="TechnicalReportDetails">View Details</a> <button class="btn btn-sm btn-outline-secondary">Update Information</button></td></tr>
-                <tr><td>TECH-2026-003</td><td>David Lee</td><td>Tablet Air 10</td><td><span class="badge text-bg-success">Completed</span></td><td>2026-07-16</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="TechnicalReportDetails">View Details</a> <button class="btn btn-sm btn-outline-secondary">Update Information</button></td></tr>
+                @if (!Model.Tickets.Any())
+                {
+                    <tr><td colspan="6">@Model.Message</td></tr>
+                }
+                else
+                {
+                    @foreach (var ticket in Model.Tickets)
+                    {
+                        <tr>
+                            <td>@ticket.TicketCode</td>
+                            <td>@ticket.CustomerName</td>
+                            <td>@ticket.Brand @ticket.DeviceModel - @ticket.DeviceType</td>
+                            <td><span class="badge text-bg-info">@ticket.Status</span></td>
+                            <td>@(ticket.AssignedTechnicianName ?? "Unassigned")</td>
+                            <td><a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="TechnicalReportDetails" asp-route-id="@ticket.RepairOrderId">View Details</a></td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>

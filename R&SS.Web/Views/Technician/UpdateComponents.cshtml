@@ -1,3 +1,4 @@
+@model TechnicianTaskViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Update Components";
@@ -9,20 +10,10 @@
     <link rel="stylesheet" href="~/css/UpdateComponents.css" asp-append-version="true" />
 }
 
-<!-- Data saved via IComponentService.ConfirmComponentUsage() -->
 <section class="update-components-page">
-    <div class="component-task-header"><span>TECH-2026-001</span><h1>Update Used Components</h1><p>Add used components and confirm inventory deduction for this repair task.</p></div>
-    <div class="alert alert-danger" role="alert">Insufficient inventory for this component!</div>
-    <div class="alert alert-success" role="status">Inventory automatically updated!</div>
-    <form class="component-form">
-        <div class="row g-3">
-            <div class="col-md-6"><label class="form-label" for="component">Search/Select Component</label><input class="form-control" id="component" value="Dell Keyboard Module" /></div>
-            <div class="col-md-3"><label class="form-label" for="qty">Quantity Used</label><input class="form-control" id="qty" type="number" value="1" /></div>
-            <div class="col-md-3 d-flex align-items-end"><button class="btn btn-primary w-100" type="button">Add Component</button></div>
-        </div>
-    </form>
+    <div class="component-task-header"><span>@Model.Ticket.TicketCode</span><h1>Update Used Components</h1><p>Component usage is recorded through the repair update endpoint when inventory product ids are selected.</p></div>
     <div class="component-list table-responsive mt-4">
-        <table class="table align-middle"><thead><tr><th>Component Name</th><th>Quantity Used</th><th>Current Stock After Usage</th><th></th></tr></thead><tbody><tr><td>Dell Keyboard Module</td><td>1</td><td>7</td><td><button class="btn btn-sm btn-outline-danger">Delete</button></td></tr><tr><td>Cleaning Kit</td><td>1</td><td>19</td><td><button class="btn btn-sm btn-outline-danger">Delete</button></td></tr></tbody></table>
+        <table class="table align-middle"><thead><tr><th>Ticket</th><th>Device</th><th>Status</th><th></th></tr></thead><tbody><tr><td>@Model.Ticket.TicketCode</td><td>@Model.Ticket.Brand @Model.Ticket.DeviceModel</td><td>@Model.Ticket.Status</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="UpdateProgress" asp-route-id="@Model.Ticket.RepairOrderId">Update Repair</a></td></tr></tbody></table>
     </div>
-    <div class="d-flex gap-2 mt-4"><button class="btn btn-success">Confirm Component Usage</button><a class="btn btn-outline-secondary" asp-controller="Technician" asp-action="TaskDetails">Back to Task</a></div>
+    <div class="d-flex gap-2 mt-4"><a class="btn btn-outline-secondary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@Model.Ticket.RepairOrderId">Back to Task</a></div>
 </section>

@@ -1,32 +1,88 @@
+@model InventoryHistoryResponse
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Inventory Tracking";
     ViewData["ActiveRole"] = "Warehouse";
     ViewData["RoleDisplay"] = "Warehouse Staff";
+    var transactionType = ViewData["TransactionType"] as string;
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/InventoryTracking.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IWarehouseService.GetInventoryMovements() -->
 <section class="inventory-tracking-page">
-    <div class="tracking-header"><h1>Inventory Tracking / History</h1><p>Track inbound receipts, outbound repair usage, current stock, and recent movement trends.</p></div>
+    <div class="tracking-header"><h1>Inventory Tracking / History</h1><p>Track inbound receipts, outbound usage, stock adjustments, and recent movement trends.</p></div>
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#history" type="button">Inventory History</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#repair" type="button">Components Shipped for Repair</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#current" type="button">Current Inventory View</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#repair" type="button">Outbound Usage</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#current" type="button">Current Movement View</button></li>
     </ul>
     <div class="tab-content tracking-tabs">
         <div class="tab-pane fade show active" id="history">
-            <div class="tracking-tools"><input class="form-control" placeholder="Search by Item Name or Document Code..." /><input class="form-control" type="date" /><input class="form-control" type="date" /></div>
-            <table class="table align-middle"><thead><tr><th>Date</th><th>Transaction Type</th><th>Item Name</th><th>Quantity Changed</th><th>Related Document</th></tr></thead><tbody><tr><td>2026-07-18</td><td>Inbound</td><td>Dell Keyboard Module</td><td>+10</td><td>REC-2026-001</td></tr><tr><td>2026-07-18</td><td>Outbound - Repair</td><td>OLED Screen Assembly</td><td>-1</td><td>TECH-2026-003</td></tr></tbody></table>
+            <form class="tracking-tools" method="get" asp-controller="Warehouse" asp-action="InventoryTracking">
+                <select class="form-select" name="transactionType">
+                    <option value="">All transaction types</option>
+                    <option value="Receipt" selected="@(transactionType == "Receipt")">Receipt</option>
+                    <option value="Issue" selected="@(transactionType == "Issue")">Issue</option>
+                    <option value="Adjustment" selected="@(transactionType == "Adjustment")">Adjustment</option>
+                </select>
+                <button class="btn btn-outline-primary" type="submit">Filter</button>
+            </form>
+            <table class="table align-middle">
+                <thead><tr><th>Date</th><th>Transaction Type</th><th>Item Name</th><th>Quantity Changed</th><th>Stock Before</th><th>Stock After</th></tr></thead>
+                <tbody>
+                    @if (!Model.Transactions.Any())
+                    {
+                        <tr><td colspan="6" class="text-center text-muted">@Model.Message</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (var transaction in Model.Transactions.OrderByDescending(item => item.CreatedAtUtc))
+                        {
+                            <tr>
+                                <td>@transaction.CreatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>@transaction.TransactionType</td>
+                                <td>@transaction.ProductName</td>
+                                <td>@(transaction.QuantityChange > 0 ? "+" : string.Empty)@transaction.QuantityChange</td>
+                                <td>@transaction.StockBefore</td>
+                                <td>@transaction.StockAfter</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
         </div>
         <div class="tab-pane fade" id="repair">
-            <table class="table align-middle"><thead><tr><th>Technical Report Code</th><th>Component Name</th><th>Quantity Shipped/Used</th><th>Date Used</th></tr></thead><tbody><tr><td>TECH-2026-003</td><td>OLED Screen Assembly</td><td>1</td><td>2026-07-18</td></tr><tr><td>TECH-2026-001</td><td>Dell Keyboard Module</td><td>1</td><td>2026-07-17</td></tr></tbody></table>
+            <table class="table align-middle">
+                <thead><tr><th>Date Used</th><th>Component Name</th><th>Quantity Used</th><th>Reason</th></tr></thead>
+                <tbody>
+                    @foreach (var transaction in Model.Transactions.Where(item => item.TransactionType == "Issue").OrderByDescending(item => item.CreatedAtUtc))
+                    {
+                        <tr><td>@transaction.CreatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd")</td><td>@transaction.ProductName</td><td>@Math.Abs(transaction.QuantityChange)</td><td>@(transaction.Reason ?? "-")</td></tr>
+                    }
+                    @if (!Model.Transactions.Any(item => item.TransactionType == "Issue"))
+                    {
+                        <tr><td colspan="4" class="text-center text-muted">No outbound usage recorded.</td></tr>
+                    }
+                </tbody>
+            </table>
         </div>
         <div class="tab-pane fade" id="current">
-            <table class="table align-middle"><thead><tr><th>Item Name</th><th>Current Quantity</th><th>Minimum Stock Level</th><th>Status</th><th>Trend</th></tr></thead><tbody><tr class="low-row"><td>Dell Keyboard Module</td><td>3</td><td>10</td><td>Low Stock</td><td><span class="spark down"></span></td></tr><tr class="low-row"><td>OLED Screen Assembly</td><td>0</td><td>6</td><td>Out of Stock</td><td><span class="spark down"></span></td></tr><tr><td>USB-C Service Kit</td><td>42</td><td>15</td><td>In Stock</td><td><span class="spark up"></span></td></tr></tbody></table>
+            <table class="table align-middle">
+                <thead><tr><th>Item Name</th><th>Last Change</th><th>Current Quantity</th><th>Status</th></tr></thead>
+                <tbody>
+                    @foreach (var latest in Model.Transactions.GroupBy(item => item.ProductId).Select(group => group.OrderByDescending(item => item.CreatedAtUtc).First()).OrderBy(item => item.ProductName))
+                    {
+                        var status = latest.StockAfter <= 0 ? "Out of Stock" : latest.StockAfter <= 5 ? "Low Stock" : "In Stock";
+                        <tr class="@(latest.StockAfter <= 5 ? "low-row" : string.Empty)"><td>@latest.ProductName</td><td>@(latest.QuantityChange > 0 ? "+" : string.Empty)@latest.QuantityChange</td><td>@latest.StockAfter</td><td>@status</td></tr>
+                    }
+                    @if (!Model.Transactions.Any())
+                    {
+                        <tr><td colspan="4" class="text-center text-muted">No current movement data available.</td></tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </section>

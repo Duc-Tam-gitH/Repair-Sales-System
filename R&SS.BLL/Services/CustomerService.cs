@@ -52,7 +52,11 @@ public class CustomerService : ICustomerService
             .Select(customer => new CustomerSummaryResponse
             {
                 CustomerId = customer.CustomerId,
-                FullName = customer.FullName
+                CustomerCode = customer.CustomerCode,
+                FullName = customer.FullName,
+                Phone = customer.Phone,
+                Email = customer.Email,
+                IsActive = customer.IsActive
             })
             .ToArray();
 

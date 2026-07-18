@@ -1,3 +1,4 @@
+@model CustomerCheckoutViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Checkout";
@@ -9,35 +10,45 @@
     <link rel="stylesheet" href="~/css/Checkout.css" asp-append-version="true" />
 }
 
-@* Checkout summary simulates data from IOrderService and ICartService. *@
 <section class="checkout-page">
     <h1>Checkout</h1>
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
     <div class="row g-4">
         <div class="col-lg-7">
-            <form class="checkout-form">
+            <form class="checkout-form" method="post" asp-controller="Customer" asp-action="Checkout">
+                @Html.AntiForgeryToken()
                 <h2>Customer Information</h2>
                 <div class="row g-3">
-                    <div class="col-md-6"><label class="form-label" for="name">Name</label><input class="form-control" id="name" value="Customer User" /></div>
-                    <div class="col-md-6"><label class="form-label" for="phone">Phone</label><input class="form-control" id="phone" value="0123456789" /></div>
-                    <div class="col-12"><label class="form-label" for="email">Email</label><input class="form-control" id="email" value="customer@rss.local" /></div>
-                    <div class="col-12"><label class="form-label" for="address">Delivery Address</label><textarea class="form-control" id="address" rows="4">123 Customer Avenue</textarea></div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="RecipientName">Name</label>
+                        <input class="form-control" id="RecipientName" name="RecipientName" value="@Model.Order.RecipientName" required />
+                    </div>
                     <div class="col-12">
-                        <label class="form-label" for="payment">Payment Method</label>
-                        <select class="form-select" id="payment"><option>Cash</option><option>Credit Card</option><option>e-Wallet</option></select>
+                        <label class="form-label" for="DeliveryAddress">Delivery Address</label>
+                        <textarea class="form-control" id="DeliveryAddress" name="DeliveryAddress" rows="4" required>@Model.Order.DeliveryAddress</textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="PaymentMethod">Payment Method</label>
+                        <select class="form-select" id="PaymentMethod" name="PaymentMethod" required>
+                            <option selected="@(Model.Order.PaymentMethod == "Cash")">Cash</option>
+                            <option selected="@(Model.Order.PaymentMethod == "Credit Card")">Credit Card</option>
+                            <option selected="@(Model.Order.PaymentMethod == "e-Wallet")">e-Wallet</option>
+                        </select>
                     </div>
                 </div>
-                <button class="btn btn-success mt-4" type="button">Confirm Order</button>
+                <button class="btn btn-success mt-4" type="submit" disabled="@(!Model.Cart.Items.Any())">Confirm Order</button>
             </form>
         </div>
         <div class="col-lg-5">
             <aside class="order-summary">
                 <h2>Order Summary</h2>
                 <ul>
-                    <li><span>ProBook 14 x 1</span><strong>$849</strong></li>
-                    <li><span>Wireless Mouse x 2</span><strong>$48</strong></li>
-                    <li><span>USB-C Service Kit x 1</span><strong>$39</strong></li>
+                    @foreach (var item in Model.Cart.Items)
+                    {
+                        <li><span>@item.ProductName x @item.Quantity</span><strong>@item.LineTotal.ToString("C")</strong></li>
+                    }
                 </ul>
-                <div class="summary-total"><span>Total</span><strong>$936</strong></div>
+                <div class="summary-total"><span>Total</span><strong>@Model.Cart.TotalAmount.ToString("C")</strong></div>
             </aside>
         </div>
     </div>

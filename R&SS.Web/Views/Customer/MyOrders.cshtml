@@ -1,3 +1,4 @@
+@model IReadOnlyCollection<OrderResponse>
 @{
     Layout = "_Layout";
     ViewData["Title"] = "My Orders";
@@ -9,20 +10,33 @@
     <link rel="stylesheet" href="~/css/MyOrders.css" asp-append-version="true" />
 }
 
-@* Order list simulates data from IOrderService. *@
 <section class="orders-page">
     <div class="orders-header">
         <h1>My Orders</h1>
-        <input class="form-control" type="search" placeholder="Search by order code..." />
+        <form method="get" asp-controller="Customer" asp-action="MyOrders">
+            <input class="form-control" name="keyword" type="search" value="@ViewData["Keyword"]" placeholder="Search by order code..." />
+        </form>
     </div>
     <div class="orders-panel table-responsive">
         <table class="table align-middle">
-            <thead><tr><th>Order Code</th><th>Date</th><th>Status</th><th>Total Amount</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Order Code</th><th>Status</th><th>Total Amount</th><th>Actions</th></tr></thead>
             <tbody>
-                <tr><td>SO-2026-1042</td><td>2026-07-18</td><td><span class="badge text-bg-warning">Pending</span></td><td>$936</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="OrderDetails">View Details</a> <button class="btn btn-sm btn-outline-danger">Cancel Order</button></td></tr>
-                <tr><td>SO-2026-1038</td><td>2026-07-15</td><td><span class="badge text-bg-info">Processing</span></td><td>$128</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="OrderDetails">View Details</a></td></tr>
-                <tr><td>SO-2026-1026</td><td>2026-07-08</td><td><span class="badge text-bg-primary">Shipped</span></td><td>$54</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="OrderDetails">View Details</a></td></tr>
-                <tr><td>SO-2026-1011</td><td>2026-06-29</td><td><span class="badge text-bg-success">Completed</span></td><td>$499</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="OrderDetails">View Details</a></td></tr>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="4">No orders found.</td></tr>
+                }
+                else
+                {
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>@order.SalesOrderCode</td>
+                            <td><span class="badge text-bg-info">@order.Status</span></td>
+                            <td>@order.TotalAmount.ToString("C")</td>
+                            <td><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="OrderDetails" asp-route-id="@order.SalesOrderId">View Details</a></td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>

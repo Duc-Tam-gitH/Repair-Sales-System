@@ -1,20 +1,16 @@
+@model ManagementViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Employee Management";
-    ViewData["ActiveRole"] = "Administrator";
-    ViewData["RoleDisplay"] = "Management User";
+    ViewData["ActiveRole"] = "Management";
+    ViewData["RoleDisplay"] = "Manager";
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/EmployeeManagement.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IEmployeeService.GetEmployees() -->
-<section class="employee-page">
-    <div class="page-header"><div><h1>Employee Management</h1><p>Review all staff records, job titles, and employment status.</p></div><input class="form-control" placeholder="Search by Name or ID..." /></div>
-    <div class="table-card table-responsive"><table class="table align-middle"><thead><tr><th>Employee ID</th><th>Full Name</th><th>Phone</th><th>Email</th><th>Job Title</th><th>Job Status</th><th>Actions</th></tr></thead><tbody>
-        <tr><td>EMP-001</td><td>Mai Nguyen</td><td>0901112222</td><td>mai@rss.local</td><td>Manager</td><td><span class="badge text-bg-success">Active</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <button class="btn btn-sm btn-outline-secondary">Update Information</button></td></tr>
-        <tr><td>EMP-002</td><td>Huy Nguyen</td><td>0903334444</td><td>huy@rss.local</td><td>Technician</td><td><span class="badge text-bg-warning">On Leave</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <button class="btn btn-sm btn-outline-secondary">Update Information</button></td></tr>
-        <tr><td>EMP-003</td><td>Anya Pham</td><td>0905556666</td><td>anya@rss.local</td><td>Receptionist</td><td><span class="badge text-bg-danger">Terminated</span></td><td><button class="btn btn-sm btn-outline-primary">View Details</button> <button class="btn btn-sm btn-outline-secondary">Update Information</button></td></tr>
-    </tbody></table></div>
+<section class="employee-management-page">
+    <div class="admin-hero"><div><span>Employees</span><h1>Employee Management</h1><p>Review employee records, roles, specialization, and work status.</p></div></div>
+    <div class="table-card table-responsive mt-4"><table class="table align-middle"><thead><tr><th>Code</th><th>Name</th><th>Email</th><th>Phone</th><th>Specialization</th><th>Status</th></tr></thead><tbody>@foreach (var employee in Model.Employees) { <tr><td>@employee.EmployeeCode</td><td>@employee.FullName</td><td>@employee.Email</td><td>@(employee.Phone ?? "-")</td><td>@(employee.Specialization ?? "-")</td><td><span class="badge @(employee.IsActive ? "text-bg-success" : "text-bg-secondary")">@employee.WorkStatus</span></td></tr> } @if (!Model.Employees.Any()) { <tr><td colspan="6" class="text-center text-muted">No employees found.</td></tr> }</tbody></table></div>
 </section>

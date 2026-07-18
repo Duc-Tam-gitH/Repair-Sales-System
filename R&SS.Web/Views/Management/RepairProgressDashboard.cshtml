@@ -1,25 +1,17 @@
+@model ManagementViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Repair Progress Dashboard";
-    ViewData["ActiveRole"] = "Administrator";
-    ViewData["RoleDisplay"] = "Management User";
+    ViewData["ActiveRole"] = "Management";
+    ViewData["RoleDisplay"] = "Manager";
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/RepairProgressDashboard.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IManagementService.GetRepairProgressDashboard() -->
-<section class="repair-monitor-page">
-    <div class="monitor-header"><h1>Repair Progress Monitoring</h1><p>Real-time tracking of repair orders across reception, technician, and handover workflows.</p></div>
-    <div class="row g-4">
-        <div class="col-md-6 col-xl-3"><a class="status-card" asp-controller="Management" asp-action="TechnicalRequestManagement"><span>Pending Orders</span><strong>22</strong><small>Awaiting assignment</small></a></div>
-        <div class="col-md-6 col-xl-3"><a class="status-card inspection" asp-controller="Management" asp-action="TechnicalRequestManagement"><span>Under Inspection</span><strong>17</strong><small>Diagnosing</small></a></div>
-        <div class="col-md-6 col-xl-3"><a class="status-card repair" asp-controller="Management" asp-action="TechnicalRequestManagement"><span>In Repair</span><strong>41</strong><small>Actively fixed</small></a></div>
-        <div class="col-md-6 col-xl-3"><a class="status-card delivery" asp-controller="Management" asp-action="TechnicalRequestManagement"><span>Awaiting Delivery</span><strong>13</strong><small>Ready for pickup</small></a></div>
-    </div>
-    <div class="row g-4 mt-1">
-        <div class="col-lg-6"><section class="panel overdue"><h2>Overdue Orders</h2><table class="table"><thead><tr><th>Report</th><th>Customer</th><th>Due</th></tr></thead><tbody><tr><td>TECH-2026-011</td><td>Minh Tran</td><td>2026-07-17</td></tr><tr><td>TECH-2026-014</td><td>Anya Pham</td><td>2026-07-18</td></tr></tbody></table></section></div>
-        <div class="col-lg-6"><section class="panel"><h2>Technician Performance</h2><table class="table"><thead><tr><th>Technician</th><th>Completed</th><th>Avg. Time</th><th>On-Time Rate</th></tr></thead><tbody><tr><td>Huy Nguyen</td><td>38</td><td>2.1 days</td><td>94%</td></tr><tr><td>Lan Ho</td><td>31</td><td>2.6 days</td><td>89%</td></tr></tbody></table></section></div>
-    </div>
+<section class="repair-progress-dashboard-page">
+    <div class="admin-hero"><div><span>Repair Progress</span><h1>Repair Progress Dashboard</h1><p>Track repair workload and current ticket statuses.</p></div></div>
+    <div class="row g-4"><div class="col-md-4"><article class="summary-card"><span>Total Repairs</span><strong>@Model.RepairOrders.Count</strong></article></div><div class="col-md-4"><article class="summary-card"><span>Completed</span><strong>@Model.RepairOrders.Count(repair => repair.CompletedDate.HasValue || repair.Status.Contains("Completed", StringComparison.OrdinalIgnoreCase))</strong></article></div><div class="col-md-4"><article class="summary-card"><span>Unassigned</span><strong>@Model.RepairOrders.Count(repair => !repair.AssignedTechnicianId.HasValue)</strong></article></div></div>
+    <section class="table-card table-responsive mt-4"><table class="table"><thead><tr><th>Code</th><th>Customer</th><th>Technician</th><th>Status</th><th>Updated</th></tr></thead><tbody>@foreach (var repair in Model.RepairOrders.OrderByDescending(repair => repair.UpdatedAt)) { <tr><td>@repair.RepairOrderCode</td><td>@(repair.Customer?.FullName ?? "-")</td><td>@(repair.AssignedTechnician?.Username ?? "Unassigned")</td><td>@repair.Status</td><td>@repair.UpdatedAt.ToString("yyyy-MM-dd")</td></tr> }</tbody></table></section>
 </section>

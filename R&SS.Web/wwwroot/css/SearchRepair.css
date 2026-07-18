@@ -1,3 +1,18 @@
+/* Technology dashboard theme tokens */
+:root {
+  --primary-dark: #0F172A;
+  --primary-light: #0891B2;
+  --accent-bright: #06B6D4;
+  --background-light: #F1F5F9;
+  --surface-white: #FFFFFF;
+  --text-dark: #1E293B;
+  --text-secondary: #64748B;
+  --border-light: #E2E8F0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 6px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 14px 34px rgba(15, 23, 42, 0.10);
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
 .search-card,
 .result-card {
     background: #ffffff;
@@ -8,7 +23,7 @@
 }
 
 .search-card {
-    background: linear-gradient(135deg, #f8fafc, #eef6ff);
+    background: linear-gradient(135deg, #f8fafc, #E0F2FE);
     margin-bottom: 22px;
 }
 
@@ -21,7 +36,7 @@
 }
 
 .result-card span {
-    color: #0f766e;
+    color: #0891B2;
     font-weight: 800;
     text-transform: uppercase;
 }

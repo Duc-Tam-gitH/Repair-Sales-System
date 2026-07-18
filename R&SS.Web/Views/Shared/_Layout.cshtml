@@ -1,10 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - R_SS.Web</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/phase15-mvc.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/R_SS.Web.styles.css" asp-append-version="true" />
@@ -12,145 +13,156 @@
 </head>
 <body>
     @{
-        var activeRole = ViewData["ActiveRole"]?.ToString();
-        var roleDisplay = ViewData["RoleDisplay"]?.ToString() ?? "Admin User";
-        var roleMenu = activeRole switch
-        {
-            "Customer" => new[] { "Dashboard", "Products", "Cart", "Orders", "Repairs", "Logout" },
-            "Reception" => new[] { "Dashboard", "Customers", "Repair Requests", "Technical Reports", "Handover" },
-            "Technician" => new[] { "Dashboard", "My Tasks", "Component Search", "Work Schedule" },
-            "Manager" => new[] { "Dashboard", "Repair Progress", "Accounts", "Employees", "Customers", "Requests", "Approvals" },
-            "Administrator" => new[] { "Dashboard", "Repair Progress", "Accounts", "Employees", "Customers", "Requests", "Approvals" },
-            "Warehouse" => new[] { "Dashboard", "Stock List", "Inventory Management", "Inventory Tracking", "Suppliers" },
-            "ProductManagement" => new[] { "Categories", "Products", "Orders" },
-            "Payment" => new[] { "Transactions", "Repair Payment", "Invoices" },
-            "Reports" => new[] { "Revenue", "Repairs", "Inventory", "Customers", "Products" },
-            "SystemAdmin" => new[] { "Audit Logs", "Process Configuration" },
-            _ => new[] { "Dashboard", "Customers", "Products", "Reports", "Administration" }
-        };
+        var activeRole = ViewData["ActiveRole"]?.ToString()
+            ?? User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+        var roleDisplay = ViewData["RoleDisplay"]?.ToString()
+            ?? User.Identity?.Name
+            ?? "User";
+        var pageTitle = ViewData["Title"]?.ToString() ?? "Dashboard";
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+        string IsActive(string controller, string action) =>
+            string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase)
+                ? "active"
+                : "";
     }
-    <header>
-        <div class="rss-app-header">
-            <div class="container-fluid">
-                <div class="rss-brand-lockup">
-                    <a class="rss-logo" asp-area="" asp-controller="Home" asp-action="Home">R&SS</a>
+
+    <div class="tech-app-shell" id="techAppShell">
+        <aside class="tech-sidebar" aria-label="Primary navigation">
+            <a class="tech-brand" asp-controller="Home" asp-action="Home">
+                <span class="tech-brand-icon"><i class="fa-solid fa-microchip"></i></span>
+                <span>
+                    <strong>TECH SYSTEM</strong>
+                    <small>Repair Management</small>
+                </span>
+            </a>
+
+            <nav class="tech-sidebar-nav">
+                @if (activeRole == "Customer")
+                {
+                    <a class="tech-nav-link @IsActive("Customer", "CustomerHome")" asp-controller="Customer" asp-action="CustomerHome"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+                    <a class="tech-nav-link @IsActive("Customer", "ProductList")" asp-controller="Customer" asp-action="ProductList"><i class="fa-solid fa-laptop"></i><span>Products</span></a>
+                    <a class="tech-nav-link @IsActive("Customer", "Cart")" asp-controller="Customer" asp-action="Cart"><i class="fa-solid fa-cart-shopping"></i><span>Cart</span></a>
+                    <a class="tech-nav-link @IsActive("Customer", "MyOrders")" asp-controller="Customer" asp-action="MyOrders"><i class="fa-solid fa-clipboard-list"></i><span>Orders</span></a>
+                    <a class="tech-nav-link @IsActive("Customer", "RepairProgress")" asp-controller="Customer" asp-action="RepairProgress"><i class="fa-solid fa-screwdriver-wrench"></i><span>Repairs</span></a>
+                }
+                else if (activeRole == "Reception" || activeRole == "Receptionist")
+                {
+                    <a class="tech-nav-link @IsActive("Reception", "ReceptionDashboard")" asp-controller="Reception" asp-action="ReceptionDashboard"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+                    <a class="tech-nav-link @IsActive("Reception", "CustomerList")" asp-controller="Reception" asp-action="CustomerList"><i class="fa-solid fa-users"></i><span>Customers</span></a>
+                    <a class="tech-nav-link @IsActive("Reception", "RepairRequestList")" asp-controller="Reception" asp-action="RepairRequestList"><i class="fa-solid fa-clipboard-list"></i><span>Repair Requests</span></a>
+                    <a class="tech-nav-link @IsActive("Reception", "TechnicalReportList")" asp-controller="Reception" asp-action="TechnicalReportList"><i class="fa-solid fa-file-lines"></i><span>Technical Reports</span></a>
+                    <a class="tech-nav-link @IsActive("Reception", "DeviceHandover")" asp-controller="Reception" asp-action="DeviceHandover"><i class="fa-solid fa-handshake"></i><span>Handover</span></a>
+                }
+                else if (activeRole == "Technician")
+                {
+                    <a class="tech-nav-link @IsActive("Technician", "TechnicianDashboard")" asp-controller="Technician" asp-action="TechnicianDashboard"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+                    <a class="tech-nav-link @IsActive("Technician", "AssignedTasks")" asp-controller="Technician" asp-action="AssignedTasks"><i class="fa-solid fa-list-check"></i><span>My Tasks</span></a>
+                    <a class="tech-nav-link @IsActive("Technician", "ComponentSearch")" asp-controller="Technician" asp-action="ComponentSearch"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Component Search</span></a>
+                    <a class="tech-nav-link @IsActive("Technician", "WorkSchedule")" asp-controller="Technician" asp-action="WorkSchedule"><i class="fa-solid fa-calendar-days"></i><span>Work Schedule</span></a>
+                }
+                else if (activeRole == "Manager" || activeRole == "Administrator" || activeRole == "Admin")
+                {
+                    <a class="tech-nav-link @IsActive("Management", "ManagementDashboard")" asp-controller="Management" asp-action="ManagementDashboard"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+                    <a class="tech-nav-link @IsActive("Management", "RepairProgressDashboard")" asp-controller="Management" asp-action="RepairProgressDashboard"><i class="fa-solid fa-chart-line"></i><span>Repair Progress</span></a>
+                    <a class="tech-nav-link @IsActive("Management", "SystemAccountManagement")" asp-controller="Management" asp-action="SystemAccountManagement"><i class="fa-solid fa-user-shield"></i><span>Accounts</span></a>
+                    <a class="tech-nav-link @IsActive("Management", "EmployeeManagement")" asp-controller="Management" asp-action="EmployeeManagement"><i class="fa-solid fa-id-card"></i><span>Employees</span></a>
+                    <a class="tech-nav-link @IsActive("Management", "CustomerManagement")" asp-controller="Management" asp-action="CustomerManagement"><i class="fa-solid fa-users"></i><span>Customers</span></a>
+                    <a class="tech-nav-link @IsActive("Management", "TechnicalRequestManagement")" asp-controller="Management" asp-action="TechnicalRequestManagement"><i class="fa-solid fa-clipboard-list"></i><span>Requests</span></a>
+                    <a class="tech-nav-link @IsActive("Management", "ApproveQuotes")" asp-controller="Management" asp-action="ApproveQuotes"><i class="fa-solid fa-circle-check"></i><span>Approvals</span></a>
+                }
+                else if (activeRole == "Warehouse")
+                {
+                    <a class="tech-nav-link @IsActive("Warehouse", "WarehouseDashboard")" asp-controller="Warehouse" asp-action="WarehouseDashboard"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+                    <a class="tech-nav-link @IsActive("Warehouse", "StockList")" asp-controller="Warehouse" asp-action="StockList"><i class="fa-solid fa-boxes-stacked"></i><span>Stock List</span></a>
+                    <a class="tech-nav-link @IsActive("Warehouse", "InventoryManagement")" asp-controller="Warehouse" asp-action="InventoryManagement"><i class="fa-solid fa-warehouse"></i><span>Inventory Management</span></a>
+                    <a class="tech-nav-link @IsActive("Warehouse", "InventoryTracking")" asp-controller="Warehouse" asp-action="InventoryTracking"><i class="fa-solid fa-route"></i><span>Inventory Tracking</span></a>
+                    <a class="tech-nav-link @IsActive("Warehouse", "SupplierManagement")" asp-controller="Warehouse" asp-action="SupplierManagement"><i class="fa-solid fa-truck-field"></i><span>Suppliers</span></a>
+                }
+                else if (activeRole == "ProductManagement")
+                {
+                    <a class="tech-nav-link @IsActive("ProductManagement", "CategoryManagement")" asp-controller="ProductManagement" asp-action="CategoryManagement"><i class="fa-solid fa-layer-group"></i><span>Categories</span></a>
+                    <a class="tech-nav-link @IsActive("ProductManagement", "ProductList")" asp-controller="ProductManagement" asp-action="ProductList"><i class="fa-solid fa-laptop"></i><span>Products</span></a>
+                    <a class="tech-nav-link @IsActive("ProductManagement", "OrderList")" asp-controller="ProductManagement" asp-action="OrderList"><i class="fa-solid fa-clipboard-list"></i><span>Orders</span></a>
+                }
+                else if (activeRole == "Payment")
+                {
+                    <a class="tech-nav-link @IsActive("Payment", "TransactionList")" asp-controller="Payment" asp-action="TransactionList"><i class="fa-solid fa-money-check-dollar"></i><span>Transactions</span></a>
+                    <a class="tech-nav-link @IsActive("Payment", "RepairPayment")" asp-controller="Payment" asp-action="RepairPayment"><i class="fa-solid fa-screwdriver-wrench"></i><span>Repair Payment</span></a>
+                    <a class="tech-nav-link @IsActive("Payment", "InvoicePrint")" asp-controller="Payment" asp-action="InvoicePrint"><i class="fa-solid fa-file-invoice-dollar"></i><span>Invoices</span></a>
+                }
+                else if (activeRole == "Reports")
+                {
+                    <a class="tech-nav-link @IsActive("Reports", "RevenueReport")" asp-controller="Reports" asp-action="RevenueReport"><i class="fa-solid fa-chart-column"></i><span>Revenue</span></a>
+                    <a class="tech-nav-link @IsActive("Reports", "RepairReport")" asp-controller="Reports" asp-action="RepairReport"><i class="fa-solid fa-screwdriver-wrench"></i><span>Repairs</span></a>
+                    <a class="tech-nav-link @IsActive("Reports", "InventoryReport")" asp-controller="Reports" asp-action="InventoryReport"><i class="fa-solid fa-boxes-stacked"></i><span>Inventory</span></a>
+                    <a class="tech-nav-link @IsActive("Reports", "CustomerStatistics")" asp-controller="Reports" asp-action="CustomerStatistics"><i class="fa-solid fa-users"></i><span>Customers</span></a>
+                    <a class="tech-nav-link @IsActive("Reports", "ProductSalesStatistics")" asp-controller="Reports" asp-action="ProductSalesStatistics"><i class="fa-solid fa-laptop"></i><span>Products</span></a>
+                }
+                else if (activeRole == "SystemAdmin")
+                {
+                    <a class="tech-nav-link @IsActive("SystemAdmin", "AuditLog")" asp-controller="SystemAdmin" asp-action="AuditLog"><i class="fa-solid fa-shield-halved"></i><span>Audit Logs</span></a>
+                    <a class="tech-nav-link @IsActive("SystemAdmin", "ProcessManagement")" asp-controller="SystemAdmin" asp-action="ProcessManagement"><i class="fa-solid fa-diagram-project"></i><span>Process Configuration</span></a>
+                }
+                else
+                {
+                    <a class="tech-nav-link active" asp-controller="Home" asp-action="Home"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+                    <a class="tech-nav-link" href="#"><i class="fa-regular fa-clipboard"></i><span>Orders</span></a>
+                    <a class="tech-nav-link" href="#"><i class="fa-solid fa-boxes-stacked"></i><span>Inventory</span></a>
+                    <a class="tech-nav-link" href="#"><i class="fa-regular fa-user"></i><span>Clients</span></a>
+                    <a class="tech-nav-link" href="#"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+                }
+            </nav>
+
+            <div class="tech-sidebar-footer">
+                <span>System Status</span>
+                <strong><i class="fa-solid fa-circle"></i> Online</strong>
+            </div>
+        </aside>
+
+        <div class="tech-sidebar-backdrop" data-sidebar-close></div>
+
+        <div class="tech-app-main">
+            <header class="tech-topbar">
+                <div class="tech-topbar-left">
+                    <button class="tech-menu-toggle" type="button" aria-label="Toggle navigation" aria-controls="techAppShell" aria-expanded="false">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
                     <div>
-                        <strong>Repair & Sales System</strong>
-                        <span>Service, inventory, and sales operations</span>
+                        <p>Technology Management System</p>
+                        <h1>@pageTitle</h1>
                     </div>
                 </div>
-                <div class="rss-user-box">
-                    <span>@roleDisplay</span>
-                    <a class="btn btn-outline-light btn-sm" asp-controller="Account" asp-action="Login">Logout</a>
+
+                <div class="tech-topbar-right">
+                    <label class="tech-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="search" placeholder="Search..." />
+                    </label>
+                    <a class="tech-user" asp-controller="Account" asp-action="PersonalInfo" aria-label="Profile">
+                        <span class="tech-avatar"><i class="fa-regular fa-user"></i></span>
+                        <span>@roleDisplay</span>
+                    </a>
+                    <a class="btn tech-logout" asp-controller="Account" asp-action="Logout">Logout</a>
                 </div>
-            </div>
+            </header>
+
+            <main class="tech-content" role="main">
+                @RenderBody()
+            </main>
+
+            <footer class="tech-footer">
+                <span>&copy; 2026 Tech System. All rights reserved.</span>
+                <nav aria-label="Footer links">
+                    <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Support</a>
+                </nav>
+            </footer>
         </div>
-        <nav class="navbar navbar-expand-lg navbar-dark rss-main-navbar mb-4">
-            <div class="container-fluid">
-                <a class="navbar-brand d-lg-none" asp-area="" asp-controller="Home" asp-action="Home">Menu</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Home">Home</a>
-                        </li>
-                        @if (activeRole == "Customer")
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Customer" asp-action="CustomerHome">Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Customer" asp-action="ProductList">Products</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Customer" asp-action="Cart">Cart</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Customer" asp-action="MyOrders">Orders</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Customer" asp-action="RepairProgress">Repairs</a></li>
-                        }
-                        else if (activeRole == "Reception")
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Reception" asp-action="ReceptionDashboard">Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Reception" asp-action="CustomerList">Customers</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Reception" asp-action="RepairRequestList">Repair Requests</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Reception" asp-action="TechnicalReportList">Technical Reports</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Reception" asp-action="DeviceHandover">Handover</a></li>
-                        }
-                        else if (activeRole == "Technician")
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Technician" asp-action="TechnicianDashboard">Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Technician" asp-action="AssignedTasks">My Tasks</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Technician" asp-action="ComponentSearch">Component Search</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Technician" asp-action="WorkSchedule">Work Schedule</a></li>
-                        }
-                        else if (activeRole == "Manager" || activeRole == "Administrator")
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Management" asp-action="ManagementDashboard">Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Management" asp-action="RepairProgressDashboard">Repair Progress</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Management" asp-action="SystemAccountManagement">Accounts</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Management" asp-action="EmployeeManagement">Employees</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Management" asp-action="CustomerManagement">Customers</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Management" asp-action="TechnicalRequestManagement">Requests</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Management" asp-action="ApproveQuotes">Approvals</a></li>
-                        }
-                        else if (activeRole == "Warehouse")
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Warehouse" asp-action="WarehouseDashboard">Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Warehouse" asp-action="StockList">Stock List</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Warehouse" asp-action="InventoryManagement">Inventory Management</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Warehouse" asp-action="InventoryTracking">Inventory Tracking</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Warehouse" asp-action="SupplierManagement">Suppliers</a></li>
-                        }
-                        else if (activeRole == "ProductManagement")
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-controller="ProductManagement" asp-action="CategoryManagement">Categories</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="ProductManagement" asp-action="ProductList">Products</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="ProductManagement" asp-action="OrderList">Orders</a></li>
-                        }
-                        else if (activeRole == "Payment")
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Payment" asp-action="TransactionList">Transactions</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Payment" asp-action="RepairPayment">Repair Payment</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Payment" asp-action="InvoicePrint">Invoices</a></li>
-                        }
-                        else if (activeRole == "Reports")
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Reports" asp-action="RevenueReport">Revenue</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Reports" asp-action="RepairReport">Repairs</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Reports" asp-action="InventoryReport">Inventory</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Reports" asp-action="CustomerStatistics">Customers</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Reports" asp-action="ProductSalesStatistics">Products</a></li>
-                        }
-                        else if (activeRole == "SystemAdmin")
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-controller="SystemAdmin" asp-action="AuditLog">Audit Logs</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="SystemAdmin" asp-action="ProcessManagement">Process Configuration</a></li>
-                        }
-                        else
-                        {
-                            @foreach (var item in roleMenu)
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">@item</a>
-                                </li>
-                            }
-                        }
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="PersonalInfo">Personal Info</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Repair & Sales System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> - <a href="#">Terms</a> - <a href="#">Support</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

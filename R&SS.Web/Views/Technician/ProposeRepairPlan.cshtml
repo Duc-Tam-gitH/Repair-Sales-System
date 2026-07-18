@@ -1,3 +1,4 @@
+@model TechnicianTaskViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Propose Repair Plan";
@@ -9,20 +10,21 @@
     <link rel="stylesheet" href="~/css/ProposeRepairPlan.css" asp-append-version="true" />
 }
 
-<!-- Data saved via ITechnicianService.SubmitRepairPlan() -->
 <section class="repair-plan-page">
     <div class="plan-card">
         <h1>Propose Repair Plan</h1>
-        <p>Prepare repair steps, replacement parts, estimated cost, and expected completion time.</p>
-        <div class="alert alert-success" role="status">Plan submitted successfully!</div>
-        <form>
-            <label class="form-label" for="plan">Proposed Repair Plan</label><textarea class="form-control" id="plan" rows="5" placeholder="1. Remove keyboard module&#10;2. Clean connector area&#10;3. Install replacement keyboard&#10;4. Run final hardware test"></textarea>
-            <label class="form-label mt-3" for="parts">Proposed Replacement Parts</label><textarea class="form-control" id="parts" rows="3">Keyboard module, cleaning kit</textarea>
+        <p>Prepare repair steps, estimated service fee, and expected processing time.</p>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+        <form method="post" asp-controller="Technician" asp-action="ProposeRepairPlan">
+            @Html.AntiForgeryToken()
+            <input name="RepairOrderId" type="hidden" value="@Model.Ticket.RepairOrderId" />
+            <label class="form-label" for="WorkPerformed">Proposed Repair Plan</label><textarea class="form-control" id="WorkPerformed" name="WorkPerformed" rows="5">@Model.Update.WorkPerformed</textarea>
+            <label class="form-label mt-3" for="RepairResult">Expected Repair Result</label><textarea class="form-control" id="RepairResult" name="RepairResult" rows="3">@Model.Update.RepairResult</textarea>
             <div class="row g-3 mt-1">
-                <div class="col-md-6"><label class="form-label" for="cost">Estimated Cost</label><input class="form-control" id="cost" type="number" value="85" /></div>
-                <div class="col-md-6"><label class="form-label" for="time">Estimated Time</label><select class="form-select" id="time"><option>4 hours</option><option>1 day</option><option>2 days</option><option>3 days</option></select></div>
+                <div class="col-md-6"><label class="form-label" for="ServiceFee">Estimated Service Fee</label><input class="form-control" id="ServiceFee" name="ServiceFee" type="number" step="0.01" min="0" value="@Model.Update.ServiceFee" /></div>
+                <div class="col-md-6"><label class="form-label" for="ProcessingMinutes">Estimated Minutes</label><input class="form-control" id="ProcessingMinutes" name="ProcessingMinutes" type="number" min="0" value="@Model.Update.ProcessingMinutes" /></div>
             </div>
-            <div class="d-flex gap-2 mt-4"><a class="btn btn-primary" asp-controller="Technician" asp-action="UpdateProgress">Submit Repair Plan</a><a class="btn btn-outline-secondary" asp-controller="Technician" asp-action="TaskDetails">Back</a></div>
+            <div class="d-flex gap-2 mt-4"><button class="btn btn-primary" type="submit">Submit Repair Plan</button><a class="btn btn-outline-secondary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@Model.Ticket.RepairOrderId">Back</a></div>
         </form>
     </div>
 </section>

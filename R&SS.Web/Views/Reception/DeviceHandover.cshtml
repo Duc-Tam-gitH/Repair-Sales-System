@@ -1,3 +1,4 @@
+@model IReadOnlyCollection<TechnicalTicketResponse>
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Device Handover";
@@ -9,44 +10,31 @@
     <link rel="stylesheet" href="~/css/DeviceHandover.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IReceptionService.GetPendingHandovers() -->
 <section class="handover-page">
     <div class="handover-header">
         <h1>Device Handover / Delivery</h1>
-        <input class="form-control" placeholder="Search by Report Code or Customer Name..." />
+        <a class="btn btn-outline-primary" asp-controller="Reception" asp-action="TechnicalReportList">All Reports</a>
     </div>
 
     <div class="row g-4">
-        <div class="col-lg-5">
+        <div class="col-lg-12">
             <section class="handover-list">
                 <h2>Pending Handover</h2>
-                <article><strong>TECH-2026-003</strong><span>David Lee - Tablet Air 10</span><button class="btn btn-sm btn-outline-primary">View Report Details</button></article>
-                <article><strong>TECH-2026-004</strong><span>Anya Pham - Nova X Phone</span><button class="btn btn-sm btn-outline-primary">View Report Details</button></article>
-            </section>
-        </div>
-        <div class="col-lg-7">
-            <section class="handover-process">
-                <h2>Handover Process</h2>
-                <div class="alert alert-success" role="status">Delivery completed successfully.</div>
-                <div class="repair-summary">
-                    <p><strong>Repair Info:</strong> Display replaced and device tested.</p>
-                    <p><strong>Components Used:</strong> OLED screen assembly, adhesive seal</p>
-                    <p><strong>Total Cost:</strong> $129</p>
-                </div>
-                <label class="confirm-line"><input type="checkbox" /> Customer receives equipment</label>
-                <div class="row g-3 mt-1">
-                    <div class="col-md-6"><label class="form-label" for="amount">Amount Paid</label><input class="form-control" id="amount" value="129" /></div>
-                    <div class="col-md-6"><label class="form-label" for="payment">Payment Method</label><select class="form-select" id="payment"><option>Cash</option><option>Credit Card</option><option>e-Wallet</option></select></div>
-                </div>
-                <div class="d-flex flex-wrap gap-2 mt-4">
-                    <button class="btn btn-success">Confirm Delivery Completion</button>
-                    <button class="btn btn-outline-secondary">Print Receipt/Invoice</button>
-                </div>
-                <div class="refusal-box mt-4">
-                    <h3>Handle Refusal</h3>
-                    <textarea class="form-control" rows="3" placeholder="Required reason if customer refuses delivery"></textarea>
-                    <button class="btn btn-outline-danger mt-3">Customer Refused Delivery</button>
-                </div>
+                @if (!Model.Any())
+                {
+                    <article><strong>No pending handovers</strong><span>Completed repair tickets will appear here.</span></article>
+                }
+                else
+                {
+                    @foreach (var ticket in Model)
+                    {
+                        <article>
+                            <strong>@ticket.TicketCode</strong>
+                            <span>@ticket.CustomerName - @ticket.Brand @ticket.DeviceModel</span>
+                            <a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="TechnicalReportDetails" asp-route-id="@ticket.RepairOrderId">View Report Details</a>
+                        </article>
+                    }
+                }
             </section>
         </div>
     </div>

@@ -11,6 +11,18 @@ namespace R_SS.DAL.Repositories
         {
         }
 
+        public async Task<IReadOnlyCollection<SalesOrder>> GetAllWithDetailsAsync()
+        {
+            return await _context.SalesOrders
+                .AsNoTracking()
+                .Include(order => order.Customer)
+                .Include(order => order.SalesOrderDetails)
+                .ThenInclude(detail => detail.Product)
+                .Include(order => order.Payments)
+                .OrderByDescending(order => order.CreatedAt)
+                .ToListAsync();
+        }
+
         public async Task<IReadOnlyCollection<SalesOrder>> GetByCustomerIdAsync(int customerId)
         {
             return await _context.SalesOrders

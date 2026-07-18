@@ -1,3 +1,4 @@
+@model CustomerListResponse
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Customer List";
@@ -9,26 +10,43 @@
     <link rel="stylesheet" href="~/css/CustomerList.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IReceptionService.GetCustomers() -->
 <section class="customer-list-page">
     <div class="list-header">
         <div><h1>Customer List</h1><p>Search, review, add, edit, or deactivate customer profiles.</p></div>
         <a class="btn btn-primary" asp-controller="Reception" asp-action="AddCustomer">Add Customer</a>
     </div>
 
-    <div class="alert alert-warning" role="alert">Deactivate action requires confirmation before updating customer status.</div>
-    <div class="list-tools">
-        <input class="form-control" type="search" placeholder="Search by name or phone..." />
-        <select class="form-select"><option>All</option><option>Active</option><option>Inactive</option></select>
-    </div>
+    @if (TempData["ErrorMessage"] is string errorMessage)
+    {
+        <div class="alert alert-danger" role="alert">@errorMessage</div>
+    }
+    <form class="list-tools" method="get" asp-controller="Reception" asp-action="CustomerList">
+        <input class="form-control" name="keyword" value="@ViewData["Keyword"]" type="search" placeholder="Search by name or phone..." />
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+    </form>
 
     <div class="table-card table-responsive">
         <table class="table align-middle">
             <thead><tr><th>Customer Code</th><th>Full Name</th><th>Phone Number</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody>
-                <tr><td>CUS-001</td><td>Minh Tran</td><td>0901112222</td><td>minh@example.com</td><td><span class="badge text-bg-success">Active</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="CustomerDetails">View Details</a> <a class="btn btn-sm btn-outline-secondary" asp-controller="Reception" asp-action="CustomerDetails">Edit</a> <button class="btn btn-sm btn-outline-danger">Deactivate</button></td></tr>
-                <tr><td>CUS-002</td><td>Anya Pham</td><td>0903334444</td><td>anya@example.com</td><td><span class="badge text-bg-success">Active</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="CustomerDetails">View Details</a> <a class="btn btn-sm btn-outline-secondary" asp-controller="Reception" asp-action="CustomerDetails">Edit</a> <button class="btn btn-sm btn-outline-danger">Deactivate</button></td></tr>
-                <tr><td>CUS-003</td><td>David Lee</td><td>0905556666</td><td>david@example.com</td><td><span class="badge text-bg-secondary">Inactive</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="CustomerDetails">View Details</a> <a class="btn btn-sm btn-outline-secondary" asp-controller="Reception" asp-action="CustomerDetails">Edit</a></td></tr>
+                @if (!Model.Customers.Any())
+                {
+                    <tr><td colspan="6">@Model.Message</td></tr>
+                }
+                else
+                {
+                    @foreach (var customer in Model.Customers)
+                    {
+                        <tr>
+                            <td>@customer.CustomerCode</td>
+                            <td>@customer.FullName</td>
+                            <td>@customer.Phone</td>
+                            <td>@customer.Email</td>
+                            <td><span class="badge @(customer.IsActive ? "text-bg-success" : "text-bg-secondary")">@(customer.IsActive ? "Active" : "Inactive")</span></td>
+                            <td><a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="CustomerDetails" asp-route-id="@customer.CustomerId">View Details</a></td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>

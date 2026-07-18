@@ -1,3 +1,4 @@
+@model RegisterRequest
 @{
     Layout = null;
     ViewData["Title"] = "Register";
@@ -23,39 +24,45 @@
                 </div>
             </div>
 
-            <div class="alert alert-warning" role="alert">
-                Username or email already exists.
-            </div>
+            <div asp-validation-summary="ModelOnly" class="alert alert-warning" role="alert"></div>
 
             <form method="post" asp-controller="Account" asp-action="Register">
+                @Html.AntiForgeryToken()
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label" for="fullName">Full Name</label>
-                        <input class="form-control" id="fullName" name="FullName" type="text" required />
+                        <label class="form-label" asp-for="FullName">Full Name</label>
+                        <input class="form-control" asp-for="FullName" required />
+                        <span class="text-danger" asp-validation-for="FullName"></span>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" for="email">Email</label>
-                        <input class="form-control" id="email" name="Email" type="email" required />
+                        <label class="form-label" asp-for="Email">Email</label>
+                        <input class="form-control" asp-for="Email" type="email" required />
+                        <span class="text-danger" asp-validation-for="Email"></span>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" for="phone">Phone Number</label>
-                        <input class="form-control" id="phone" name="PhoneNumber" type="tel" required />
+                        <label class="form-label" asp-for="Phone">Phone Number</label>
+                        <input class="form-control" asp-for="Phone" type="tel" />
+                        <span class="text-danger" asp-validation-for="Phone"></span>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" for="username">Username</label>
-                        <input class="form-control" id="username" name="Username" type="text" required />
+                        <label class="form-label" asp-for="Username">Username</label>
+                        <input class="form-control" asp-for="Username" required />
+                        <span class="text-danger" asp-validation-for="Username"></span>
                     </div>
                     <div class="col-12">
-                        <label class="form-label" for="address">Address <span class="text-muted">(optional)</span></label>
-                        <textarea class="form-control" id="address" name="Address" rows="2"></textarea>
+                        <label class="form-label" asp-for="Address">Address <span class="text-muted">(optional)</span></label>
+                        <textarea class="form-control" asp-for="Address" rows="2"></textarea>
+                        <span class="text-danger" asp-validation-for="Address"></span>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" for="password">Password</label>
-                        <input class="form-control" id="password" name="Password" type="password" required />
+                        <label class="form-label" asp-for="Password">Password</label>
+                        <input class="form-control" asp-for="Password" type="password" required />
+                        <span class="text-danger" asp-validation-for="Password"></span>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" for="confirmPassword">Confirm Password</label>
-                        <input class="form-control" id="confirmPassword" name="ConfirmPassword" type="password" required />
+                        <label class="form-label" asp-for="ConfirmPassword">Confirm Password</label>
+                        <input class="form-control" asp-for="ConfirmPassword" type="password" required />
+                        <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
                     </div>
                 </div>
                 <button class="btn btn-success btn-lg w-100 mt-4" type="submit">Register</button>

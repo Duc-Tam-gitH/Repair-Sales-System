@@ -1,3 +1,4 @@
+@model LoginRequest
 @{
     Layout = null;
     ViewData["Title"] = "Login";
@@ -23,20 +24,29 @@
             <h1 id="login-title">Welcome back</h1>
             <p class="auth-subtitle">Sign in to manage services, orders, customers, and reports.</p>
 
-            <div class="alert alert-danger" role="alert">
-                Invalid username or password.
-            </div>
+            @if (TempData["SuccessMessage"] is string successMessage)
+            {
+                <div class="alert alert-success" role="status">@successMessage</div>
+            }
 
-            <form method="post" asp-controller="Account" asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]">
                 @Html.AntiForgeryToken()
                 <div class="mb-3">
-                    <label class="form-label" for="username">Username</label>
-                    <input class="form-control form-control-lg" id="username" name="EmailOrUsername" type="text" autocomplete="username" placeholder="Enter your username" required />
+                    <label class="form-label" asp-for="EmailOrUsername">Username or Email</label>
+                    <input class="form-control form-control-lg" asp-for="EmailOrUsername" autocomplete="username" placeholder="Enter your username or email" required />
+                    <span class="text-danger" asp-validation-for="EmailOrUsername"></span>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="password">Password</label>
-                    <input class="form-control form-control-lg" id="password" name="Password" type="password" autocomplete="current-password" placeholder="Enter your password" required />
+                    <label class="form-label" asp-for="Password">Password</label>
+                    <input class="form-control form-control-lg" asp-for="Password" type="password" autocomplete="current-password" placeholder="Enter your password" required />
+                    <span class="text-danger" asp-validation-for="Password"></span>
                 </div>
+                <label class="form-check mb-3">
+                    <input class="form-check-input" name="rememberMe" type="checkbox" value="true" />
+                    <span class="form-check-label">Remember me</span>
+                </label>
                 <div class="auth-links">
                     <a asp-controller="Account" asp-action="ForgotPassword">Forgot Password?</a>
                     <a asp-controller="Account" asp-action="Register">Create an account</a>

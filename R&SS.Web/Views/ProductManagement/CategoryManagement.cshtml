@@ -1,3 +1,4 @@
+@model ProductCategoryManagementViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Category Management";
@@ -9,18 +10,26 @@
     <link rel="stylesheet" href="~/css/CategoryManagement.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IProductService.GetCategories() -->
 <section class="category-management-page">
     <div class="product-admin-header">
         <div><span>Catalog Setup</span><h1>Product Category Management</h1><p>Manage active and discontinued sales categories used by the product catalog.</p></div>
-        <button class="btn btn-primary">Add Category</button>
+        <a class="btn btn-primary" asp-controller="ProductManagement" asp-action="ProductList">Products</a>
     </div>
 
-    <div class="alert alert-warning" role="alert">Cannot delete category: products are linked to this category! Reassign linked products before discontinuing.</div>
+    @if (TempData["SuccessMessage"] is string success)
+    {
+        <div class="alert alert-success" role="status">@success</div>
+    }
+    @if (TempData["ErrorMessage"] is string error)
+    {
+        <div class="alert alert-warning" role="alert">@error</div>
+    }
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-    <div class="category-tools">
-        <input class="form-control" type="search" placeholder="Search by Category Name..." />
-    </div>
+    <form class="category-tools" method="get" asp-controller="ProductManagement" asp-action="CategoryManagement">
+        <input class="form-control" name="keyword" value="@Model.Keyword" type="search" placeholder="Search by Category Name..." />
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+    </form>
 
     <div class="row g-4">
         <div class="col-lg-8">
@@ -28,23 +37,58 @@
                 <table class="table align-middle">
                     <thead><tr><th>Category ID</th><th>Category Name</th><th>Description</th><th>Status</th><th>Actions</th></tr></thead>
                     <tbody>
-                        <tr><td>CAT-001</td><td>Laptops</td><td>Business and consumer laptops.</td><td><span class="badge text-bg-success">Active</span></td><td><button class="btn btn-sm btn-outline-secondary">Edit Category</button> <button class="btn btn-sm btn-outline-danger">Delete/Discontinue Category</button></td></tr>
-                        <tr><td>CAT-002</td><td>Phones</td><td>Smartphones and related retail devices.</td><td><span class="badge text-bg-success">Active</span></td><td><button class="btn btn-sm btn-outline-secondary">Edit Category</button> <button class="btn btn-sm btn-outline-danger">Delete/Discontinue Category</button></td></tr>
-                        <tr><td>CAT-003</td><td>Legacy Accessories</td><td>Discontinued accessories.</td><td><span class="badge text-bg-secondary">Discontinued</span></td><td><button class="btn btn-sm btn-outline-secondary">Edit Category</button></td></tr>
+                        @if (!Model.Categories.Any())
+                        {
+                            <tr><td colspan="5" class="text-center text-muted">No categories found.</td></tr>
+                        }
+                        else
+                        {
+                            @foreach (var category in Model.Categories)
+                            {
+                                var editFormId = $"edit-category-{category.ProductCategoryId}";
+                                var deleteFormId = $"delete-category-{category.ProductCategoryId}";
+                                <tr>
+                                    <td>@category.CategoryCode</td>
+                                    <td>
+                                        <form id="@editFormId" method="post" asp-controller="ProductManagement" asp-action="EditCategory">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="ProductCategoryId" value="@category.ProductCategoryId" />
+                                        </form>
+                                        <input class="form-control" form="@editFormId" name="CategoryName" value="@category.CategoryName" required maxlength="100" />
+                                    </td>
+                                    <td><input class="form-control" form="@editFormId" name="Description" value="@category.Description" maxlength="255" /></td>
+                                    <td>
+                                        <select class="form-select form-select-sm" form="@editFormId" name="IsActive">
+                                            <option value="true" selected="@category.IsActive">Active</option>
+                                            <option value="false" selected="@(!category.IsActive)">Discontinued</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-sm btn-outline-secondary" form="@editFormId" type="submit">Edit</button>
+                                            <form id="@deleteFormId" method="post" asp-controller="ProductManagement" asp-action="DeleteCategory">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="categoryId" value="@category.ProductCategoryId" />
+                                            </form>
+                                            <button class="btn btn-sm btn-outline-danger" form="@deleteFormId" type="submit">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
                     </tbody>
                 </table>
             </div>
         </div>
         <div class="col-lg-4">
-            <form class="category-form">
-                <h2>Add / Edit Category</h2>
-                <label class="form-label" for="categoryName">Category Name</label>
-                <input class="form-control" id="categoryName" value="Accessories" />
-                <label class="form-label mt-3" for="description">Description</label>
-                <textarea class="form-control" id="description" rows="4">Retail accessories for customers.</textarea>
-                <label class="form-label mt-3" for="status">Status</label>
-                <select class="form-select" id="status"><option>Active</option><option>Discontinued</option></select>
-                <button class="btn btn-primary w-100 mt-4" type="button">Save</button>
+            <form class="category-form" method="post" asp-controller="ProductManagement" asp-action="AddCategory">
+                @Html.AntiForgeryToken()
+                <h2>Add Category</h2>
+                <label class="form-label" for="CategoryName">Category Name</label>
+                <input class="form-control" id="CategoryName" name="CategoryName" value="@Model.Category.CategoryName" required maxlength="100" />
+                <label class="form-label mt-3" for="Description">Description</label>
+                <textarea class="form-control" id="Description" name="Description" rows="4" maxlength="255">@Model.Category.Description</textarea>
+                <button class="btn btn-primary w-100 mt-4" type="submit">Save</button>
             </form>
         </div>
     </div>

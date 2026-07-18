@@ -1,1 +1,16 @@
-.report-hero,.filter-panel,.summary-card,.chart-card,.table-card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;box-shadow:0 14px 34px rgba(23,32,51,.08);padding:24px}.report-hero{background:linear-gradient(135deg,#172033,#2563eb);color:#fff;margin-bottom:18px}.report-hero span{color:#bfdbfe;font-weight:800;text-transform:uppercase}.report-hero h1,.chart-card h2,.table-card h2{font-weight:800}.report-hero p{color:#e0ecff;margin:0}.filter-panel{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:18px}.filter-panel select{max-width:230px}.summary-card{border-top:5px solid #2563eb;height:100%}.summary-card strong{display:block;font-size:2rem}.revenue{border-top-color:#0f766e}.avg{border-top-color:#f59e0b}.rank{background:#2563eb;border-radius:999px;color:#fff;display:inline-flex;font-weight:800;height:32px;justify-content:center;align-items:center;width:32px}.bar-chart{align-items:end;display:flex;gap:14px;height:220px}.bar-chart i{background:#2563eb;border-radius:8px 8px 0 0;flex:1}
+/* Technology dashboard theme tokens */
+:root {
+  --primary-dark: #0F172A;
+  --primary-light: #0891B2;
+  --accent-bright: #06B6D4;
+  --background-light: #F1F5F9;
+  --surface-white: #FFFFFF;
+  --text-dark: #1E293B;
+  --text-secondary: #64748B;
+  --border-light: #E2E8F0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 6px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 14px 34px rgba(15, 23, 42, 0.10);
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.report-hero,.filter-panel,.summary-card,.chart-card,.table-card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;box-shadow:0 14px 34px rgba(23,32,51,.08);padding:24px}.report-hero{background:linear-gradient(135deg,#0F172A,#0891B2);color:#fff;margin-bottom:18px}.report-hero span{color:#CFFAFE;font-weight:800;text-transform:uppercase}.report-hero h1,.chart-card h2,.table-card h2{font-weight:800}.report-hero p{color:#ECFEFF;margin:0}.filter-panel{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:18px}.filter-panel select{max-width:230px}.summary-card{border-top:5px solid #0891B2;height:100%}.summary-card strong{display:block;font-size:2rem}.revenue{border-top-color:#0891B2}.avg{border-top-color:#f59e0b}.rank{background:#0891B2;border-radius:999px;color:#fff;display:inline-flex;font-weight:800;height:32px;justify-content:center;align-items:center;width:32px}.bar-chart{align-items:end;display:flex;gap:14px;height:220px}.bar-chart i{background:#0891B2;border-radius:8px 8px 0 0;flex:1}

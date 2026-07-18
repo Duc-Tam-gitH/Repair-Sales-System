@@ -1,3 +1,4 @@
+@model ProcessManagementViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Process Management";
@@ -9,49 +10,53 @@
     <link rel="stylesheet" href="~/css/ProcessManagement.css" asp-append-version="true" />
 }
 
-<!-- Data fetched and saved via IWorkflowConfigurationService.GetRepairWorkflow() -->
 <section class="process-management-page">
     <div class="admin-hero">
-        <div><span>Workflow Configuration</span><h1>Repair Process Management</h1><p>Configure repair states, ordering, allowed transitions, and required workflow rules.</p></div>
+        <div><span>Workflow Configuration</span><h1>Repair Process Management</h1><p>Configure workflow settings, operational limits, and process rules.</p></div>
     </div>
 
-    <div class="alert alert-success" role="status">Workflow updated successfully!</div>
-    <div class="alert alert-warning" role="alert">Cannot delete: step is currently in use!</div>
+    @if (TempData["SuccessMessage"] is string success)
+    {
+        <div class="alert alert-success" role="status">@success</div>
+    }
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
     <div class="row g-4">
         <div class="col-md-4"><article class="summary-card"><span>Current Process Status</span><strong class="status-active">Active</strong></article></div>
-        <div class="col-md-4"><article class="summary-card"><span>Total Steps</span><strong>7</strong></article></div>
-        <div class="col-md-4"><article class="summary-card"><span>Total States</span><strong>7</strong></article></div>
+        <div class="col-md-4"><article class="summary-card"><span>Total Settings</span><strong>@Model.Configurations.Count</strong></article></div>
+        <div class="col-md-4"><article class="summary-card"><span>Total Groups</span><strong>@Model.Configurations.Select(item => item.GroupName ?? "General").Distinct().Count()</strong></article></div>
     </div>
 
     <section class="workflow-panel mt-4">
-        <h2>State / Step Order Configuration</h2>
+        <h2>Configuration Entries</h2>
         <div class="workflow-steps">
-            <article><span>1</span><strong>Pending</strong><small>Active</small><div><button>Move Down</button><button>Edit</button></div></article>
-            <article><span>2</span><strong>Inspection</strong><small>Active</small><div><button>Move Up</button><button>Move Down</button><button>Edit</button></div></article>
-            <article><span>3</span><strong>In-Repair</strong><small>Active</small><div><button>Move Up</button><button>Move Down</button><button>Edit</button></div></article>
-            <article><span>4</span><strong>Awaiting Parts</strong><small>Active</small><div><button>Move Up</button><button>Move Down</button><button>Edit</button></div></article>
-            <article><span>5</span><strong>Quality Check</strong><small>Active</small><div><button>Move Up</button><button>Move Down</button><button>Edit</button></div></article>
-            <article><span>6</span><strong>Completed</strong><small>Active</small><div><button>Move Up</button><button>Move Down</button><button>Edit</button></div></article>
-            <article><span>7</span><strong>Handed Over</strong><small>Active</small><div><button>Move Up</button><button>Enable/Disable</button><button>Edit</button></div></article>
+            @foreach (var configuration in Model.Configurations.OrderBy(item => item.GroupName).ThenBy(item => item.Key))
+            {
+                <article><span>@configuration.SystemConfigurationId</span><strong>@configuration.Key</strong><small>@(configuration.GroupName ?? "General"): @configuration.Value</small></article>
+            }
+            @if (!Model.Configurations.Any())
+            {
+                <article><span>0</span><strong>No configuration</strong><small>Add the first configuration below</small></article>
+            }
         </div>
     </section>
 
     <section class="edit-panel mt-4">
-        <h2>Step Details Editing</h2>
-        <div class="row g-3">
-            <div class="col-md-4"><label class="form-label" for="stepName">Step Name</label><input class="form-control" id="stepName" value="Quality Check" /></div>
-            <div class="col-md-2"><label class="form-label" for="sequence">Order / Sequence</label><input class="form-control" id="sequence" type="number" value="5" /></div>
-            <div class="col-md-2 d-flex align-items-end"><label class="form-check"><input class="form-check-input" type="checkbox" checked /> Is Active?</label></div>
-            <div class="col-md-4"><label class="form-label">Allowed Transitions</label><div class="transition-list"><label><input type="checkbox" checked /> Completed</label><label><input type="checkbox" /> Awaiting Parts</label></div></div>
-            <div class="col-12"><label class="form-label" for="description">Description</label><textarea class="form-control" id="description" rows="3">Final quality validation before customer handover.</textarea></div>
-        </div>
-        <button class="btn btn-primary mt-4">Save Changes</button>
+        <h2>Add / Update Configuration</h2>
+        <form method="post" asp-controller="SystemAdmin" asp-action="UpdateConfiguration">
+            @Html.AntiForgeryToken()
+            <div class="row g-3">
+                <div class="col-md-4"><label class="form-label" for="Key">Key</label><input class="form-control" id="Key" name="Key" value="@Model.Configuration.Key" required /></div>
+                <div class="col-md-4"><label class="form-label" for="Value">Value</label><input class="form-control" id="Value" name="Value" value="@Model.Configuration.Value" required /></div>
+                <div class="col-md-4"><label class="form-label" for="GroupName">Group</label><input class="form-control" id="GroupName" name="GroupName" value="@Model.Configuration.GroupName" /></div>
+                <div class="col-12"><label class="form-label" for="Description">Description</label><textarea class="form-control" id="Description" name="Description" rows="3">@Model.Configuration.Description</textarea></div>
+            </div>
+            <button class="btn btn-primary mt-4" type="submit">Save Changes</button>
+        </form>
     </section>
 
     <section class="rules-panel mt-4 table-responsive">
-        <h2>Workflow Rules</h2>
-        <table class="table align-middle"><thead><tr><th>From State</th><th>To State</th><th>Allowed Roles</th><th>Required Actions</th></tr></thead><tbody><tr><td>Inspection</td><td>In-Repair</td><td>Technician, Manager</td><td>Must attach repair plan</td></tr><tr><td>Completed</td><td>Handed Over</td><td>Reception, Payment</td><td>Must confirm payment and customer receipt</td></tr></tbody></table>
-        <div class="d-flex flex-wrap gap-2"><button class="btn btn-outline-danger">Reset to Default Workflow</button><button class="btn btn-success">Apply Changes</button></div>
+        <h2>Existing Settings</h2>
+        <table class="table align-middle"><thead><tr><th>Group</th><th>Key</th><th>Value</th><th>Description</th></tr></thead><tbody>@foreach (var configuration in Model.Configurations) { <tr><td>@(configuration.GroupName ?? "General")</td><td>@configuration.Key</td><td>@configuration.Value</td><td>@(configuration.Description ?? "-")</td></tr> }</tbody></table>
     </section>
 </section>

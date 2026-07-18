@@ -1,6 +1,7 @@
+@model ProductCatalogViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Add / Update Product";
+    ViewData["Title"] = Model.Product.ProductId.HasValue ? "Update Product" : "Add Product";
     ViewData["ActiveRole"] = "ProductManagement";
     ViewData["RoleDisplay"] = "Product Staff";
 }
@@ -9,23 +10,42 @@
     <link rel="stylesheet" href="~/css/AddUpdateProduct.css" asp-append-version="true" />
 }
 
-<!-- Data saved via IProductService.SaveProduct() -->
 <section class="add-update-product-page">
     <div class="product-form-card">
-        <div class="form-title"><span>Catalog Product</span><h1>Add / Update Product</h1><p>Create a new product or update catalog information.</p></div>
-        <div class="alert alert-success" role="status">Product saved successfully!</div>
-        <form>
+        <div class="form-title"><span>Catalog Product</span><h1>@ViewData["Title"]</h1><p>Create a new product or update catalog information.</p></div>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+        <form method="post" asp-controller="ProductManagement" asp-action="AddUpdateProduct">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="ProductId" value="@Model.Product.ProductId" />
             <div class="row g-3">
-                <div class="col-md-4"><label class="form-label" for="code">Product Code</label><input class="form-control" id="code" value="PRD-004" /></div>
-                <div class="col-md-8"><label class="form-label" for="name">Product Name</label><input class="form-control" id="name" value="Wireless Keyboard" /></div>
-                <div class="col-md-6"><label class="form-label" for="category">Select Category</label><select class="form-select" id="category"><option>Laptops</option><option>Phones</option><option>Accessories</option></select></div>
-                <div class="col-md-3"><label class="form-label" for="price">Price</label><input class="form-control" id="price" type="number" value="59" /></div>
-                <div class="col-md-3"><label class="form-label" for="stock">Stock Quantity</label><input class="form-control" id="stock" type="number" value="30" /></div>
-                <div class="col-12"><label class="form-label" for="description">Description</label><textarea class="form-control" id="description" rows="4">Compact wireless keyboard for office and home users.</textarea></div>
-                <div class="col-12"><label class="form-label" for="specs">Product Specifications</label><textarea class="form-control" id="specs" rows="4">Connectivity: Bluetooth / USB receiver&#10;Battery: AAA x2&#10;Warranty: 12 months</textarea></div>
-                <div class="col-md-6"><label class="form-label" for="status">Status</label><select class="form-select" id="status"><option>Active</option><option>Discontinued</option></select></div>
+                <div class="col-md-4"><label class="form-label" for="ProductCode">Product Code</label><input class="form-control" id="ProductCode" name="ProductCode" value="@Model.Product.ProductCode" required maxlength="50" /></div>
+                <div class="col-md-8"><label class="form-label" for="ProductName">Product Name</label><input class="form-control" id="ProductName" name="ProductName" value="@Model.Product.ProductName" required maxlength="150" /></div>
+                <div class="col-md-6">
+                    <label class="form-label" for="ProductCategoryId">Select Category</label>
+                    <select class="form-select" id="ProductCategoryId" name="ProductCategoryId" required>
+                        <option value="">Select category</option>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.ProductCategoryId" selected="@(category.ProductCategoryId == Model.Product.ProductCategoryId)">@category.CategoryName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="SupplierId">Supplier</label>
+                    <select class="form-select" id="SupplierId" name="SupplierId">
+                        <option value="">No supplier</option>
+                        @foreach (var supplier in Model.Suppliers)
+                        {
+                            <option value="@supplier.SupplierId" selected="@(supplier.SupplierId == Model.Product.SupplierId)">@supplier.SupplierName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3"><label class="form-label" for="SalePrice">Price</label><input class="form-control" id="SalePrice" name="SalePrice" type="number" step="0.01" min="0" value="@Model.Product.SalePrice" /></div>
+                <div class="col-md-3"><label class="form-label" for="QuantityInStock">Stock Quantity</label><input class="form-control" id="QuantityInStock" name="QuantityInStock" type="number" min="0" value="@Model.Product.QuantityInStock" /></div>
+                <div class="col-md-6"><label class="form-label" for="ImageUrl">Image URL</label><input class="form-control" id="ImageUrl" name="ImageUrl" value="@Model.Product.ImageUrl" maxlength="500" /></div>
+                <div class="col-12"><label class="form-label" for="Description">Description</label><textarea class="form-control" id="Description" name="Description" rows="4" maxlength="255">@Model.Product.Description</textarea></div>
             </div>
-            <div class="d-flex gap-2 mt-4"><a class="btn btn-primary" asp-controller="ProductManagement" asp-action="ProductList">Save Product</a><a class="btn btn-outline-secondary" asp-controller="ProductManagement" asp-action="ProductList">Cancel</a></div>
+            <div class="d-flex gap-2 mt-4"><button class="btn btn-primary" type="submit">Save Product</button><a class="btn btn-outline-secondary" asp-controller="ProductManagement" asp-action="ProductList">Cancel</a></div>
         </form>
     </div>
 </section>

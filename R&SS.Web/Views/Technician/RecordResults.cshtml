@@ -1,3 +1,4 @@
+@model TechnicianTaskViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Record Results";
@@ -9,18 +10,19 @@
     <link rel="stylesheet" href="~/css/RecordResults.css" asp-append-version="true" />
 }
 
-<!-- Data saved via ITechnicianService.RecordRepairResults() -->
 <section class="record-results-page">
     <div class="results-card">
         <h1>Record Repair Results</h1>
         <p>Complete the technical work and prepare the device for reception handover.</p>
-        <div class="alert alert-success" role="status">Task completed and ready for handover!</div>
-        <form>
-            <label class="form-label" for="results">Repair Results</label><textarea class="form-control" id="results" rows="4">Successfully repaired keyboard fault and passed final hardware tests.</textarea>
-            <label class="form-label mt-3" for="resolved">Faults Resolved</label><textarea class="form-control" id="resolved" rows="3">Keyboard input failure, moisture residue near connector.</textarea>
-            <label class="form-label mt-3" for="status">Equipment Status After Repair</label><select class="form-select" id="status"><option>Working</option><option>Partially Working</option><option>Not Repairable</option></select>
-            <label class="form-label mt-3" for="notes">Technical Notes</label><textarea class="form-control" id="notes" rows="4" placeholder="Final observations and recommendations."></textarea>
-            <a class="btn btn-primary mt-4" asp-controller="Technician" asp-action="AssignedTasks">Confirm Completion of Technical Work</a>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+        <form method="post" asp-controller="Technician" asp-action="RecordResults">
+            @Html.AntiForgeryToken()
+            <input name="RepairOrderId" type="hidden" value="@Model.Ticket.RepairOrderId" />
+            <label class="form-label" for="RepairResult">Repair Results</label><textarea class="form-control" id="RepairResult" name="RepairResult" rows="4" required>@Model.Update.RepairResult</textarea>
+            <label class="form-label mt-3" for="WorkPerformed">Work Performed</label><textarea class="form-control" id="WorkPerformed" name="WorkPerformed" rows="3">@Model.Update.WorkPerformed</textarea>
+            <label class="form-label mt-3" for="DeviceCondition">Equipment Status After Repair</label><input class="form-control" id="DeviceCondition" name="DeviceCondition" value="@Model.Update.DeviceCondition" />
+            <label class="form-label mt-3" for="ServiceFee">Service Fee</label><input class="form-control" id="ServiceFee" name="ServiceFee" type="number" step="0.01" min="0" value="@Model.Update.ServiceFee" />
+            <button class="btn btn-primary mt-4" type="submit">Confirm Completion of Technical Work</button>
         </form>
     </div>
 </section>

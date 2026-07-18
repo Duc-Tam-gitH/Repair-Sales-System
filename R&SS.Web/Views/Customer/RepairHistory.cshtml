@@ -1,3 +1,4 @@
+@model IReadOnlyCollection<R_SS.Models.Entities.RepairOrder>
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Repair History";
@@ -9,7 +10,6 @@
     <link rel="stylesheet" href="~/css/RepairHistory.css" asp-append-version="true" />
 }
 
-@* Repair history simulates data from IRepairService.GetRepairHistoryAsync. *@
 <section class="repair-history-page">
     <div class="history-header">
         <h1>Repair History</h1>
@@ -17,23 +17,24 @@
     </div>
 
     <div class="row g-4">
-        <div class="col-lg-6">
-            <article class="history-card">
-                <span>Nova X Phone</span>
-                <h2>Screen cracked and touch failure</h2>
-                <p><strong>Repair Solution:</strong> Replaced OLED screen assembly and recalibrated touch panel.</p>
-                <p><strong>Replaced Parts:</strong> OLED screen assembly, adhesive seal</p>
-                <p><strong>Repair Cost:</strong> $129</p>
-            </article>
-        </div>
-        <div class="col-lg-6">
-            <article class="history-card">
-                <span>Office Printer</span>
-                <h2>Paper jam and faded output</h2>
-                <p><strong>Repair Solution:</strong> Cleaned roller path, replaced feed roller, calibrated print head.</p>
-                <p><strong>Replaced Parts:</strong> Feed roller kit</p>
-                <p><strong>Repair Cost:</strong> $74</p>
-            </article>
-        </div>
+        @if (!Model.Any())
+        {
+            <div class="col-12"><article class="history-card"><h2>No repair history found</h2></article></div>
+        }
+        else
+        {
+            @foreach (var repair in Model)
+            {
+                <div class="col-lg-6">
+                    <article class="history-card">
+                        <span>@repair.RepairOrderCode</span>
+                        <h2>@repair.DeviceName</h2>
+                        <p><strong>Repair Solution:</strong> @(repair.WorkPerformed ?? repair.RepairResult ?? "No repair summary recorded.")</p>
+                        <p><strong>Replaced Parts:</strong> @string.Join(", ", repair.RepairOrderDetails.Select(detail => detail.Product?.ProductName).Where(name => !string.IsNullOrWhiteSpace(name)))</p>
+                        <p><strong>Repair Cost:</strong> @repair.TotalAmount.ToString("C")</p>
+                    </article>
+                </div>
+            }
+        }
     </div>
 </section>

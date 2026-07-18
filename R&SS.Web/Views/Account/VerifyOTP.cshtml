@@ -1,3 +1,4 @@
+@model VerifyForgotPasswordOtpRequest
 @{
     Layout = "_Layout";
     ViewData["Title"] = "OTP Verification";
@@ -13,16 +14,21 @@
         <h1 id="otp-title">Verify OTP</h1>
         <p>Enter the 6-digit code sent to your registered email address.</p>
 
-        <div class="alert alert-warning" role="alert">
-            OTP has expired. Please request a new code.
-        </div>
+        @if (TempData["SuccessMessage"] is string successMessage)
+        {
+            <div class="alert alert-success" role="status">@successMessage</div>
+        }
+        <div asp-validation-summary="ModelOnly" class="alert alert-warning" role="alert"></div>
 
-        <form method="post">
-            <label class="form-label" for="otpCode">6-digit OTP Code</label>
-            <input class="form-control form-control-lg otp-input" id="otpCode" name="OtpCode" type="text" inputmode="numeric" maxlength="6" placeholder="000000" required />
+        <form method="post" asp-controller="Account" asp-action="VerifyOTP">
+            @Html.AntiForgeryToken()
+            <input asp-for="Email" type="hidden" />
+            <label class="form-label" asp-for="OtpCode">6-digit OTP Code</label>
+            <input class="form-control form-control-lg otp-input" asp-for="OtpCode" type="text" inputmode="numeric" maxlength="6" placeholder="000000" required />
+            <span class="text-danger" asp-validation-for="OtpCode"></span>
             <div class="d-flex gap-2 mt-4">
                 <button class="btn btn-primary flex-fill" type="submit">Verify OTP</button>
-                <button class="btn btn-outline-secondary flex-fill" type="button">Resend OTP</button>
+                <a class="btn btn-outline-secondary flex-fill" asp-controller="Account" asp-action="ForgotPassword">Resend OTP</a>
             </div>
         </form>
 

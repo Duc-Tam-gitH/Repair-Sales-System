@@ -1,6 +1,8 @@
+@model PaymentInvoiceViewModel
 @{
     Layout = null;
     ViewData["Title"] = "Invoice Print";
+    var payment = Model.Payment;
 }
 
 <!DOCTYPE html>
@@ -13,42 +15,46 @@
     <link rel="stylesheet" href="~/css/InvoicePrint.css" asp-append-version="true" />
 </head>
 <body>
-    <!-- Data fetched via IInvoiceService.GetPrintableInvoice() -->
     <main class="invoice-page">
         <section class="invoice-sheet">
             <header class="invoice-header">
-                <div class="company-lockup"><div class="logo">R&SS</div><div><h1>Repair & Sales System</h1><p>123 Service Street, Operations District<br />Phone: 0123456789 • Email: billing@rss.local</p></div></div>
-                <div class="invoice-meta"><strong>Invoice #INV-2026-1001</strong><span>Date: 2026-07-18</span></div>
+                <div class="company-lockup"><div class="logo">R&SS</div><div><h1>Repair & Sales System</h1><p>123 Service Street, Operations District<br />Phone: 0123456789 / Email: billing@rss.local</p></div></div>
+                <div class="invoice-meta"><strong>Invoice #@(Model.Invoice?.InvoiceCode ?? payment?.PaymentCode ?? "-")</strong><span>Date: @(Model.Invoice?.PrintedAtUtc.ToLocalTime().ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd"))</span></div>
             </header>
+
+            @if (TempData["ErrorMessage"] is string error)
+            {
+                <div class="alert alert-warning" role="alert">@error</div>
+            }
 
             <section class="customer-box">
                 <h2>Customer Information</h2>
-                <p><strong>Name:</strong> Minh Tran</p>
-                <p><strong>Phone:</strong> 0901112222</p>
-                <p><strong>Address:</strong> 45 Nguyen Street, District 1</p>
+                <p><strong>Name:</strong> @(payment?.Customer?.FullName ?? Model.Invoice?.CustomerName ?? "-")</p>
+                <p><strong>Phone:</strong> @(payment?.Customer?.Phone ?? "-")</p>
+                <p><strong>Address:</strong> @(payment?.Customer?.Address ?? "-")</p>
             </section>
 
             <table class="table invoice-table">
                 <thead><tr><th>Description</th><th>Quantity</th><th>Unit Price</th><th>Total</th></tr></thead>
-                <tbody><tr><td>Phone Repair - Nova X Model</td><td>1</td><td>$40</td><td>$40</td></tr><tr><td>OLED Screen Assembly</td><td>1</td><td>$89</td><td>$89</td></tr></tbody>
+                <tbody><tr><td>@(payment?.SalesOrder?.SalesOrderCode ?? payment?.RepairOrder?.RepairOrderCode ?? "Transaction")</td><td>1</td><td>@(payment?.Amount.ToString("C") ?? "-")</td><td>@(payment?.Amount.ToString("C") ?? "-")</td></tr></tbody>
             </table>
 
             <section class="invoice-totals">
-                <div><span>Subtotal</span><strong>$129</strong></div>
-                <div><span>Tax/VAT</span><strong>$0</strong></div>
-                <div class="grand-total"><span>Total Amount</span><strong>$129</strong></div>
+                <div><span>Subtotal</span><strong>@(payment?.Amount.ToString("C") ?? "-")</strong></div>
+                <div><span>Tax/VAT</span><strong>$0.00</strong></div>
+                <div class="grand-total"><span>Total Amount</span><strong>@(payment?.Amount.ToString("C") ?? "-")</strong></div>
             </section>
 
             <section class="payment-info">
                 <h2>Payment Information</h2>
-                <p><strong>Payment Method:</strong> Cash</p>
-                <p><strong>Payment Date:</strong> 2026-07-18</p>
-                <p><strong>Status:</strong> Paid</p>
+                <p><strong>Payment Method:</strong> @(payment?.PaymentMethod ?? "-")</p>
+                <p><strong>Payment Date:</strong> @(payment?.PaymentDate.ToLocalTime().ToString("yyyy-MM-dd") ?? "-")</p>
+                <p><strong>Status:</strong> @(payment?.PaymentStatus ?? "-")</p>
             </section>
 
             <footer class="invoice-footer">
-                <p>Thank you for choosing Repair & Sales System. Terms & Conditions: Warranty and refund policies follow company service guidelines.</p>
-                <div class="print-actions"><button class="btn btn-primary" onclick="window.print()">Print</button><button class="btn btn-outline-secondary" onclick="window.close()">Close</button></div>
+                <p>Thank you for choosing Repair & Sales System. Warranty and refund policies follow company service guidelines.</p>
+                <div class="print-actions"><button class="btn btn-primary" onclick="window.print()">Print</button><a class="btn btn-outline-secondary" asp-controller="Payment" asp-action="TransactionList">Close</a></div>
             </footer>
         </section>
     </main>

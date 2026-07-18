@@ -1,3 +1,4 @@
+@model OrderResponse
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Order Details";
@@ -9,11 +10,10 @@
     <link rel="stylesheet" href="~/css/OrderDetails.css" asp-append-version="true" />
 }
 
-@* Order details simulate data from IOrderService. *@
 <section class="order-detail-page">
     <div class="order-banner">
-        <div><span>Order Code</span><h1>SO-2026-1042</h1></div>
-        <span class="status">Pending</span>
+        <div><span>Order Code</span><h1>@Model.SalesOrderCode</h1></div>
+        <span class="status">@Model.Status</span>
     </div>
     <div class="row g-4">
         <div class="col-lg-8">
@@ -22,9 +22,10 @@
                 <table class="table align-middle">
                     <thead><tr><th>Name</th><th>Quantity</th><th>Unit Price</th><th>Total</th></tr></thead>
                     <tbody>
-                        <tr><td>ProBook 14</td><td>1</td><td>$849</td><td>$849</td></tr>
-                        <tr><td>Wireless Mouse</td><td>2</td><td>$24</td><td>$48</td></tr>
-                        <tr><td>USB-C Service Kit</td><td>1</td><td>$39</td><td>$39</td></tr>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr><td>@item.ProductName</td><td>@item.Quantity</td><td>@item.UnitPrice.ToString("C")</td><td>@item.LineTotal.ToString("C")</td></tr>
+                        }
                     </tbody>
                 </table>
             </div>
@@ -32,10 +33,11 @@
         <div class="col-lg-4">
             <aside class="detail-card">
                 <h2>Summary</h2>
-                <p><strong>Date:</strong> 2026-07-18</p>
-                <p><strong>Payment:</strong> Cash</p>
-                <p><strong>Total:</strong> $936</p>
-                <p><strong>Delivery Address:</strong> 123 Customer Avenue</p>
+                <p><strong>Payment:</strong> @Model.PaymentMethod</p>
+                <p><strong>Subtotal:</strong> @Model.SubTotal.ToString("C")</p>
+                <p><strong>Discount:</strong> @Model.DiscountAmount.ToString("C")</p>
+                <p><strong>Total:</strong> @Model.TotalAmount.ToString("C")</p>
+                <p><strong>Notes:</strong> @Model.Message</p>
             </aside>
         </div>
     </div>

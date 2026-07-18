@@ -1,1 +1,16 @@
-.monitor-header,.panel,.status-card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;box-shadow:0 14px 34px rgba(23,32,51,.08);padding:24px}.monitor-header{background:linear-gradient(135deg,#f8fafc,#e0f2fe);margin-bottom:20px}.monitor-header h1,.panel h2{font-weight:800}.monitor-header p{color:#64748b;margin:0}.status-card{border-top:5px solid #f59e0b;color:#172033;display:grid;gap:8px;height:100%;text-decoration:none}.status-card strong{font-size:2.3rem}.inspection{border-top-color:#2563eb}.repair{border-top-color:#0f766e}.delivery{border-top-color:#7c3aed}.overdue{border-top:5px solid #dc2626}
+/* Technology dashboard theme tokens */
+:root {
+  --primary-dark: #0F172A;
+  --primary-light: #0891B2;
+  --accent-bright: #06B6D4;
+  --background-light: #F1F5F9;
+  --surface-white: #FFFFFF;
+  --text-dark: #1E293B;
+  --text-secondary: #64748B;
+  --border-light: #E2E8F0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 6px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 14px 34px rgba(15, 23, 42, 0.10);
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.monitor-header,.panel,.status-card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;box-shadow:0 14px 34px rgba(23,32,51,.08);padding:24px}.monitor-header{background:linear-gradient(135deg,#f8fafc,#e0f2fe);margin-bottom:20px}.monitor-header h1,.panel h2{font-weight:800}.monitor-header p{color:#64748b;margin:0}.status-card{border-top:5px solid #f59e0b;color:#0F172A;display:grid;gap:8px;height:100%;text-decoration:none}.status-card strong{font-size:2.3rem}.inspection{border-top-color:#0891B2}.repair{border-top-color:#0891B2}.delivery{border-top-color:#06B6D4}.overdue{border-top:5px solid #dc2626}

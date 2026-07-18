@@ -1,25 +1,32 @@
+@model ManagementViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Add Account";
-    ViewData["ActiveRole"] = "Administrator";
-    ViewData["RoleDisplay"] = "Management User";
+    ViewData["Title"] = Model.Account.UserId.HasValue ? "Edit Account" : "Add Account";
+    ViewData["ActiveRole"] = "Management";
+    ViewData["RoleDisplay"] = "Manager";
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/AddAccount.css" asp-append-version="true" />
 }
 
-<!-- Data saved via IAccountManagementService.CreateEmployeeAccount() -->
 <section class="add-account-page">
     <div class="form-card">
-        <div class="form-title"><span>Employee Account</span><h1>Add Employee Account</h1><p>Create credentials, employee profile, role, and specialization.</p></div>
-        <div class="alert alert-success" role="status">Account created successfully!</div>
-        <form>
-            <h2>Account Credentials</h2>
-            <div class="row g-3"><div class="col-md-4"><label class="form-label">Username</label><input class="form-control" /></div><div class="col-md-4"><label class="form-label">Password</label><input class="form-control" type="password" /></div><div class="col-md-4"><label class="form-label">Confirm Password</label><input class="form-control" type="password" /></div></div>
-            <h2 class="mt-4">Employee Information</h2>
-            <div class="row g-3"><div class="col-md-6"><label class="form-label">Full Name</label><input class="form-control" /></div><div class="col-md-6"><label class="form-label">Phone Number</label><input class="form-control" /></div><div class="col-md-6"><label class="form-label">Email</label><input class="form-control" type="email" /></div><div class="col-md-6"><label class="form-label">Address</label><input class="form-control" /></div><div class="col-md-6"><label class="form-label">Select Role</label><select class="form-select"><option>Admin</option><option>Reception</option><option>Technician</option></select></div><div class="col-md-6"><label class="form-label">Select Specialization</label><select class="form-select"><option>Phone Repair</option><option>Laptop Repair</option><option>Tablet Repair</option><option>General Operations</option></select></div></div>
-            <div class="d-flex gap-2 mt-4"><button class="btn btn-primary" type="button">Create Account</button><a class="btn btn-outline-secondary" asp-controller="Management" asp-action="SystemAccountManagement">Cancel</a></div>
+        <div class="form-title"><span>Account</span><h1>@ViewData["Title"]</h1><p>Create or update a system user account.</p></div>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+        <form method="post" asp-controller="Management" asp-action="AddAccount">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="UserId" value="@Model.Account.UserId" />
+            <div class="row g-3">
+                <div class="col-md-4"><label class="form-label">Username</label><input class="form-control" name="Username" value="@Model.Account.Username" required /></div>
+                <div class="col-md-4"><label class="form-label">Password</label><input class="form-control" name="Password" type="password" placeholder="Required for new account" /></div>
+                <div class="col-md-4"><label class="form-label">Role</label><select class="form-select" name="RoleName" required><option value="">Select role</option>@foreach (var role in Model.Roles) { <option value="@role.RoleName" selected="@(role.RoleName == Model.Account.RoleName)">@role.RoleName</option> }</select></div>
+                <div class="col-md-6"><label class="form-label">Full Name</label><input class="form-control" name="FullName" value="@Model.Account.FullName" required /></div>
+                <div class="col-md-6"><label class="form-label">Email</label><input class="form-control" name="Email" value="@Model.Account.Email" type="email" required /></div>
+                <div class="col-md-6"><label class="form-label">Phone</label><input class="form-control" name="Phone" value="@Model.Account.Phone" /></div>
+                <div class="col-md-6 d-flex align-items-end"><label class="form-check"><input class="form-check-input" name="IsActive" type="checkbox" value="true" checked="@Model.Account.IsActive" /> Active</label></div>
+            </div>
+            <div class="d-flex gap-2 mt-4"><button class="btn btn-primary" type="submit">Save Account</button><a class="btn btn-outline-secondary" asp-controller="Management" asp-action="SystemAccountManagement">Cancel</a></div>
         </form>
     </div>
 </section>

@@ -30,6 +30,13 @@ namespace R_SS.DAL.Repositories
                 .ToListAsync();
         }
 
+        public async Task<Customer?> GetByUserIdAsync(int userId)
+        {
+            return await _context.Customers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(customer => customer.UserId == userId);
+        }
+
         public async Task<Customer?> GetByCodeAsync(string customerCode)
         {
             return await _context.Customers

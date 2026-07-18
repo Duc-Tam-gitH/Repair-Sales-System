@@ -1,15 +1,20 @@
+@model WarehouseDashboardViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Warehouse Dashboard";
     ViewData["ActiveRole"] = "Warehouse";
     ViewData["RoleDisplay"] = "Warehouse Staff";
+    var lowStockProducts = Model.Products
+        .Where(product => product.QuantityInStock <= 5)
+        .OrderBy(product => product.QuantityInStock)
+        .Take(5)
+        .ToArray();
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/WarehouseDashboard.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IWarehouseService.GetInventorySummary() -->
 <section class="warehouse-dashboard-page">
     <div class="warehouse-hero">
         <div><span>Inventory Control</span><h1>Warehouse Dashboard</h1><p>Monitor stock levels, inventory value, low-stock alerts, and warehouse actions.</p></div>
@@ -17,17 +22,28 @@
     </div>
 
     <div class="row g-4">
-        <div class="col-md-6 col-xl-3"><article class="warehouse-card"><span>Total Items</span><strong>12,480</strong><small>Products and components</small></article></div>
-        <div class="col-md-6 col-xl-3"><article class="warehouse-card low"><span>Items Running Low</span><strong>28</strong><small>Below minimum stock</small></article></div>
-        <div class="col-md-6 col-xl-3"><article class="warehouse-card empty"><span>Out-of-Stock Items</span><strong>7</strong><small>Need urgent reorder</small></article></div>
-        <div class="col-md-6 col-xl-3"><article class="warehouse-card value"><span>Total Inventory Value</span><strong>$184,650</strong><small>Estimated value</small></article></div>
+        <div class="col-md-6 col-xl-3"><article class="warehouse-card"><span>Total Stock</span><strong>@Model.TotalStockQuantity</strong><small>Units in inventory</small></article></div>
+        <div class="col-md-6 col-xl-3"><article class="warehouse-card low"><span>Items Running Low</span><strong>@Model.LowStockCount</strong><small>Five units or fewer</small></article></div>
+        <div class="col-md-6 col-xl-3"><article class="warehouse-card empty"><span>Out-of-Stock Items</span><strong>@Model.OutOfStockCount</strong><small>Need urgent reorder</small></article></div>
+        <div class="col-md-6 col-xl-3"><article class="warehouse-card value"><span>Total Inventory Value</span><strong>@Model.EstimatedInventoryValue.ToString("C")</strong><small>Estimated sale value</small></article></div>
     </div>
 
     <section class="alerts-panel mt-4">
         <h2>Inventory Alerts</h2>
-        <div class="alert alert-warning" role="alert">Low inventory alert: please reorder soon!</div>
-        <div class="alert-row"><div><strong>Dell Keyboard Module is running low!</strong><p>Quantity: 3, minimum stock: 10</p></div><a class="btn btn-sm btn-outline-primary" asp-controller="Warehouse" asp-action="StockList">View</a></div>
-        <div class="alert-row danger"><div><strong>OLED Screen Assembly is out of stock!</strong><p>Quantity: 0, minimum stock: 6</p></div><a class="btn btn-sm btn-outline-danger" asp-controller="Warehouse" asp-action="InventoryTracking">View</a></div>
-        <div class="alert-row"><div><strong>Nova X Battery is running low!</strong><p>Quantity: 4, minimum stock: 12</p></div><a class="btn btn-sm btn-outline-primary" asp-controller="Warehouse" asp-action="StockList">View</a></div>
+        @if (lowStockProducts.Length == 0)
+        {
+            <div class="alert alert-success" role="alert">No low-stock items found.</div>
+        }
+        else
+        {
+            <div class="alert alert-warning" role="alert">Low inventory alert: please reorder soon.</div>
+            @foreach (var product in lowStockProducts)
+            {
+                <div class="alert-row @(product.QuantityInStock <= 0 ? "danger" : string.Empty)">
+                    <div><strong>@product.ProductName @(product.QuantityInStock <= 0 ? "is out of stock" : "is running low")</strong><p>Quantity: @product.QuantityInStock</p></div>
+                    <a class="btn btn-sm @(product.QuantityInStock <= 0 ? "btn-outline-danger" : "btn-outline-primary")" asp-controller="Warehouse" asp-action="InventoryDetails" asp-route-id="@product.ProductId">View</a>
+                </div>
+            }
+        }
     </section>
 </section>

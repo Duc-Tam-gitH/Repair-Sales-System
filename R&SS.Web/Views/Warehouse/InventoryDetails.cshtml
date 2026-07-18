@@ -1,24 +1,58 @@
+@model WarehouseProductDetailsViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Inventory Details";
     ViewData["ActiveRole"] = "Warehouse";
     ViewData["RoleDisplay"] = "Warehouse Staff";
+    var product = Model.Product;
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/InventoryDetails.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IWarehouseService.GetIncomingGoodsReceiptDetails() -->
 <section class="inventory-details-page">
     <div class="receipt-hero">
-        <div><span>Receipt Code</span><h1>REC-2026-001</h1><p>Supplier: TechParts Co. • Receipt Date: 2026-07-18</p></div>
-        <strong>Pending</strong>
+        <div><span>@product.ProductCode</span><h1>@product.ProductName</h1><p>@(product.CategoryName ?? "Uncategorized") / @(product.BrandName ?? "No brand")</p></div>
+        <strong>@product.QuantityInStock in stock</strong>
     </div>
+    @if (TempData["SuccessMessage"] is string success)
+    {
+        <div class="alert alert-success mt-3" role="status">@success</div>
+    }
     <div class="details-card table-responsive">
-        <h2>Product List</h2>
-        <table class="table align-middle"><thead><tr><th>Product Name</th><th>Quantity</th><th>Unit Price</th><th>Total Amount</th></tr></thead><tbody><tr><td>Dell Keyboard Module</td><td>10</td><td>$45</td><td>$450</td></tr><tr><td>Nova X Battery</td><td>20</td><td>$22</td><td>$440</td></tr><tr><td>USB-C Service Kit</td><td>30</td><td>$12</td><td>$360</td></tr></tbody></table>
-        <div class="receipt-total"><span>Total Amount</span><strong>$1,250</strong></div>
-        <div class="d-flex gap-2 mt-4"><button class="btn btn-success">Confirm Receipt</button><a class="btn btn-outline-secondary" asp-controller="Warehouse" asp-action="InventoryManagement">Back to List</a></div>
+        <h2>Product Details</h2>
+        <table class="table align-middle">
+            <tbody>
+                <tr><th>Sale Price</th><td>@product.SalePrice.ToString("C")</td></tr>
+                <tr><th>Description</th><td>@(product.Description ?? "No description provided.")</td></tr>
+                <tr><th>Current Stock</th><td>@product.QuantityInStock</td></tr>
+            </tbody>
+        </table>
+        <h2>Recent Movements</h2>
+        <table class="table align-middle">
+            <thead><tr><th>Date</th><th>Type</th><th>Change</th><th>Before</th><th>After</th><th>Reason</th></tr></thead>
+            <tbody>
+                @if (!Model.Transactions.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted">No movement history for this product.</td></tr>
+                }
+                else
+                {
+                    @foreach (var transaction in Model.Transactions)
+                    {
+                        <tr>
+                            <td>@transaction.CreatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@transaction.TransactionType</td>
+                            <td>@(transaction.QuantityChange > 0 ? "+" : string.Empty)@transaction.QuantityChange</td>
+                            <td>@transaction.StockBefore</td>
+                            <td>@transaction.StockAfter</td>
+                            <td>@(transaction.Reason ?? "-")</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="d-flex gap-2 mt-4"><a class="btn btn-success" asp-controller="Warehouse" asp-action="InventoryManagement">Update Stock</a><a class="btn btn-outline-secondary" asp-controller="Warehouse" asp-action="StockList">Back to List</a></div>
     </div>
 </section>

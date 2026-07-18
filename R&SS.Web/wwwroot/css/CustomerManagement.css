@@ -1,1 +1,16 @@
-.page-header,.table-card,.detail-preview{background:#fff;border:1px solid #e2e8f0;border-radius:18px;box-shadow:0 12px 32px rgba(23,32,51,.08);padding:24px}.page-header{align-items:center;display:flex;justify-content:space-between;margin-bottom:18px}.page-header h1,.detail-preview h2{font-weight:800}.page-header p{color:#64748b;margin:0}.filters{display:flex;gap:12px}.table-card{padding:18px}.detail-preview strong{color:#2563eb}@media(max-width:768px){.page-header,.filters{align-items:stretch;flex-direction:column}}
+/* Technology dashboard theme tokens */
+:root {
+  --primary-dark: #0F172A;
+  --primary-light: #0891B2;
+  --accent-bright: #06B6D4;
+  --background-light: #F1F5F9;
+  --surface-white: #FFFFFF;
+  --text-dark: #1E293B;
+  --text-secondary: #64748B;
+  --border-light: #E2E8F0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 6px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 14px 34px rgba(15, 23, 42, 0.10);
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.page-header,.table-card,.detail-preview{background:#fff;border:1px solid #e2e8f0;border-radius:18px;box-shadow:0 12px 32px rgba(23,32,51,.08);padding:24px}.page-header{align-items:center;display:flex;justify-content:space-between;margin-bottom:18px}.page-header h1,.detail-preview h2{font-weight:800}.page-header p{color:#64748b;margin:0}.filters{display:flex;gap:12px}.table-card{padding:18px}.detail-preview strong{color:#0891B2}@media(max-width:768px){.page-header,.filters{align-items:stretch;flex-direction:column}}

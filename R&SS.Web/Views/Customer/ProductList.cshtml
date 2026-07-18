@@ -1,3 +1,4 @@
+@model ProductListResponse
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Product Catalog";
@@ -9,7 +10,6 @@
     <link rel="stylesheet" href="~/css/ProductList.css" asp-append-version="true" />
 }
 
-@* Product rows simulate data from IProductService. *@
 <section class="catalog-page">
     <div class="catalog-header">
         <div>
@@ -19,25 +19,45 @@
         <a class="btn btn-primary" asp-controller="Customer" asp-action="Cart">View Cart</a>
     </div>
 
-    <div class="catalog-tools">
-        <input class="form-control form-control-lg" type="search" placeholder="Search products by name..." />
-        <div class="btn-group">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">Category</button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">All Categories</a></li>
-                <li><a class="dropdown-item" href="#">Laptops</a></li>
-                <li><a class="dropdown-item" href="#">Phones</a></li>
-                <li><a class="dropdown-item" href="#">Accessories</a></li>
-            </ul>
-        </div>
-    </div>
+    <form class="catalog-tools" method="get" asp-controller="Customer" asp-action="ProductList">
+        <input class="form-control form-control-lg" name="keyword" type="search" value="@ViewData["Keyword"]" placeholder="Search products by name, category, or brand..." />
+        <select class="form-select" name="criteria" aria-label="Search criteria">
+            <option value="all" selected="@(ViewData["Criteria"]?.ToString() == "all")">All</option>
+            <option value="name" selected="@(ViewData["Criteria"]?.ToString() == "name")">Name</option>
+            <option value="category" selected="@(ViewData["Criteria"]?.ToString() == "category")">Category</option>
+            <option value="brand" selected="@(ViewData["Criteria"]?.ToString() == "brand")">Brand</option>
+        </select>
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+    </form>
+
+    <div asp-validation-summary="ModelOnly" class="alert alert-warning" role="alert"></div>
 
     <div class="row g-4">
-        <div class="col-md-6 col-xl-4"><article class="catalog-card"><span class="stock in-stock">In Stock</span><h2>ProBook 14</h2><p>Laptop</p><strong>$849</strong><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails">View Details</a></article></div>
-        <div class="col-md-6 col-xl-4"><article class="catalog-card"><span class="stock in-stock">In Stock</span><h2>Nova X Phone</h2><p>Phone</p><strong>$499</strong><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails">View Details</a></article></div>
-        <div class="col-md-6 col-xl-4"><article class="catalog-card"><span class="stock out-stock">Out of Stock</span><h2>Gaming Keyboard</h2><p>Accessory</p><strong>$74</strong><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails">View Details</a></article></div>
-        <div class="col-md-6 col-xl-4"><article class="catalog-card"><span class="stock in-stock">In Stock</span><h2>SSD 1TB</h2><p>Components</p><strong>$92</strong><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails">View Details</a></article></div>
-        <div class="col-md-6 col-xl-4"><article class="catalog-card"><span class="stock in-stock">In Stock</span><h2>Wireless Mouse</h2><p>Accessory</p><strong>$24</strong><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails">View Details</a></article></div>
-        <div class="col-md-6 col-xl-4"><article class="catalog-card"><span class="stock out-stock">Out of Stock</span><h2>Tablet Air 10</h2><p>Tablet</p><strong>$329</strong><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails">View Details</a></article></div>
+        @if (!Model.Products.Any())
+        {
+            <div class="col-12">
+                <article class="catalog-card">
+                    <h2>No products found</h2>
+                    <p>@Model.Message</p>
+                </article>
+            </div>
+        }
+        else
+        {
+            @foreach (var product in Model.Products)
+            {
+                <div class="col-md-6 col-xl-4">
+                    <article class="catalog-card">
+                        <span class="stock @(product.QuantityInStock > 0 ? "in-stock" : "out-stock")">
+                            @(product.QuantityInStock > 0 ? "In Stock" : "Out of Stock")
+                        </span>
+                        <h2>@product.ProductName</h2>
+                        <p>@(product.CategoryName ?? product.BrandName ?? product.ProductCode)</p>
+                        <strong>@product.SalePrice.ToString("C")</strong>
+                        <a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails" asp-route-id="@product.ProductId">View Details</a>
+                    </article>
+                </div>
+            }
+        }
     </div>
 </section>

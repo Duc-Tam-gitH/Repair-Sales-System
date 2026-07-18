@@ -26,6 +26,29 @@ public class CartService : ICartService
     }
 
     /// <summary>
+    /// Gets the customer's persisted cart.
+    /// </summary>
+    public async Task<CartResponse> GetCartAsync(int customerId)
+    {
+        if (customerId <= 0)
+        {
+            throw new ValidationException(new[] { new ValidationFailure(nameof(customerId), "Customer id must be greater than 0.") });
+        }
+
+        var cart = await _unitOfWork.Carts.GetByCustomerIdAsync(customerId);
+        if (cart is null)
+        {
+            return new CartResponse
+            {
+                CustomerId = customerId,
+                Message = "Cart is empty."
+            };
+        }
+
+        return BuildCartResponse(cart, "Cart retrieved successfully.");
+    }
+
+    /// <summary>
     /// Adds a product to the customer's persisted cart or updates its quantity.
     /// </summary>
     public async Task<CartResponse> AddToCartAsync(AddToCartRequest request)

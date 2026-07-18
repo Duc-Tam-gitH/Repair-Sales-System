@@ -1,3 +1,4 @@
+@model PersonalInfoResponse
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Personal Information";
@@ -17,23 +18,30 @@
         <a class="btn btn-outline-primary" asp-controller="Account" asp-action="ChangePassword">Change Password</a>
     </div>
 
-    <form class="profile-card" method="post">
+    @if (TempData["SuccessMessage"] is string successMessage)
+    {
+        <div class="alert alert-success" role="status">@successMessage</div>
+    }
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+    <form class="profile-card" method="post" asp-controller="Account" asp-action="PersonalInfo">
+        @Html.AntiForgeryToken()
         <div class="row g-4">
             <div class="col-md-6">
-                <label class="form-label" for="fullName">Full Name</label>
-                <input class="form-control" id="fullName" name="FullName" type="text" value="Admin User" />
+                <label class="form-label" for="FullName">Full Name</label>
+                <input class="form-control" id="FullName" name="FullName" type="text" value="@Model.FullName" />
             </div>
             <div class="col-md-6">
-                <label class="form-label" for="email">Email</label>
-                <input class="form-control" id="email" name="Email" type="email" value="admin@rss.local" />
+                <label class="form-label" for="Email">Email</label>
+                <input class="form-control" id="Email" name="Email" type="email" value="@Model.Email" />
             </div>
             <div class="col-md-6">
-                <label class="form-label" for="phone">Phone Number</label>
-                <input class="form-control" id="phone" name="PhoneNumber" type="tel" value="0123456789" />
+                <label class="form-label" for="Phone">Phone Number</label>
+                <input class="form-control" id="Phone" name="Phone" type="tel" value="@Model.Phone" />
             </div>
             <div class="col-12">
-                <label class="form-label" for="address">Address</label>
-                <textarea class="form-control" id="address" name="Address" rows="4">123 Service Street, Operations District</textarea>
+                <label class="form-label" for="Address">Address</label>
+                <textarea class="form-control" id="Address" name="Address" rows="4">@Model.Address</textarea>
             </div>
         </div>
         <button class="btn btn-primary mt-4" type="submit">Update</button>

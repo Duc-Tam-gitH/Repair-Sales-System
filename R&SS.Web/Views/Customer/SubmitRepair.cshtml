@@ -1,3 +1,4 @@
+@model SendServiceRequestRequest
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Submit Repair Request";
@@ -9,30 +10,25 @@
     <link rel="stylesheet" href="~/css/SubmitRepair.css" asp-append-version="true" />
 }
 
-@* Repair request form simulates data submitted through IRepairService. *@
 <section class="submit-repair-page">
     <div class="repair-intro">
         <span>Technical Service</span>
         <h1>Submit Repair Request</h1>
-        <p>Tell us about your device issue and select a preferred appointment schedule.</p>
+        <p>Tell us about your device issue so reception can process it.</p>
     </div>
 
-    <div class="alert alert-success" role="status">
-        Repair request submitted. Technical Order Code: <strong>#REP-2026-001</strong>
-    </div>
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-    <form class="repair-form">
-        <h2>Customer Information</h2>
+    <form class="repair-form" method="post" asp-controller="Customer" asp-action="SubmitRepair">
+        @Html.AntiForgeryToken()
+        <h2>Device Information</h2>
         <div class="row g-3">
-            <div class="col-md-4"><label class="form-label" for="name">Name</label><input class="form-control" id="name" value="Customer User" /></div>
-            <div class="col-md-4"><label class="form-label" for="phone">Phone</label><input class="form-control" id="phone" value="0123456789" /></div>
-            <div class="col-md-4"><label class="form-label" for="email">Email</label><input class="form-control" id="email" value="customer@rss.local" /></div>
-            <div class="col-md-6"><label class="form-label" for="deviceName">Device Name</label><input class="form-control" id="deviceName" placeholder="e.g., Dell Inspiron 15" /></div>
-            <div class="col-md-6"><label class="form-label" for="deviceType">Device Type</label><select class="form-select" id="deviceType"><option>Phone</option><option>Laptop</option><option>Tablet</option><option>Printer</option><option>Other</option></select></div>
-            <div class="col-12"><label class="form-label" for="fault">Fault Description</label><textarea class="form-control" id="fault" rows="5" placeholder="Describe the issue, symptoms, and when it started."></textarea></div>
-            <div class="col-md-6"><label class="form-label" for="date">Preferred Date</label><input class="form-control" id="date" type="date" /></div>
-            <div class="col-md-6"><label class="form-label" for="time">Preferred Time</label><input class="form-control" id="time" type="time" /></div>
+            <div class="col-md-6"><label class="form-label" asp-for="ServiceType">Service Type</label><select class="form-select" asp-for="ServiceType"><option>Repair</option><option>Maintenance</option><option>Inspection</option></select></div>
+            <div class="col-md-6"><label class="form-label" asp-for="DeviceType">Device Type</label><select class="form-select" asp-for="DeviceType"><option>Phone</option><option>Laptop</option><option>Tablet</option><option>Printer</option><option>Other</option></select></div>
+            <div class="col-md-6"><label class="form-label" asp-for="Brand">Brand</label><input class="form-control" asp-for="Brand" placeholder="e.g., Dell" required /></div>
+            <div class="col-md-6"><label class="form-label" asp-for="DeviceModel">Device Model</label><input class="form-control" asp-for="DeviceModel" placeholder="e.g., Inspiron 15" /></div>
+            <div class="col-12"><label class="form-label" asp-for="Description">Fault Description</label><textarea class="form-control" asp-for="Description" rows="5" placeholder="Describe the issue, symptoms, and when it started." required></textarea></div>
         </div>
-        <button class="btn btn-primary mt-4" type="button">Submit Repair Request</button>
+        <button class="btn btn-primary mt-4" type="submit">Submit Repair Request</button>
     </form>
 </section>

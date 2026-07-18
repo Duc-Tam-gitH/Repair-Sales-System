@@ -1,3 +1,4 @@
+@model TechnicalTicketListResponse
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Work Schedule";
@@ -9,18 +10,18 @@
     <link rel="stylesheet" href="~/css/WorkSchedule.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via ITechnicianService.GetWorkSchedule() -->
 <section class="work-schedule-page">
-    <div class="schedule-header"><h1>Work Schedule</h1><p>Weekly repair schedule, assigned appointments, and completion deadlines.</p></div>
-    <div class="calendar-grid">
-        <div><strong>Mon</strong><span>TASK-2038<br />Nova X Phone<br />09:00-11:00</span></div>
-        <div class="deadline"><strong>Tue</strong><span>TASK-2041<br />Dell Inspiron 15<br />Due 10:00</span></div>
-        <div><strong>Wed</strong><span>TASK-2032<br />Tablet Air 10<br />13:00-15:00</span></div>
-        <div><strong>Thu</strong><span>Component review<br />BIN-A12<br />10:30</span></div>
-        <div><strong>Fri</strong><span>Final testing<br />Printer repair<br />14:00</span></div>
-    </div>
+    <div class="schedule-header"><h1>Work Schedule</h1><p>Assigned technical tickets and completion deadlines.</p></div>
     <div class="schedule-list table-responsive mt-4">
         <h2>Task List</h2>
-        <table class="table align-middle"><thead><tr><th>Task Name</th><th>Device</th><th>Date</th><th>Time Slot</th><th>Status</th></tr></thead><tbody><tr><td>Keyboard replacement</td><td>Dell Inspiron 15</td><td>2026-07-19</td><td>08:00-10:00</td><td><span class="badge text-bg-danger">Due Soon</span></td></tr><tr><td>Screen repair</td><td>Nova X Phone</td><td>2026-07-20</td><td>09:00-11:00</td><td><span class="badge text-bg-info">In-Progress</span></td></tr><tr><td>Battery inspection</td><td>Tablet Air 10</td><td>2026-07-21</td><td>13:00-15:00</td><td><span class="badge text-bg-warning">Pending</span></td></tr></tbody></table>
+        <table class="table align-middle">
+            <thead><tr><th>Task</th><th>Device</th><th>Customer</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+                @foreach (var ticket in Model.Tickets)
+                {
+                    <tr><td>@ticket.TicketCode</td><td>@ticket.Brand @ticket.DeviceModel</td><td>@ticket.CustomerName</td><td><span class="badge text-bg-info">@ticket.Status</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@ticket.RepairOrderId">Open</a></td></tr>
+                }
+            </tbody>
+        </table>
     </div>
 </section>

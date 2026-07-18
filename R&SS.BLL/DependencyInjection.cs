@@ -26,6 +26,7 @@ public static class DependencyInjection
         services.AddScoped<IFeedbackService, FeedbackService>();
         services.AddScoped<IProductManagementService, ProductManagementService>();
         services.AddScoped<IProductCategoryManagementService, ProductCategoryManagementService>();
+        services.AddScoped<ISupplierManagementService, SupplierManagementService>();
         services.AddScoped<IPromotionService, PromotionService>();
         services.AddScoped<IInventoryService, InventoryService>();
         services.AddScoped<IAccountManagementService, AccountManagementService>();

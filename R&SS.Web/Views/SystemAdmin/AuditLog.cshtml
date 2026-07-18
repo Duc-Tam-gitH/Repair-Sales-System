@@ -1,47 +1,56 @@
+@model AuditLogViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Audit Logs";
     ViewData["ActiveRole"] = "SystemAdmin";
     ViewData["RoleDisplay"] = "System Administrator";
+    var logs = Model.Logs.Logs;
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/AuditLog.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IAuditLogService.GetLogs() -->
 <section class="audit-log-page">
     <div class="admin-hero">
         <div><span>Security Monitoring</span><h1>System Activity History</h1><p>Search, filter, review, and export user activity logs for auditing and security monitoring.</p></div>
-        <div class="dropdown"><button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">Export Logs</button><ul class="dropdown-menu"><li><a class="dropdown-item" href="#">Export as PDF</a></li><li><a class="dropdown-item" href="#">Export as Excel</a></li><li><a class="dropdown-item" href="#">Export as CSV</a></li></ul></div>
     </div>
 
-    <div class="alert alert-success" role="status">Logs exported successfully!</div>
+    @if (TempData["ErrorMessage"] is string error)
+    {
+        <div class="alert alert-danger" role="alert">@error</div>
+    }
 
-    <div class="filter-panel">
-        <input class="form-control" type="date" />
-        <input class="form-control" type="date" />
-        <select class="form-select"><option>All Users</option><option>admin01</option><option>tech.huy</option><option>recep.anya</option></select>
-        <select class="form-select"><option>All Activity Types</option><option>Login</option><option>Logout</option><option>Add</option><option>Edit</option><option>Delete</option><option>View</option><option>Export</option></select>
-        <input class="form-control search-input" placeholder="Search by User Name, Activity Description, or IP Address..." />
-        <button class="btn btn-primary">Apply Filters</button>
-        <button class="btn btn-outline-secondary">Clear Filters</button>
-    </div>
+    <form class="filter-panel" method="get" asp-controller="SystemAdmin" asp-action="AuditLog">
+        <input class="form-control" name="fromUtc" type="date" value="@Model.Search.FromUtc?.ToString("yyyy-MM-dd")" />
+        <input class="form-control" name="toUtc" type="date" value="@Model.Search.ToUtc?.ToString("yyyy-MM-dd")" />
+        <input class="form-control" name="functionName" value="@Model.Search.FunctionName" placeholder="Module / function..." />
+        <input class="form-control" name="operationType" value="@Model.Search.OperationType" placeholder="Activity type..." />
+        <button class="btn btn-primary" type="submit">Apply Filters</button>
+        <a class="btn btn-outline-secondary" asp-controller="SystemAdmin" asp-action="AuditLog">Clear Filters</a>
+    </form>
 
     <div class="row g-4">
-        <div class="col-md-4"><article class="summary-card"><span>Total Activities</span><strong>1,842</strong></article></div>
-        <div class="col-md-4"><article class="summary-card active-user"><span>Most Active User</span><strong>admin01</strong></article></div>
-        <div class="col-md-4"><article class="summary-card common"><span>Most Common Activity</span><strong>View - 45%</strong></article></div>
+        <div class="col-md-4"><article class="summary-card"><span>Total Activities</span><strong>@logs.Count</strong></article></div>
+        <div class="col-md-4"><article class="summary-card active-user"><span>Most Active User</span><strong>@(logs.GroupBy(log => log.ActorUsername ?? "System").OrderByDescending(group => group.Count()).FirstOrDefault()?.Key ?? "-")</strong></article></div>
+        <div class="col-md-4"><article class="summary-card common"><span>Most Common Activity</span><strong>@(logs.GroupBy(log => log.OperationType).OrderByDescending(group => group.Count()).FirstOrDefault()?.Key ?? "-")</strong></article></div>
     </div>
 
     <div class="audit-table table-responsive mt-4">
         <table class="table align-middle">
-            <thead><tr><th>Date & Time</th><th>User Name</th><th>Activity Type</th><th>Module</th><th>Description</th><th>IP Address</th><th></th></tr></thead>
+            <thead><tr><th>Date & Time</th><th>User Name</th><th>Activity Type</th><th>Module</th><th>Description</th><th>Result</th><th></th></tr></thead>
             <tbody>
-                <tr><td>2026-07-18 09:42</td><td>admin01</td><td><span class="badge text-bg-danger">Delete</span></td><td>Products</td><td>Deleted product <mark>Legacy Charger</mark></td><td>192.168.1.24</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="SystemAdmin" asp-action="AuditLogDetails">View Details</a></td></tr>
-                <tr><td>2026-07-18 09:15</td><td>recep.anya</td><td><span class="badge text-bg-primary">Add</span></td><td>Customers</td><td>Added customer Minh Tran</td><td>192.168.1.31</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="SystemAdmin" asp-action="AuditLogDetails">View Details</a></td></tr>
-                <tr><td>2026-07-18 08:58</td><td>tech.huy</td><td><span class="badge text-bg-info">Edit</span></td><td>Repairs</td><td>Updated repair progress for TECH-2026-001</td><td>192.168.1.44</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="SystemAdmin" asp-action="AuditLogDetails">View Details</a></td></tr>
-                <tr><td>2026-07-18 08:30</td><td>admin01</td><td><span class="badge text-bg-success">Login</span></td><td>Security</td><td>User logged into the system</td><td>192.168.1.24</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="SystemAdmin" asp-action="AuditLogDetails">View Details</a></td></tr>
+                @if (!logs.Any())
+                {
+                    <tr><td colspan="7" class="text-center text-muted">@Model.Logs.Message</td></tr>
+                }
+                else
+                {
+                    @foreach (var log in logs.OrderByDescending(log => log.ExecutedAtUtc))
+                    {
+                        <tr><td>@log.ExecutedAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td><td>@(log.ActorUsername ?? "System")</td><td><span class="badge text-bg-primary">@log.OperationType</span></td><td>@log.FunctionName</td><td>@(log.Details ?? log.AffectedData ?? "-")</td><td>@log.ExecutionResult</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="SystemAdmin" asp-action="AuditLogDetails" asp-route-id="@log.SystemActivityLogId">View Details</a></td></tr>
+                    }
+                }
             </tbody>
         </table>
     </div>

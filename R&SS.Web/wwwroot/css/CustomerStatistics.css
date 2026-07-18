@@ -1,1 +1,16 @@
-.report-hero,.filter-panel,.summary-card,.chart-card,.table-card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;box-shadow:0 14px 34px rgba(23,32,51,.08);padding:24px}.report-hero{background:linear-gradient(135deg,#172033,#7c3aed);color:#fff;margin-bottom:18px}.report-hero span{color:#ede9fe;font-weight:800;text-transform:uppercase}.report-hero h1,.chart-card h2,.table-card h2{font-weight:800}.report-hero p{color:#f5f3ff;margin:0}.filter-panel{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:18px}.filter-panel select{max-width:260px}.summary-card{border-top:5px solid #7c3aed;height:100%}.summary-card strong{display:block;font-size:2rem}.active{border-top-color:#16a34a}.inactive{border-top-color:#64748b}.line-chart{align-items:end;display:flex;gap:16px;height:180px}.line-chart i{background:linear-gradient(180deg,#7c3aed,#c4b5fd);border-radius:999px;flex:1}
+/* Technology dashboard theme tokens */
+:root {
+  --primary-dark: #0F172A;
+  --primary-light: #0891B2;
+  --accent-bright: #06B6D4;
+  --background-light: #F1F5F9;
+  --surface-white: #FFFFFF;
+  --text-dark: #1E293B;
+  --text-secondary: #64748B;
+  --border-light: #E2E8F0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 6px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 14px 34px rgba(15, 23, 42, 0.10);
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.report-hero,.filter-panel,.summary-card,.chart-card,.table-card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;box-shadow:0 14px 34px rgba(23,32,51,.08);padding:24px}.report-hero{background:linear-gradient(135deg,#0F172A,#06B6D4);color:#fff;margin-bottom:18px}.report-hero span{color:#CFFAFE;font-weight:800;text-transform:uppercase}.report-hero h1,.chart-card h2,.table-card h2{font-weight:800}.report-hero p{color:#ECFEFF;margin:0}.filter-panel{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:18px}.filter-panel select{max-width:260px}.summary-card{border-top:5px solid #06B6D4;height:100%}.summary-card strong{display:block;font-size:2rem}.active{border-top-color:#16a34a}.inactive{border-top-color:#64748b}.line-chart{align-items:end;display:flex;gap:16px;height:180px}.line-chart i{background:linear-gradient(180deg,#06B6D4,#BAE6FD);border-radius:999px;flex:1}

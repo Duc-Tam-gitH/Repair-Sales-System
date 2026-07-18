@@ -1,36 +1,39 @@
+@model TechnicalTicketListResponse
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Technician Dashboard";
     ViewData["ActiveRole"] = "Technician";
     ViewData["RoleDisplay"] = "Technician User";
+    var pendingCount = Model.Tickets.Count(ticket => ticket.Status.Contains("Pending", StringComparison.OrdinalIgnoreCase));
+    var progressCount = Model.Tickets.Count(ticket => !ticket.Status.Contains("Pending", StringComparison.OrdinalIgnoreCase) && !ticket.Status.Equals("Completed", StringComparison.OrdinalIgnoreCase));
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/TechnicianDashboard.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via ITechnicianService.GetDashboardSummary() -->
 <section class="technician-dashboard-page">
     <div class="tech-hero">
-        <div><span>Repair Workbench</span><h1>Technician Dashboard</h1><p>Review assigned work, urgent deadlines, and the next tasks that need technical action.</p></div>
+        <div><span>Repair Workbench</span><h1>Technician Dashboard</h1><p>Review assigned work and the next tasks that need technical action.</p></div>
         <a class="btn btn-light" asp-controller="Technician" asp-action="AssignedTasks">Open My Tasks</a>
     </div>
 
     <div class="row g-4">
-        <div class="col-md-6 col-xl-3"><article class="tech-metric"><span>Total Assigned Tasks</span><strong>18</strong></article></div>
-        <div class="col-md-6 col-xl-3"><article class="tech-metric pending"><span>Pending Tasks</span><strong>6</strong></article></div>
-        <div class="col-md-6 col-xl-3"><article class="tech-metric progress"><span>In-Progress Tasks</span><strong>9</strong></article></div>
-        <div class="col-md-6 col-xl-3"><article class="tech-metric due"><span>Tasks Due Soon</span><strong>3</strong></article></div>
+        <div class="col-md-6 col-xl-3"><article class="tech-metric"><span>Total Assigned Tasks</span><strong>@Model.Tickets.Count</strong></article></div>
+        <div class="col-md-6 col-xl-3"><article class="tech-metric pending"><span>Pending Tasks</span><strong>@pendingCount</strong></article></div>
+        <div class="col-md-6 col-xl-3"><article class="tech-metric progress"><span>In-Progress Tasks</span><strong>@progressCount</strong></article></div>
+        <div class="col-md-6 col-xl-3"><article class="tech-metric due"><span>Ready to Complete</span><strong>@Model.Tickets.Count(ticket => ticket.Status.Contains("Delivery", StringComparison.OrdinalIgnoreCase))</strong></article></div>
     </div>
 
     <div class="urgent-panel mt-4 table-responsive">
-        <h2>Recent / Urgent Tasks</h2>
+        <h2>Recent Tasks</h2>
         <table class="table align-middle">
-            <thead><tr><th>Task ID</th><th>Customer</th><th>Device</th><th>Deadline</th><th>Status</th><th></th></tr></thead>
+            <thead><tr><th>Task ID</th><th>Customer</th><th>Device</th><th>Status</th><th></th></tr></thead>
             <tbody>
-                <tr><td>TASK-2041</td><td>Minh Tran</td><td>Dell Inspiron 15</td><td>2026-07-19 10:00</td><td><span class="badge text-bg-danger">Due Soon</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails">View</a></td></tr>
-                <tr><td>TASK-2038</td><td>Anya Pham</td><td>Nova X Phone</td><td>2026-07-20 15:00</td><td><span class="badge text-bg-info">In-Progress</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails">View</a></td></tr>
-                <tr><td>TASK-2032</td><td>David Lee</td><td>Tablet Air 10</td><td>2026-07-21 09:00</td><td><span class="badge text-bg-warning">Pending</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails">View</a></td></tr>
+                @foreach (var ticket in Model.Tickets.Take(5))
+                {
+                    <tr><td>@ticket.TicketCode</td><td>@ticket.CustomerName</td><td>@ticket.Brand @ticket.DeviceModel</td><td><span class="badge text-bg-info">@ticket.Status</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@ticket.RepairOrderId">View</a></td></tr>
+                }
             </tbody>
         </table>
     </div>

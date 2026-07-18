@@ -1,3 +1,4 @@
+@model ProductDetailResponse
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Product Details";
@@ -9,20 +10,21 @@
     <link rel="stylesheet" href="~/css/ProductManagementProductDetails.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IProductService.GetProductDetails() -->
 <section class="product-admin-details-page">
     <div class="details-hero">
-        <div><span>PRD-001</span><h1>ProBook 14</h1><p>Business laptop with SSD storage and 12-month warranty.</p></div>
-        <span class="status-badge">Active</span>
+        <div><span>@Model.ProductCode</span><h1>@Model.ProductName</h1><p>@(Model.Description ?? "No description provided.")</p></div>
+        <span class="status-badge">@(Model.QuantityInStock > 0 ? "Active" : "No Stock")</span>
     </div>
+    @if (TempData["SuccessMessage"] is string success)
+    {
+        <div class="alert alert-success mt-3" role="status">@success</div>
+    }
     <div class="row g-4">
-        <div class="col-lg-4"><section class="detail-card"><h2>Product Information</h2><p><strong>Category:</strong> Laptops</p><p><strong>Price:</strong> $849</p><p><strong>Stock Quantity:</strong> 24</p></section></div>
-        <div class="col-lg-4"><section class="detail-card"><h2>Description</h2><p>Reliable productivity laptop for office and service customers with durable build quality.</p></section></div>
-        <div class="col-lg-4"><section class="detail-card"><h2>Specifications</h2><p>CPU: Intel Core i5</p><p>Memory: 16GB RAM</p><p>Storage: 512GB SSD</p></section></div>
+        <div class="col-lg-4"><section class="detail-card"><h2>Product Information</h2><p><strong>Category:</strong> @(Model.CategoryName ?? "Uncategorized")</p><p><strong>Brand:</strong> @(Model.BrandName ?? "No brand")</p><p><strong>Price:</strong> @Model.SalePrice.ToString("C")</p><p><strong>Stock Quantity:</strong> @Model.QuantityInStock</p></section></div>
+        <div class="col-lg-8"><section class="detail-card"><h2>Description</h2><p>@(Model.Description ?? "No description provided.")</p></section></div>
     </div>
     <section class="related-orders mt-4 table-responsive">
-        <h2>Related Orders</h2>
-        <table class="table align-middle"><thead><tr><th>Order Code</th><th>Customer</th><th>Date</th><th>Total</th></tr></thead><tbody><tr><td>SO-2026-1042</td><td>Minh Tran</td><td>2026-07-18</td><td>$936</td></tr><tr><td>SO-2026-1011</td><td>Anya Pham</td><td>2026-06-29</td><td>$849</td></tr></tbody></table>
-        <div class="d-flex gap-2"><a class="btn btn-primary" asp-controller="ProductManagement" asp-action="AddUpdateProduct">Edit</a><a class="btn btn-outline-secondary" asp-controller="ProductManagement" asp-action="ProductList">Back to List</a></div>
+        <h2>Actions</h2>
+        <div class="d-flex gap-2"><a class="btn btn-primary" asp-controller="ProductManagement" asp-action="AddUpdateProduct" asp-route-id="@Model.ProductId">Edit</a><a class="btn btn-outline-secondary" asp-controller="ProductManagement" asp-action="ProductList">Back to List</a></div>
     </section>
 </section>

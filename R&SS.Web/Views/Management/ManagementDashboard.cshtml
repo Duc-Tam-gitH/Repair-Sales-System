@@ -1,42 +1,17 @@
+@model ManagementViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Management Dashboard";
-    ViewData["ActiveRole"] = "Administrator";
-    ViewData["RoleDisplay"] = "Management User";
+    ViewData["ActiveRole"] = "Management";
+    ViewData["RoleDisplay"] = "Manager";
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/ManagementDashboard.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IManagementService.GetRevenueStats() -->
 <section class="management-dashboard-page">
-    <div class="management-hero">
-        <div><span>System Overview</span><h1>Management Dashboard</h1><p>Revenue, repair activity, inventory health, and business indicators in one executive view.</p></div>
-        <a class="btn btn-light" asp-controller="Management" asp-action="ApproveQuotes">Pending Approvals</a>
-    </div>
-
-    <div class="row g-4">
-        <div class="col-md-6 col-xl-3"><article class="mgmt-card"><span>Total Revenue</span><strong>$48,920</strong><small>This month</small></article></div>
-        <div class="col-md-6 col-xl-3"><article class="mgmt-card"><span>Total Repair Orders</span><strong>1,284</strong><small>All time</small></article></div>
-        <div class="col-md-6 col-xl-3"><article class="mgmt-card"><span>Orders by Status</span><div class="stacked"><i class="pending"></i><i class="progress"></i><i class="complete"></i><i class="cancel"></i></div><small>Pending / In-Progress / Completed / Cancelled</small></article></div>
-        <div class="col-md-6 col-xl-3"><article class="mgmt-card alert-card"><span>Inventory Status</span><strong>14 / 342</strong><small>Low stock components</small></article></div>
-    </div>
-
-    <div class="row g-4 mt-1">
-        <div class="col-lg-7">
-            <section class="panel table-responsive">
-                <h2>Best-Selling Products</h2>
-                <table class="table align-middle"><thead><tr><th>Product Name</th><th>Units Sold</th><th>Revenue</th></tr></thead><tbody><tr><td>ProBook 14</td><td>48</td><td>$40,752</td></tr><tr><td>Wireless Mouse</td><td>160</td><td>$3,840</td></tr><tr><td>SSD 1TB</td><td>74</td><td>$6,808</td></tr></tbody></table>
-            </section>
-        </div>
-        <div class="col-lg-5">
-            <section class="panel indicators">
-                <h2>Statistical Indicators</h2>
-                <div><span>Average repair time</span><strong>2.4 days</strong></div>
-                <div><span>Customer satisfaction</span><strong>4.7 / 5</strong></div>
-                <div><span>Monthly growth</span><strong>+12.8%</strong></div>
-            </section>
-        </div>
-    </div>
+    <div class="admin-hero"><div><span>Operations</span><h1>Management Dashboard</h1><p>Monitor accounts, customers, repairs, requests, and sales performance.</p></div></div>
+    <div class="row g-4"><div class="col-md-3"><article class="summary-card"><span>Users</span><strong>@Model.Users.Count</strong></article></div><div class="col-md-3"><article class="summary-card"><span>Customers</span><strong>@Model.Customers.Count</strong></article></div><div class="col-md-3"><article class="summary-card"><span>Active Repairs</span><strong>@Model.RepairOrders.Count(repair => !repair.Status.Contains("Completed", StringComparison.OrdinalIgnoreCase))</strong></article></div><div class="col-md-3"><article class="summary-card"><span>Sales Revenue</span><strong>@Model.SalesOrders.Sum(order => order.TotalAmount).ToString("C")</strong></article></div></div>
+    <section class="table-card table-responsive mt-4"><h2>Recent Repair Orders</h2><table class="table"><thead><tr><th>Code</th><th>Customer</th><th>Device</th><th>Status</th></tr></thead><tbody>@foreach (var repair in Model.RepairOrders.OrderByDescending(repair => repair.ReceivedDate).Take(8)) { <tr><td>@repair.RepairOrderCode</td><td>@(repair.Customer?.FullName ?? "Customer")</td><td>@repair.DeviceType</td><td>@repair.Status</td></tr> }</tbody></table></section>
 </section>

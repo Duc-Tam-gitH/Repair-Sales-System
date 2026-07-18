@@ -1,3 +1,4 @@
+@model IReadOnlyCollection<R_SS.Models.Entities.RepairOrder>
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Repair Progress";
@@ -9,39 +10,35 @@
     <link rel="stylesheet" href="~/css/RepairProgress.css" asp-append-version="true" />
 }
 
-@* Repair progress cards simulate data from IRepairService.GetCustomerRepairProgressAsync. *@
 <section class="repair-progress-page">
     <div class="progress-header">
         <h1>Track Repair Progress</h1>
         <a class="btn btn-primary" asp-controller="Customer" asp-action="SubmitRepair">New Repair Request</a>
     </div>
 
-    <article class="repair-ticket">
-        <div class="ticket-top">
-            <div><span>#REP-2026-001</span><h2>Dell Inspiron 15</h2></div>
-            <strong class="state progress-state">In-Progress</strong>
-        </div>
-        <p><strong>Assigned Technician:</strong> Huy Nguyen</p>
-        <div class="timeline">
-            <div><span>2026-07-18</span><p>Request received and assigned to technician.</p></div>
-            <div><span>2026-07-19</span><p>Diagnostics completed. Keyboard replacement required.</p></div>
-            <div><span>2026-07-20</span><p>Replacement part reserved from inventory.</p></div>
-        </div>
-        <div class="parts-box"><strong>Parts Used:</strong> Laptop keyboard module, cleaning kit</div>
-        <div class="result-box"><strong>Final Repair Results:</strong> Pending final test after replacement.</div>
-    </article>
-
-    <article class="repair-ticket">
-        <div class="ticket-top">
-            <div><span>#REP-2026-0008</span><h2>Nova X Phone</h2></div>
-            <strong class="state complete-state">Completed</strong>
-        </div>
-        <p><strong>Assigned Technician:</strong> Lan Ho</p>
-        <div class="timeline">
-            <div><span>2026-07-05</span><p>Screen damage confirmed.</p></div>
-            <div><span>2026-07-06</span><p>Display replaced and touch test passed.</p></div>
-        </div>
-        <div class="parts-box"><strong>Parts Used:</strong> OLED screen assembly</div>
-        <div class="result-box"><strong>Final Repair Results:</strong> Device returned with 90-day service warranty.</div>
-    </article>
+    @if (!Model.Any())
+    {
+        <article class="repair-ticket"><h2>No active repairs found</h2></article>
+    }
+    else
+    {
+        @foreach (var repair in Model)
+        {
+            <article class="repair-ticket">
+                <div class="ticket-top">
+                    <div><span>@repair.RepairOrderCode</span><h2>@repair.DeviceName</h2></div>
+                    <strong class="state progress-state">@repair.Status</strong>
+                </div>
+                <p><strong>Assigned Technician:</strong> @(repair.AssignedTechnician?.FullName ?? "Pending assignment")</p>
+                <div class="timeline">
+                    @foreach (var history in repair.StatusHistories.OrderBy(history => history.UpdatedAtUtc))
+                    {
+                        <div><span>@history.UpdatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd")</span><p>@(history.Notes ?? history.Status)</p></div>
+                    }
+                </div>
+                <div class="parts-box"><strong>Parts Used:</strong> @string.Join(", ", repair.RepairOrderDetails.Select(detail => detail.Product?.ProductName).Where(name => !string.IsNullOrWhiteSpace(name)))</div>
+                <div class="result-box"><strong>Final Repair Results:</strong> @(repair.RepairResult ?? "Pending final result.")</div>
+            </article>
+        }
+    }
 </section>

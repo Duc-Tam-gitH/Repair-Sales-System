@@ -4,5 +4,7 @@ namespace R_SS.DAL.Repositories.Interfaces
 {
     public interface IPaymentRp : IGenericRp<Payment>
     {
+        Task<IReadOnlyCollection<Payment>> GetAllWithDetailsAsync();
+        Task<Payment?> GetWithDetailsAsync(int paymentId);
     }
 }

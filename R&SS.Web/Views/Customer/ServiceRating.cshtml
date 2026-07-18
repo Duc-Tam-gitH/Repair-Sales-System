@@ -1,3 +1,4 @@
+@model ServiceRatingViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Service Rating";
@@ -9,34 +10,43 @@
     <link rel="stylesheet" href="~/css/ServiceRating.css" asp-append-version="true" />
 }
 
-@* Rating options simulate completed repairs returned from IRepairService. *@
 <section class="rating-page">
     <div class="rating-card">
         <h1>Service Rating</h1>
-        <p>Select a completed repair report and share your feedback.</p>
+        <p>Select a completed order or delivered repair and share your feedback.</p>
 
-        <div class="alert alert-success" role="status">Thank you! Your rating has been submitted.</div>
+        @if (TempData["SuccessMessage"] is string successMessage)
+        {
+            <div class="alert alert-success" role="status">@successMessage</div>
+        }
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-        <form>
-            <label class="form-label" for="report">Completed Repair Report</label>
-            <select class="form-select form-select-lg" id="report">
-                <option>#REP-2026-0008 - Nova X Phone</option>
-                <option>#REP-2026-0004 - Office Printer</option>
+        <form method="post" asp-controller="Customer" asp-action="ServiceRating">
+            @Html.AntiForgeryToken()
+            <label class="form-label" for="eligibleItem">Completed Item</label>
+            <select class="form-select form-select-lg" id="eligibleItem" name="ItemId">
+                @foreach (var item in Model.EligibleItems.Items)
+                {
+                    <option value="@item.Id" data-type="@item.Type">@item.Code - @item.Type</option>
+                }
             </select>
+            <input id="feedbackType" name="Type" type="hidden" value="@(Model.EligibleItems.Items.FirstOrDefault()?.Type ?? "order")" />
 
-            <label class="form-label mt-4">Rating</label>
-            <div class="stars" aria-label="5 star rating selector">
-                <button type="button">★</button>
-                <button type="button">★</button>
-                <button type="button">★</button>
-                <button type="button">★</button>
-                <button type="button">☆</button>
-            </div>
+            <label class="form-label mt-4" for="Rating">Rating</label>
+            <input class="form-control" id="Rating" name="Rating" type="number" min="1" max="5" value="@Model.Feedback.Rating" />
 
             <label class="form-label mt-4" for="comment">Comment / Feedback</label>
-            <textarea class="form-control" id="comment" rows="5" placeholder="Tell us what went well or what we can improve."></textarea>
+            <textarea class="form-control" id="comment" name="Comment" rows="5" placeholder="Tell us what went well or what we can improve.">@Model.Feedback.Comment</textarea>
 
-            <button class="btn btn-primary btn-lg mt-4" type="button">Submit Rating</button>
+            <button class="btn btn-primary btn-lg mt-4" type="submit" disabled="@(!Model.EligibleItems.Items.Any())">Submit Rating</button>
         </form>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        document.getElementById('eligibleItem')?.addEventListener('change', function () {
+            document.getElementById('feedbackType').value = this.selectedOptions[0]?.dataset.type || 'order';
+        });
+    </script>
+}

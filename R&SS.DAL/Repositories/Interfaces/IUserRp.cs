@@ -4,6 +4,7 @@ namespace R_SS.DAL.Repositories.Interfaces
 {
     public interface IUserRp : IGenericRp<User>
     {
+        Task<IReadOnlyCollection<User>> GetAllWithRolesAsync();
         Task<User?> GetByUsernameAsync(string username);
         Task<User?> GetByEmailAsync(string email);
         Task<User?> GetUserWithRolesAsync(string emailOrUsername);

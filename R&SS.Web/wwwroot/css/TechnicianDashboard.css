@@ -1,6 +1,21 @@
+/* Technology dashboard theme tokens */
+:root {
+  --primary-dark: #0F172A;
+  --primary-light: #0891B2;
+  --accent-bright: #06B6D4;
+  --background-light: #F1F5F9;
+  --surface-white: #FFFFFF;
+  --text-dark: #1E293B;
+  --text-secondary: #64748B;
+  --border-light: #E2E8F0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 6px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 14px 34px rgba(15, 23, 42, 0.10);
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
 .tech-hero {
     align-items: center;
-    background: linear-gradient(135deg, #172033, #0f766e);
+    background: linear-gradient(135deg, #0F172A, #0891B2);
     border-radius: 20px;
     color: #fff;
     display: flex;
@@ -8,9 +23,9 @@
     margin-bottom: 24px;
     padding: 32px;
 }
-.tech-hero span { color: #bff1e9; font-weight: 800; text-transform: uppercase; }
+.tech-hero span { color: #CFFAFE; font-weight: 800; text-transform: uppercase; }
 .tech-hero h1, .urgent-panel h2 { font-weight: 800; }
-.tech-hero p { color: #e5f5f2; margin: 0; }
+.tech-hero p { color: #ECFEFF; margin: 0; }
 .tech-metric, .urgent-panel {
     background: #fff;
     border: 1px solid #e2e8f0;
@@ -18,8 +33,8 @@
     box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
     padding: 22px;
 }
-.tech-metric { border-top: 5px solid #0d6efd; height: 100%; }
+.tech-metric { border-top: 5px solid #0891B2; height: 100%; }
 .tech-metric strong { display: block; font-size: 2.4rem; }
 .pending { border-top-color: #f59e0b; }
-.progress { border-top-color: #0f766e; }
+.progress { border-top-color: #0891B2; }
 .due { border-top-color: #dc2626; }

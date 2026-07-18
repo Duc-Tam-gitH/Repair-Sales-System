@@ -11,6 +11,16 @@ namespace R_SS.DAL.Repositories
         {
         }
 
+        public async Task<IReadOnlyCollection<User>> GetAllWithRolesAsync()
+        {
+            return await _context.Users
+                .AsNoTracking()
+                .Include(user => user.UserRoles)
+                .ThenInclude(userRole => userRole.Role)
+                .OrderBy(user => user.FullName)
+                .ToListAsync();
+        }
+
         // 1. Tìm User theo tên tài khoản (Không phân biệt chữ hoa/thường)
         public async Task<User?> GetByUsernameAsync(string username)
         {

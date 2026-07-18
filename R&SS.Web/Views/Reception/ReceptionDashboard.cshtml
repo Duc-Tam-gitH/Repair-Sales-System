@@ -21,11 +21,21 @@
     </div>
 
     <div class="row g-4">
-        <div class="col-md-6 col-xl-3"><article class="metric-card pending"><span>Total Pending Requests</span><strong>18</strong><a asp-controller="Reception" asp-action="RepairRequestList">View Pending Requests</a></article></div>
-        <div class="col-md-6 col-xl-3"><article class="metric-card processing"><span>Total Processing Slips</span><strong>42</strong><a asp-controller="Reception" asp-action="TechnicalReportList">View Processing Slips</a></article></div>
-        <div class="col-md-6 col-xl-3"><article class="metric-card handover"><span>Total Handover Slips</span><strong>9</strong><a asp-controller="Reception" asp-action="DeviceHandover">View Handover Slips</a></article></div>
-        <div class="col-md-6 col-xl-3"><article class="metric-card tasks"><span>Total Tasks to be Processed</span><strong>27</strong><a asp-controller="Reception" asp-action="EquipmentReception">Process Incoming Devices</a></article></div>
+        <div class="col-md-6 col-xl-3"><article class="metric-card pending"><i class="fa-regular fa-clock"></i><span>Total Pending Requests</span><strong>18</strong><a asp-controller="Reception" asp-action="RepairRequestList">View Pending Requests</a></article></div>
+        <div class="col-md-6 col-xl-3"><article class="metric-card processing"><i class="fa-solid fa-screwdriver-wrench"></i><span>Total Processing Slips</span><strong>42</strong><a asp-controller="Reception" asp-action="TechnicalReportList">View Processing Slips</a></article></div>
+        <div class="col-md-6 col-xl-3"><article class="metric-card handover"><i class="fa-solid fa-handshake"></i><span>Total Handover Slips</span><strong>9</strong><a asp-controller="Reception" asp-action="DeviceHandover">View Handover Slips</a></article></div>
+        <div class="col-md-6 col-xl-3"><article class="metric-card tasks"><i class="fa-solid fa-inbox"></i><span>Total Tasks to be Processed</span><strong>27</strong><a asp-controller="Reception" asp-action="EquipmentReception">Process Incoming Devices</a></article></div>
     </div>
+
+    <section class="reception-flow mt-4" aria-labelledby="flow-title">
+        <h2 id="flow-title">Front Desk Workflow</h2>
+        <div class="flow-steps">
+            <article><span>01</span><strong>Approve Request</strong><small>Validate online customer repair submissions.</small></article>
+            <article><span>02</span><strong>Receive Device</strong><small>Record customer, equipment, accessories, and initial fault.</small></article>
+            <article><span>03</span><strong>Create Report</strong><small>Assign technician and issue a technical report code.</small></article>
+            <article><span>04</span><strong>Handover</strong><small>Confirm pickup, payment, and delivery completion.</small></article>
+        </div>
+    </section>
 
     <div class="dashboard-panel mt-4">
         <h2>Today's Front Desk Queue</h2>

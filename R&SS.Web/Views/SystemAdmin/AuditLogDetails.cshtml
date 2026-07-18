@@ -1,3 +1,4 @@
+@model SystemActivityLogResponse
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Audit Log Details";
@@ -9,30 +10,14 @@
     <link rel="stylesheet" href="~/css/AuditLogDetails.css" asp-append-version="true" />
 }
 
-<!-- Data fetched via IAuditLogService.GetLogDetails() -->
 <section class="audit-details-page">
     <div class="details-hero">
-        <div><span>Log ID</span><h1>LOG-2026-0001842</h1><p>Date & Time: 2026-07-18 09:42</p></div>
+        <div><span>Log ID</span><h1>LOG-@Model.SystemActivityLogId</h1><p>Date & Time: @Model.ExecutedAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</p></div>
         <a class="btn btn-light" asp-controller="SystemAdmin" asp-action="AuditLog">Back to Logs</a>
     </div>
 
     <div class="row g-4">
-        <div class="col-lg-4"><section class="detail-card"><h2>User Information</h2><p><strong>User Name:</strong> admin01</p><p><strong>Role:</strong> Administrator</p><p><strong>IP Address:</strong> 192.168.1.24</p></section></div>
-        <div class="col-lg-8"><section class="detail-card"><h2>Activity Information</h2><p><strong>Activity Type:</strong> Delete</p><p><strong>Module:</strong> Products</p><p><strong>Description:</strong> Deleted product Legacy Charger after it was discontinued.</p></section></div>
-    </div>
-
-    <div class="row g-4 mt-1">
-        <div class="col-lg-6"><section class="change-card before"><h2>Before</h2><pre>{
-  "ProductCode": "PRD-003",
-  "ProductName": "Legacy Charger",
-  "Status": "Discontinued",
-  "StockQuantity": 0
-}</pre></section></div>
-        <div class="col-lg-6"><section class="change-card after"><h2>After</h2><pre>{
-  "ProductCode": "PRD-003",
-  "Deleted": true,
-  "DeletedBy": "admin01",
-  "DeletedAt": "2026-07-18T09:42:00"
-}</pre></section></div>
+        <div class="col-lg-4"><section class="detail-card"><h2>User Information</h2><p><strong>User Name:</strong> @(Model.ActorUsername ?? "System")</p><p><strong>User ID:</strong> @(Model.ActorUserId?.ToString() ?? "-")</p><p><strong>Result:</strong> @Model.ExecutionResult</p></section></div>
+        <div class="col-lg-8"><section class="detail-card"><h2>Activity Information</h2><p><strong>Activity Type:</strong> @Model.OperationType</p><p><strong>Module:</strong> @Model.FunctionName</p><p><strong>Affected Data:</strong> @(Model.AffectedData ?? "-")</p><p><strong>Description:</strong> @(Model.Details ?? "-")</p></section></div>
     </div>
 </section>
