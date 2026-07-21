@@ -29,6 +29,27 @@ public class InventoryController : AuthenticatedControllerBase
         return Ok(new ApiResponse<InventoryTransactionResponse> { Success = true, Message = result.Message, Data = result });
     }
 
+    [HttpPost("import")]
+    public Task<IActionResult> ImportInventory([FromBody] InventoryTransactionRequest request)
+    {
+        request.TransactionType = "Receipt";
+        return ApplyTransaction(request);
+    }
+
+    [HttpPost("export")]
+    public Task<IActionResult> ExportInventory([FromBody] InventoryTransactionRequest request)
+    {
+        request.TransactionType = "Issue";
+        return ApplyTransaction(request);
+    }
+
+    [HttpPost("adjust")]
+    public Task<IActionResult> AdjustInventory([FromBody] InventoryTransactionRequest request)
+    {
+        request.TransactionType = "Adjustment";
+        return ApplyTransaction(request);
+    }
+
     [HttpGet("history")]
     public async Task<IActionResult> GetHistory([FromQuery] InventoryHistoryRequest request)
     {
@@ -42,6 +63,15 @@ public class InventoryController : AuthenticatedControllerBase
     public async Task<IActionResult> GetStatistics([FromQuery] InventoryStatisticRequest request)
     {
         request.ActorRole = CurrentRole();
+        var result = await _inventoryStatisticService.GenerateAsync(request);
+        return Ok(new ApiResponse<InventoryStatisticResponse> { Success = true, Message = result.Message, Data = result });
+    }
+
+    [HttpGet("low-stock-warning")]
+    public async Task<IActionResult> GetLowStockWarning([FromQuery] InventoryStatisticRequest request)
+    {
+        request.ActorRole = CurrentRole();
+        request.StockStatus = "low";
         var result = await _inventoryStatisticService.GenerateAsync(request);
         return Ok(new ApiResponse<InventoryStatisticResponse> { Success = true, Message = result.Message, Data = result });
     }

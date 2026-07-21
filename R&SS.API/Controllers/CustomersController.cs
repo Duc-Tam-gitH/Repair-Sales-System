@@ -26,7 +26,8 @@ public class CustomersController : AuthenticatedControllerBase
             ActorRole = CurrentRole()
         });
 
-        return Ok(new ApiResponse<CustomerListResponse> { Success = true, Message = result.Message, Data = result });
+        var response = ToCustomerLookupResponse(result);
+        return Ok(new ApiResponse<CustomerLookupListResponse> { Success = true, Message = result.Message, Data = response });
     }
 
     [HttpGet("search")]
@@ -38,7 +39,8 @@ public class CustomersController : AuthenticatedControllerBase
             ActorRole = CurrentRole()
         });
 
-        return Ok(new ApiResponse<CustomerListResponse> { Success = true, Message = result.Message, Data = result });
+        var response = ToCustomerLookupResponse(result);
+        return Ok(new ApiResponse<CustomerLookupListResponse> { Success = true, Message = result.Message, Data = response });
     }
 
     [HttpGet("{id:int}")]
@@ -78,5 +80,32 @@ public class CustomersController : AuthenticatedControllerBase
         var result = await _customerService.UpdateStatusAsync(request);
 
         return Ok(new ApiResponse<CustomerResponse> { Success = true, Message = result.Message, Data = result });
+    }
+
+    private static CustomerLookupListResponse ToCustomerLookupResponse(CustomerListResponse result)
+    {
+        return new CustomerLookupListResponse
+        {
+            Customers = result.Customers
+                .Select(customer => new CustomerLookupResponse
+                {
+                    CustomerId = customer.CustomerId,
+                    FullName = customer.FullName
+                })
+                .ToArray(),
+            Message = result.Message
+        };
+    }
+
+    private sealed class CustomerLookupListResponse
+    {
+        public IReadOnlyCollection<CustomerLookupResponse> Customers { get; set; } = Array.Empty<CustomerLookupResponse>();
+        public string Message { get; set; } = string.Empty;
+    }
+
+    private sealed class CustomerLookupResponse
+    {
+        public int CustomerId { get; set; }
+        public string FullName { get; set; } = string.Empty;
     }
 }

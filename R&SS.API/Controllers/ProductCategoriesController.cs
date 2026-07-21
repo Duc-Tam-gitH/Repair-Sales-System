@@ -3,19 +3,49 @@ using Microsoft.AspNetCore.Mvc;
 using R_SS.API.Responses;
 using R_SS.BLL.DTOs.ProductCategory;
 using R_SS.BLL.Interfaces;
+using R_SS.DAL.UnitOfWork;
 
 namespace R_SS.API.Controllers;
 
 [ApiController]
 [Authorize(Roles = "Manager")]
 [Route("api/product-categories")]
+[Route("api/categories")]
 public class ProductCategoriesController : AuthenticatedControllerBase
 {
     private readonly IProductCategoryManagementService _categoryService;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public ProductCategoriesController(IProductCategoryManagementService categoryService)
+    public ProductCategoriesController(IProductCategoryManagementService categoryService, IUnitOfWork unitOfWork)
     {
         _categoryService = categoryService;
+        _unitOfWork = unitOfWork;
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> GetCategories()
+    {
+        var categories = await _unitOfWork.ProductCategories.GetAllAsync();
+        var data = categories
+            .OrderBy(category => category.CategoryName)
+            .Select(category => new ProductCategoryResponse
+            {
+                ProductCategoryId = category.ProductCategoryId,
+                CategoryCode = category.CategoryCode,
+                CategoryName = category.CategoryName,
+                Description = category.Description,
+                IsActive = category.IsActive,
+                Message = string.Empty
+            })
+            .ToArray();
+
+        return Ok(new ApiResponse<IReadOnlyCollection<ProductCategoryResponse>>
+        {
+            Success = true,
+            Message = data.Length == 0 ? "No categories found." : "Categories retrieved successfully.",
+            Data = data
+        });
     }
 
     [HttpPost]

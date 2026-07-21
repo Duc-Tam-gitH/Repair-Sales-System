@@ -74,6 +74,14 @@ namespace R_SS.DAL.Repositories
                 (!excludedCustomerId.HasValue || customer.CustomerId != excludedCustomerId.Value));
         }
 
+        public async Task<bool> HasOperationalReferencesAsync(int customerId)
+        {
+            return await _context.SalesOrders.AnyAsync(order => order.CustomerId == customerId) ||
+                await _context.RepairOrders.AnyAsync(order => order.CustomerId == customerId) ||
+                await _context.Payments.AnyAsync(payment => payment.CustomerId == customerId) ||
+                await _context.ServiceRequests.AnyAsync(request => request.CustomerId == customerId);
+        }
+
         private static IQueryable<Customer> ApplyCurrentCustomerRoleFilter(IQueryable<Customer> query)
         {
             return query.Where(customer =>

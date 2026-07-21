@@ -33,26 +33,36 @@ public class AccountManagementService : IAccountManagementService
         if (!string.IsNullOrWhiteSpace(request.Phone) && await _unitOfWork.Users.ExistsPhoneAsync(request.Phone)) throw new InvalidOperationException("Phone number already exists.");
         var role = await _unitOfWork.Roles.GetByNameAsync(request.RoleName);
         if (role is null) throw new NotFoundException("Role not found.");
-        var user = new User
-        {
-            Username = request.Username.Trim(),
-            PasswordHash = _passwordHasher.Hash(request.Password),
-            FullName = request.FullName.Trim(),
-            Email = request.Email.Trim(),
-            Phone = Normalize(request.Phone),
-            IsActive = request.IsActive,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-        await _unitOfWork.Users.AddAsync(user);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.BeginTransactionAsync();
 
-        await EnsureUserRoleAsync(user, role);
-        await EnsureCustomerProfileAsync(user, role.RoleName);
-        await EnsureEmployeeProfileAsync(user, role);
-        await _unitOfWork.SaveChangesAsync();
-        await _activityLogService.LogAsync(request.ActorUserId, null, "System Account Management", "Add", user.Username, "Success");
-        return Map(user, role.RoleName, "Account added successfully.");
+        try
+        {
+            var user = new User
+            {
+                Username = request.Username.Trim(),
+                PasswordHash = _passwordHasher.Hash(request.Password),
+                FullName = request.FullName.Trim(),
+                Email = request.Email.Trim(),
+                Phone = Normalize(request.Phone),
+                IsActive = request.IsActive,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            await _unitOfWork.Users.AddAsync(user);
+            await _unitOfWork.SaveChangesAsync();
+
+            await EnsureUserRoleAsync(user, role);
+            await SyncProfilesForRoleAsync(user, role);
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitAsync();
+            await _activityLogService.LogAsync(request.ActorUserId, null, "System Account Management", "Add", user.Username, "Success");
+            return Map(user, role.RoleName, "Account added successfully.");
+        }
+        catch
+        {
+            await _unitOfWork.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task<AccountResponse> UpdateAsync(ManageAccountRequest request)
@@ -66,19 +76,29 @@ public class AccountManagementService : IAccountManagementService
         if (!string.IsNullOrWhiteSpace(request.Phone) && await _unitOfWork.Users.ExistsPhoneAsync(request.Phone, user.UserId)) throw new InvalidOperationException("Phone number already exists.");
         var role = await _unitOfWork.Roles.GetByNameAsync(request.RoleName);
         if (role is null) throw new NotFoundException("Role not found.");
-        user.Username = request.Username.Trim();
-        user.FullName = request.FullName.Trim();
-        user.Email = request.Email.Trim();
-        user.Phone = Normalize(request.Phone);
-        user.IsActive = request.IsActive;
-        user.UpdatedAt = DateTime.UtcNow;
-        _unitOfWork.Users.Update(user);
-        await EnsureUserRoleAsync(user, role);
-        await EnsureCustomerProfileAsync(user, role.RoleName);
-        await EnsureEmployeeProfileAsync(user, role);
-        await _unitOfWork.SaveChangesAsync();
-        await _activityLogService.LogAsync(request.ActorUserId, null, "System Account Management", "Update", user.Username, "Success");
-        return Map(user, role.RoleName, "Account updated successfully.");
+        await _unitOfWork.BeginTransactionAsync();
+
+        try
+        {
+            user.Username = request.Username.Trim();
+            user.FullName = request.FullName.Trim();
+            user.Email = request.Email.Trim();
+            user.Phone = Normalize(request.Phone);
+            user.IsActive = request.IsActive;
+            user.UpdatedAt = DateTime.UtcNow;
+            _unitOfWork.Users.Update(user);
+            await EnsureUserRoleAsync(user, role);
+            await SyncProfilesForRoleAsync(user, role);
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitAsync();
+            await _activityLogService.LogAsync(request.ActorUserId, null, "System Account Management", "Update", user.Username, "Success");
+            return Map(user, role.RoleName, "Account updated successfully.");
+        }
+        catch
+        {
+            await _unitOfWork.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task<AccountResponse> SetLockAsync(int userId, int actorUserId, string actorRole, bool isLocked)
@@ -141,10 +161,38 @@ public class AccountManagementService : IAccountManagementService
         _unitOfWork.UserRoles.Update(existingRole);
     }
 
-    private async Task EnsureCustomerProfileAsync(User user, string roleName)
+    private async Task SyncProfilesForRoleAsync(User user, Role role)
     {
-        if (!roleName.Equals(RoleConstants.Customer, StringComparison.OrdinalIgnoreCase))
+        if (IsCustomerRole(role.RoleName))
         {
+            await EnsureCustomerProfileAsync(user);
+            await RemoveEmployeeProfileAsync(user);
+            return;
+        }
+
+        await RemoveCustomerProfileAsync(user);
+        await EnsureEmployeeProfileAsync(user, role);
+    }
+
+    private async Task EnsureCustomerProfileAsync(User user)
+    {
+        var existingCustomerForUser = await _unitOfWork.Customers.GetByUserIdAsync(user.UserId);
+        if (existingCustomerForUser is not null)
+        {
+            var updatedCustomerCode = user.Username.Trim();
+            var customerWithCode = await _unitOfWork.Customers.GetByCodeAsync(updatedCustomerCode);
+            if (customerWithCode is not null && customerWithCode.CustomerId != existingCustomerForUser.CustomerId)
+            {
+                throw new InvalidOperationException("Customer code already belongs to another user.");
+            }
+
+            existingCustomerForUser.CustomerCode = updatedCustomerCode;
+            existingCustomerForUser.FullName = user.FullName.Trim();
+            existingCustomerForUser.Phone = Normalize(user.Phone);
+            existingCustomerForUser.Email = user.Email.Trim();
+            existingCustomerForUser.IsActive = user.IsActive;
+            existingCustomerForUser.UpdatedAt = DateTime.UtcNow;
+            _unitOfWork.Customers.Update(existingCustomerForUser);
             return;
         }
 
@@ -152,6 +200,19 @@ public class AccountManagementService : IAccountManagementService
         var existingCustomer = await _unitOfWork.Customers.GetByCodeAsync(customerCode);
         if (existingCustomer is not null)
         {
+            if (existingCustomer.UserId.HasValue && existingCustomer.UserId.Value != user.UserId)
+            {
+                throw new InvalidOperationException("Customer code already belongs to another user.");
+            }
+
+            existingCustomer.UserId = user.UserId;
+            existingCustomer.User = user;
+            existingCustomer.FullName = user.FullName.Trim();
+            existingCustomer.Phone = Normalize(user.Phone);
+            existingCustomer.Email = user.Email.Trim();
+            existingCustomer.IsActive = user.IsActive;
+            existingCustomer.UpdatedAt = DateTime.UtcNow;
+            _unitOfWork.Customers.Update(existingCustomer);
             return;
         }
 
@@ -171,21 +232,18 @@ public class AccountManagementService : IAccountManagementService
 
     private async Task EnsureEmployeeProfileAsync(User user, Role role)
     {
-        if (role.RoleName.Equals(RoleConstants.Customer, StringComparison.OrdinalIgnoreCase))
-        {
-            return;
-        }
-
-        if (!IsEmployeeRole(role.RoleName))
-        {
-            return;
-        }
-
         var existingEmployee = await _unitOfWork.Employees.GetByUserIdAsync(user.UserId);
         if (existingEmployee is not null)
         {
+            var updatedEmployeeCode = user.Username.Trim();
+            var existingEmployeeWithCode = await _unitOfWork.Employees.GetByCodeAsync(updatedEmployeeCode);
+            if (existingEmployeeWithCode is not null && existingEmployeeWithCode.EmployeeId != existingEmployee.EmployeeId)
+            {
+                throw new InvalidOperationException("Employee code already belongs to another user.");
+            }
+
             existingEmployee.RoleId = role.RoleId;
-            existingEmployee.EmployeeCode = user.Username.Trim();
+            existingEmployee.EmployeeCode = updatedEmployeeCode;
             existingEmployee.FullName = user.FullName.Trim();
             existingEmployee.Email = user.Email.Trim();
             existingEmployee.Phone = Normalize(user.Phone);
@@ -196,13 +254,20 @@ public class AccountManagementService : IAccountManagementService
             return;
         }
 
+        var employeeCode = user.Username.Trim();
+        var employeeWithCode = await _unitOfWork.Employees.GetByCodeAsync(employeeCode);
+        if (employeeWithCode is not null && employeeWithCode.UserId != user.UserId)
+        {
+            throw new InvalidOperationException("Employee code already belongs to another user.");
+        }
+
         await _unitOfWork.Employees.AddAsync(new Employee
         {
             UserId = user.UserId,
             User = user,
             RoleId = role.RoleId,
             Role = role,
-            EmployeeCode = user.Username.Trim(),
+            EmployeeCode = employeeCode,
             FullName = user.FullName.Trim(),
             Email = user.Email.Trim(),
             Phone = Normalize(user.Phone),
@@ -213,12 +278,36 @@ public class AccountManagementService : IAccountManagementService
         });
     }
 
-    private static bool IsEmployeeRole(string roleName)
+    private async Task RemoveCustomerProfileAsync(User user)
     {
-        return roleName.Equals(RoleConstants.Admin, StringComparison.OrdinalIgnoreCase) ||
-            roleName.Equals(RoleConstants.Manager, StringComparison.OrdinalIgnoreCase) ||
-            roleName.Equals(RoleConstants.Receptionist, StringComparison.OrdinalIgnoreCase) ||
-            roleName.Equals(RoleConstants.Technician, StringComparison.OrdinalIgnoreCase);
+        var existingCustomer = await _unitOfWork.Customers.GetByUserIdAsync(user.UserId);
+        if (existingCustomer is null)
+        {
+            return;
+        }
+
+        if (await _unitOfWork.Customers.HasOperationalReferencesAsync(existingCustomer.CustomerId))
+        {
+            throw new InvalidOperationException("Cannot remove customer profile because it has operational records.");
+        }
+
+        _unitOfWork.Customers.Delete(existingCustomer);
+    }
+
+    private async Task RemoveEmployeeProfileAsync(User user)
+    {
+        var existingEmployee = await _unitOfWork.Employees.GetByUserIdAsync(user.UserId);
+        if (existingEmployee is null)
+        {
+            return;
+        }
+
+        _unitOfWork.Employees.Delete(existingEmployee);
+    }
+
+    private static bool IsCustomerRole(string roleName)
+    {
+        return roleName.Equals(RoleConstants.Customer, StringComparison.OrdinalIgnoreCase);
     }
 
     private static AccountResponse Map(User user, string roleName, string message) => new()

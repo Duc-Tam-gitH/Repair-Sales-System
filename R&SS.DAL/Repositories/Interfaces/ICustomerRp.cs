@@ -10,5 +10,6 @@ namespace R_SS.DAL.Repositories.Interfaces
         Task<bool> ExistsPhoneAsync(string phone, int? excludedCustomerId = null);
         Task<bool> ExistsEmailAsync(string email, int? excludedCustomerId = null);
         Task<bool> ExistsCodeAsync(string customerCode, int? excludedCustomerId = null);
+        Task<bool> HasOperationalReferencesAsync(int customerId);
     }
 }

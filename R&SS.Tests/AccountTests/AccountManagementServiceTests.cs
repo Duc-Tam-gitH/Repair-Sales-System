@@ -59,6 +59,69 @@ public class AccountManagementServiceTests
     }
 
     [Fact]
+    public async Task UpdateAsync_ShouldRemoveCustomerProfileAndCreateEmployeeProfile_WhenRoleChangesToEmployee()
+    {
+        var mocks = CreateMocks();
+        var request = BuildRequest();
+        request.UserId = 1;
+        request.RoleName = RoleConstants.Manager;
+        var user = BuildUser(RoleConstants.Customer);
+        var role = new Role { RoleId = 2, RoleName = RoleConstants.Manager };
+        var customer = new Customer { CustomerId = 7, UserId = user.UserId, CustomerCode = user.Username, FullName = user.FullName };
+
+        mocks.Users.Setup(repo => repo.GetByIdAsync(user.UserId)).ReturnsAsync(user);
+        mocks.Roles.Setup(repo => repo.GetByNameAsync(RoleConstants.Manager)).ReturnsAsync(role);
+        mocks.UserRoles.Setup(repo => repo.GetByUserIdAsync(user.UserId)).ReturnsAsync(new[] { new UserRole { UserId = user.UserId, User = user, Role = new Role { RoleName = RoleConstants.Customer } } });
+        mocks.Customers.Setup(repo => repo.GetByUserIdAsync(user.UserId)).ReturnsAsync(customer);
+        mocks.Employees.Setup(repo => repo.GetByUserIdAsync(user.UserId)).ReturnsAsync((Employee?)null);
+        mocks.Employees.Setup(repo => repo.GetByCodeAsync(request.Username)).ReturnsAsync((Employee?)null);
+        mocks.Employees.Setup(repo => repo.AddAsync(It.IsAny<Employee>())).Returns(Task.CompletedTask);
+        var service = CreateService(mocks);
+
+        var response = await service.UpdateAsync(request);
+
+        response.RoleName.Should().Be(RoleConstants.Manager);
+        mocks.Customers.Verify(repo => repo.Delete(customer), Times.Once);
+        mocks.Employees.Verify(repo => repo.AddAsync(It.Is<Employee>(employee =>
+            employee.UserId == user.UserId &&
+            employee.RoleId == role.RoleId &&
+            employee.EmployeeCode == request.Username)), Times.Once);
+        mocks.UnitOfWork.Verify(unit => unit.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        mocks.UnitOfWork.Verify(unit => unit.RollbackAsync(It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ShouldRemoveEmployeeProfileAndCreateCustomerProfile_WhenRoleChangesToCustomer()
+    {
+        var mocks = CreateMocks();
+        var request = BuildRequest();
+        request.UserId = 1;
+        request.RoleName = RoleConstants.Customer;
+        var user = BuildUser(RoleConstants.Technician);
+        var role = new Role { RoleId = 4, RoleName = RoleConstants.Customer };
+        var employee = new Employee { EmployeeId = 8, UserId = user.UserId, EmployeeCode = user.Username, FullName = user.FullName };
+
+        mocks.Users.Setup(repo => repo.GetByIdAsync(user.UserId)).ReturnsAsync(user);
+        mocks.Roles.Setup(repo => repo.GetByNameAsync(RoleConstants.Customer)).ReturnsAsync(role);
+        mocks.UserRoles.Setup(repo => repo.GetByUserIdAsync(user.UserId)).ReturnsAsync(new[] { new UserRole { UserId = user.UserId, User = user, Role = new Role { RoleName = RoleConstants.Technician } } });
+        mocks.Customers.Setup(repo => repo.GetByUserIdAsync(user.UserId)).ReturnsAsync((Customer?)null);
+        mocks.Customers.Setup(repo => repo.GetByCodeAsync(request.Username)).ReturnsAsync((Customer?)null);
+        mocks.Customers.Setup(repo => repo.AddAsync(It.IsAny<Customer>())).Returns(Task.CompletedTask);
+        mocks.Employees.Setup(repo => repo.GetByUserIdAsync(user.UserId)).ReturnsAsync(employee);
+        var service = CreateService(mocks);
+
+        var response = await service.UpdateAsync(request);
+
+        response.RoleName.Should().Be(RoleConstants.Customer);
+        mocks.Employees.Verify(repo => repo.Delete(employee), Times.Once);
+        mocks.Customers.Verify(repo => repo.AddAsync(It.Is<Customer>(customer =>
+            customer.UserId == user.UserId &&
+            customer.CustomerCode == request.Username)), Times.Once);
+        mocks.UnitOfWork.Verify(unit => unit.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        mocks.UnitOfWork.Verify(unit => unit.RollbackAsync(It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
     public async Task AddAsync_ShouldThrowInvalidOperationException_WhenUsernameExists()
     {
         var mocks = CreateMocks();
@@ -95,6 +158,10 @@ public class AccountManagementServiceTests
         mocks.UnitOfWork.SetupGet(unit => unit.UserRoles).Returns(mocks.UserRoles.Object);
         mocks.UnitOfWork.SetupGet(unit => unit.Customers).Returns(mocks.Customers.Object);
         mocks.UnitOfWork.SetupGet(unit => unit.Employees).Returns(mocks.Employees.Object);
+        mocks.Customers.Setup(repo => repo.HasOperationalReferencesAsync(It.IsAny<int>())).ReturnsAsync(false);
+        mocks.UnitOfWork.Setup(unit => unit.BeginTransactionAsync(It.IsAny<CancellationToken>())).ReturnsAsync(Mock.Of<Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction>());
+        mocks.UnitOfWork.Setup(unit => unit.CommitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        mocks.UnitOfWork.Setup(unit => unit.RollbackAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         mocks.UnitOfWork.Setup(unit => unit.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
         mocks.Logs.Setup(log => log.LogAsync(It.IsAny<int?>(), It.IsAny<string?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<string>(), It.IsAny<string?>())).Returns(Task.CompletedTask);
         return mocks;
