@@ -1,9 +1,9 @@
 @model ReceptionIntakeViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Equipment Reception";
+    ViewData["Title"] = "Tiếp nhận thiết bị";
     ViewData["ActiveRole"] = "Reception";
-    ViewData["RoleDisplay"] = "Reception Staff";
+    ViewData["RoleDisplay"] = "Nhân viên tiếp nhận";
 }
 
 @section Styles {
@@ -12,51 +12,85 @@
 
 <section class="equipment-reception-page">
     <div class="step-banner">
-        <span>Technical Intake</span>
-        <h1>Equipment Reception</h1>
-        <p>Select the customer, record the device condition, and create the technical ticket.</p>
+        <span>Tiếp nhận kỹ thuật</span>
+        <h1>Tiếp nhận thiết bị</h1>
+        <p>Chọn khách hàng, ghi nhận tình trạng thiết bị, phân công kỹ thuật viên và tạo phiếu kỹ thuật.</p>
     </div>
 
     @if (Model.SourceRequest is not null)
     {
-        <div class="alert alert-info" role="status">Loaded online request @Model.SourceRequest.RequestCode.</div>
+        <div class="alert alert-info" role="status">Đã tải yêu cầu trực tuyến @Model.SourceRequest.RequestCode.</div>
     }
     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
     <form class="intake-form" method="post" asp-controller="Reception" asp-action="EquipmentReception">
         @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Ticket.SourceServiceRequestId" name="SourceServiceRequestId" />
+
         <section class="form-section">
-            <h2>Select Customer</h2>
+            <h2>Chọn khách hàng</h2>
             <div class="row g-3">
                 <div class="col-md-8">
-                    <label class="form-label" for="CustomerId">Existing Customer</label>
+                    <label class="form-label" for="CustomerId">Khách hàng hiện có</label>
                     <select class="form-select" id="CustomerId" name="CustomerId" required>
                         @foreach (var customer in Model.Customers)
                         {
-                            <option value="@customer.CustomerId" selected="@(customer.CustomerId == Model.Ticket.CustomerId)">@customer.FullName - @customer.CustomerCode</option>
+                            <option value="@customer.CustomerId" selected="@(customer.CustomerId == Model.Ticket.CustomerId)">
+                                @customer.FullName - @customer.CustomerCode
+                            </option>
                         }
                     </select>
                 </div>
-                <div class="col-md-4 d-flex align-items-end"><a class="btn btn-outline-primary w-100" asp-controller="Reception" asp-action="AddCustomer">Add New Customer</a></div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <a class="btn btn-outline-primary w-100" asp-controller="Reception" asp-action="AddCustomer">Thêm khách hàng mới</a>
+                </div>
             </div>
         </section>
 
         <section class="form-section">
-            <h2>Equipment Information</h2>
+            <h2>Phân công kỹ thuật viên</h2>
             <div class="row g-3">
-                <div class="col-md-4"><label class="form-label" for="DeviceName">Equipment Name</label><input class="form-control" id="DeviceName" name="DeviceName" value="@Model.Ticket.DeviceName" placeholder="Dell Inspiron 15" /></div>
-                <div class="col-md-4"><label class="form-label" for="DeviceType">Equipment Type</label><input class="form-control" id="DeviceType" name="DeviceType" value="@Model.Ticket.DeviceType" required /></div>
-                <div class="col-md-4"><label class="form-label" for="Brand">Brand</label><input class="form-control" id="Brand" name="Brand" value="@Model.Ticket.Brand" required /></div>
-                <div class="col-md-6"><label class="form-label" for="DeviceModel">Model</label><input class="form-control" id="DeviceModel" name="DeviceModel" value="@Model.Ticket.DeviceModel" /></div>
-                <div class="col-md-6"><label class="form-label" for="SerialNumber">Serial Number</label><input class="form-control" id="SerialNumber" name="SerialNumber" value="@Model.Ticket.SerialNumber" /></div>
-                <div class="col-md-6"><label class="form-label" for="CustomerEmail">Customer Email</label><input class="form-control" id="CustomerEmail" name="CustomerEmail" value="@Model.Ticket.CustomerEmail" type="email" required /></div>
-                <div class="col-md-6"><label class="form-label" for="CustomerPhone">Customer Phone</label><input class="form-control" id="CustomerPhone" name="CustomerPhone" value="@Model.Ticket.CustomerPhone" required /></div>
-                <div class="col-md-6"><label class="form-label" for="RequestType">Request Type</label><input class="form-control" id="RequestType" name="RequestType" value="@Model.Ticket.RequestType" required /></div>
-                <div class="col-md-6"><label class="form-label" for="DeviceCondition">Equipment Status</label><input class="form-control" id="DeviceCondition" name="DeviceCondition" value="@Model.Ticket.DeviceCondition" placeholder="Good, scratched, broken..." required /></div>
-                <div class="col-12"><label class="form-label" for="IssueDescription">Initial Fault Description</label><textarea class="form-control" id="IssueDescription" name="IssueDescription" rows="4" required>@Model.Ticket.IssueDescription</textarea></div>
-                <div class="col-12"><label class="form-label" for="Notes">Included Accessories / Notes</label><textarea class="form-control" id="Notes" name="Notes" rows="3">@Model.Ticket.Notes</textarea></div>
+                <div class="col-md-8">
+                    <label class="form-label" for="AssignedTechnicianId">Kỹ thuật viên phụ trách</label>
+                    <select class="form-select" id="AssignedTechnicianId" name="AssignedTechnicianId" required>
+                        <option value="">-- Chọn kỹ thuật viên --</option>
+                        @foreach (var technician in Model.Technicians)
+                        {
+                            var label = $"{technician.FullName} - {technician.WorkStatus} ({technician.ActiveTicketCount} phiếu đang xử lý)";
+                            if (!string.IsNullOrWhiteSpace(technician.Specialization))
+                            {
+                                label = $"{technician.FullName} - {technician.Specialization} ({technician.ActiveTicketCount} phiếu đang xử lý)";
+                            }
+
+                            <option value="@technician.TechnicianId" selected="@(technician.TechnicianId == Model.Ticket.AssignedTechnicianId)">
+                                @label
+                            </option>
+                        }
+                    </select>
+                    <span class="text-danger">@Html.ValidationMessage("AssignedTechnicianId")</span>
+                </div>
+                <div class="col-md-4">
+                    <div class="assignment-note">Bắt buộc chọn kỹ thuật viên trước khi tạo phiếu. Phiếu sau khi tạo sẽ chuyển sang trạng thái đã tiếp nhận.</div>
+                </div>
             </div>
-            <button class="btn btn-primary mt-4" type="submit">Create Technical Ticket</button>
+        </section>
+
+        <section class="form-section">
+            <h2>Thông tin thiết bị</h2>
+            <div class="row g-3">
+                <div class="col-md-4"><label class="form-label" for="DeviceName">Tên thiết bị</label><input class="form-control" id="DeviceName" name="DeviceName" value="@Model.Ticket.DeviceName" placeholder="Dell Inspiron 15" /></div>
+                <div class="col-md-4"><label class="form-label" for="DeviceType">Loại thiết bị</label><input class="form-control" id="DeviceType" name="DeviceType" value="@Model.Ticket.DeviceType" required /></div>
+                <div class="col-md-4"><label class="form-label" for="Brand">Thương hiệu</label><input class="form-control" id="Brand" name="Brand" value="@Model.Ticket.Brand" required /></div>
+                <div class="col-md-6"><label class="form-label" for="DeviceModel">Kiểu máy</label><input class="form-control" id="DeviceModel" name="DeviceModel" value="@Model.Ticket.DeviceModel" /></div>
+                <div class="col-md-6"><label class="form-label" for="SerialNumber">Số serial</label><input class="form-control" id="SerialNumber" name="SerialNumber" value="@Model.Ticket.SerialNumber" /></div>
+                <div class="col-md-6"><label class="form-label" for="CustomerEmail">Email khách hàng</label><input class="form-control" id="CustomerEmail" name="CustomerEmail" value="@Model.Ticket.CustomerEmail" type="email" required /></div>
+                <div class="col-md-6"><label class="form-label" for="CustomerPhone">Điện thoại khách hàng</label><input class="form-control" id="CustomerPhone" name="CustomerPhone" value="@Model.Ticket.CustomerPhone" required /></div>
+                <div class="col-md-6"><label class="form-label" for="RequestType">Loại yêu cầu</label><input class="form-control" id="RequestType" name="RequestType" value="@Model.Ticket.RequestType" required /></div>
+                <div class="col-md-6"><label class="form-label" for="DeviceCondition">Tình trạng thiết bị</label><input class="form-control" id="DeviceCondition" name="DeviceCondition" value="@Model.Ticket.DeviceCondition" placeholder="Tốt, trầy xước, hỏng..." required /></div>
+                <div class="col-12"><label class="form-label" for="IssueDescription">Mô tả lỗi ban đầu</label><textarea class="form-control" id="IssueDescription" name="IssueDescription" rows="4" required>@Model.Ticket.IssueDescription</textarea></div>
+                <div class="col-12"><label class="form-label" for="Notes">Phụ kiện kèm theo / ghi chú</label><textarea class="form-control" id="Notes" name="Notes" rows="3">@Model.Ticket.Notes</textarea></div>
+            </div>
+            <button class="btn btn-primary mt-4" type="submit">Tạo phiếu kỹ thuật</button>
         </section>
     </form>
 </section>

@@ -126,12 +126,12 @@ namespace R_SS.Web.Controllers
             {
                 var response = await _technicalTicketService.CreateAsync(request);
                 TempData["SuccessMessage"] = response.Message;
-                return RedirectToAction(nameof(TechnicalReportDetails), new { id = response.RepairOrderId });
+                return RedirectToAction(nameof(TechnicalReportList));
             }
             catch (Exception ex)
             {
                 AddError(ex);
-                return View(await BuildIntakeModelAsync(null, request));
+                return View(await BuildIntakeModelAsync(request.SourceServiceRequestId, request));
             }
         }
 
@@ -143,6 +143,9 @@ namespace R_SS.Web.Controllers
         public async Task<IActionResult> TechnicalReportList()
         {
             var model = await _technicalTicketService.GetTicketsAsync(BuildTicketViewer());
+            model.Tickets = model.Tickets
+                .Where(ticket => ticket.IsHandedOverToTechnician)
+                .ToArray();
             return View(model);
         }
 
@@ -151,6 +154,12 @@ namespace R_SS.Web.Controllers
             try
             {
                 var model = await _technicalTicketService.GetDetailsAsync(id, BuildTicketViewer());
+                if (!model.IsHandedOverToTechnician)
+                {
+                    TempData["ErrorMessage"] = "Work must be handed over to the assigned technician before the technical certification is issued.";
+                    return RedirectToAction(nameof(TechnicalReportList));
+                }
+
                 return View(model);
             }
             catch (Exception ex)
@@ -175,6 +184,7 @@ namespace R_SS.Web.Controllers
             {
                 ActorRole = GetActorRole()
             });
+            var technicians = await _technicalTicketService.GetTechniciansAsync(GetActorRole());
 
             ServiceRequestResponse? sourceRequest = null;
             if (requestId.HasValue)
@@ -189,12 +199,14 @@ namespace R_SS.Web.Controllers
                     ticket.DeviceModel = entity.DeviceModel;
                     ticket.RequestType = entity.ServiceType;
                     ticket.IssueDescription = entity.Description;
+                    ticket.SourceServiceRequestId = entity.ServiceRequestId;
                 }
             }
 
             return new ReceptionIntakeViewModel
             {
                 Customers = customers.Customers,
+                Technicians = technicians.Technicians,
                 SourceRequest = sourceRequest,
                 Ticket = ticket
             };

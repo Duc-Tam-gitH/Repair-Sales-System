@@ -1,9 +1,9 @@
 @model OrderResponse
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Order Details";
+    ViewData["Title"] = "Chi tiết đơn hàng";
     ViewData["ActiveRole"] = "Customer";
-    ViewData["RoleDisplay"] = "Customer User";
+    ViewData["RoleDisplay"] = "Khách hàng";
 }
 
 @section Styles {
@@ -12,15 +12,15 @@
 
 <section class="order-detail-page">
     <div class="order-banner">
-        <div><span>Order Code</span><h1>@Model.SalesOrderCode</h1></div>
+        <div><span>Mã đơn hàng</span><h1>@Model.SalesOrderCode</h1></div>
         <span class="status">@Model.Status</span>
     </div>
     <div class="row g-4">
         <div class="col-lg-8">
             <div class="detail-card table-responsive">
-                <h2>Products</h2>
+                <h2>Sản phẩm</h2>
                 <table class="table align-middle">
-                    <thead><tr><th>Name</th><th>Quantity</th><th>Unit Price</th><th>Total</th></tr></thead>
+                    <thead><tr><th>Tên sản phẩm</th><th>Số lượng</th><th>Đơn giá</th><th>Thành tiền</th></tr></thead>
                     <tbody>
                         @foreach (var item in Model.Items)
                         {
@@ -32,12 +32,12 @@
         </div>
         <div class="col-lg-4">
             <aside class="detail-card">
-                <h2>Summary</h2>
-                <p><strong>Payment:</strong> @Model.PaymentMethod</p>
-                <p><strong>Subtotal:</strong> @Model.SubTotal.ToString("C")</p>
-                <p><strong>Discount:</strong> @Model.DiscountAmount.ToString("C")</p>
-                <p><strong>Total:</strong> @Model.TotalAmount.ToString("C")</p>
-                <p><strong>Notes:</strong> @Model.Message</p>
+                <h2>Tóm tắt</h2>
+                <p><strong>Thanh toán:</strong> @Model.PaymentMethod</p>
+                <p><strong>Tạm tính:</strong> @Model.SubTotal.ToString("C")</p>
+                <p><strong>Giảm giá:</strong> @Model.DiscountAmount.ToString("C")</p>
+                <p><strong>Tổng cộng:</strong> @Model.TotalAmount.ToString("C")</p>
+                <p><strong>Ghi chú:</strong> @Model.Message</p>
             </aside>
         </div>
     </div>

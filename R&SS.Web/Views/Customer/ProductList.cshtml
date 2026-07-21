@@ -1,9 +1,9 @@
 @model ProductListResponse
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Product Catalog";
+    ViewData["Title"] = "Danh mục sản phẩm";
     ViewData["ActiveRole"] = "Customer";
-    ViewData["RoleDisplay"] = "Customer User";
+    ViewData["RoleDisplay"] = "Khách hàng";
 }
 
 @section Styles {
@@ -13,21 +13,21 @@
 <section class="catalog-page">
     <div class="catalog-header">
         <div>
-            <h1>Product Catalog</h1>
-            <p>Search products, filter by category, and open product details before purchase.</p>
+            <h1>Danh mục sản phẩm</h1>
+            <p>Tìm kiếm sản phẩm, lọc theo danh mục và xem chi tiết trước khi mua.</p>
         </div>
-        <a class="btn btn-primary" asp-controller="Customer" asp-action="Cart">View Cart</a>
+        <a class="btn btn-primary" asp-controller="Customer" asp-action="Cart">Xem giỏ hàng</a>
     </div>
 
     <form class="catalog-tools" method="get" asp-controller="Customer" asp-action="ProductList">
-        <input class="form-control form-control-lg" name="keyword" type="search" value="@ViewData["Keyword"]" placeholder="Search products by name, category, or brand..." />
-        <select class="form-select" name="criteria" aria-label="Search criteria">
-            <option value="all" selected="@(ViewData["Criteria"]?.ToString() == "all")">All</option>
-            <option value="name" selected="@(ViewData["Criteria"]?.ToString() == "name")">Name</option>
-            <option value="category" selected="@(ViewData["Criteria"]?.ToString() == "category")">Category</option>
-            <option value="brand" selected="@(ViewData["Criteria"]?.ToString() == "brand")">Brand</option>
+        <input class="form-control form-control-lg" name="keyword" type="search" value="@ViewData["Keyword"]" placeholder="Tìm sản phẩm theo tên, danh mục hoặc thương hiệu..." />
+        <select class="form-select" name="criteria" aria-label="Tiêu chí tìm kiếm">
+            <option value="all" selected="@(ViewData["Criteria"]?.ToString() == "all")">Tất cả</option>
+            <option value="name" selected="@(ViewData["Criteria"]?.ToString() == "name")">Tên</option>
+            <option value="category" selected="@(ViewData["Criteria"]?.ToString() == "category")">Danh mục</option>
+            <option value="brand" selected="@(ViewData["Criteria"]?.ToString() == "brand")">Thương hiệu</option>
         </select>
-        <button class="btn btn-outline-primary" type="submit">Search</button>
+        <button class="btn btn-outline-primary" type="submit">Tìm kiếm</button>
     </form>
 
     <div asp-validation-summary="ModelOnly" class="alert alert-warning" role="alert"></div>
@@ -37,7 +37,7 @@
         {
             <div class="col-12">
                 <article class="catalog-card">
-                    <h2>No products found</h2>
+                    <h2>Không tìm thấy sản phẩm</h2>
                     <p>@Model.Message</p>
                 </article>
             </div>
@@ -49,12 +49,12 @@
                 <div class="col-md-6 col-xl-4">
                     <article class="catalog-card">
                         <span class="stock @(product.QuantityInStock > 0 ? "in-stock" : "out-stock")">
-                            @(product.QuantityInStock > 0 ? "In Stock" : "Out of Stock")
+                            @(product.QuantityInStock > 0 ? "Còn hàng" : "Hết hàng")
                         </span>
                         <h2>@product.ProductName</h2>
                         <p>@(product.CategoryName ?? product.BrandName ?? product.ProductCode)</p>
                         <strong>@product.SalePrice.ToString("C")</strong>
-                        <a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails" asp-route-id="@product.ProductId">View Details</a>
+                        <a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="ProductDetails" asp-route-id="@product.ProductId">Xem chi tiết</a>
                     </article>
                 </div>
             }

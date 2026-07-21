@@ -1,9 +1,9 @@
 @model ProductDetailResponse
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Product Details";
+    ViewData["Title"] = "Chi tiết sản phẩm";
     ViewData["ActiveRole"] = "ProductManagement";
-    ViewData["RoleDisplay"] = "Product Staff";
+    ViewData["RoleDisplay"] = "Nhân viên sản phẩm";
 }
 
 @section Styles {
@@ -12,19 +12,19 @@
 
 <section class="product-admin-details-page">
     <div class="details-hero">
-        <div><span>@Model.ProductCode</span><h1>@Model.ProductName</h1><p>@(Model.Description ?? "No description provided.")</p></div>
-        <span class="status-badge">@(Model.QuantityInStock > 0 ? "Active" : "No Stock")</span>
+        <div><span>@Model.ProductCode</span><h1>@Model.ProductName</h1><p>@(Model.Description ?? "Chưa có mô tả.")</p></div>
+        <span class="status-badge">@(Model.QuantityInStock > 0 ? "Đang hoạt động" : "Hết hàng")</span>
     </div>
     @if (TempData["SuccessMessage"] is string success)
     {
         <div class="alert alert-success mt-3" role="status">@success</div>
     }
     <div class="row g-4">
-        <div class="col-lg-4"><section class="detail-card"><h2>Product Information</h2><p><strong>Category:</strong> @(Model.CategoryName ?? "Uncategorized")</p><p><strong>Brand:</strong> @(Model.BrandName ?? "No brand")</p><p><strong>Price:</strong> @Model.SalePrice.ToString("C")</p><p><strong>Stock Quantity:</strong> @Model.QuantityInStock</p></section></div>
-        <div class="col-lg-8"><section class="detail-card"><h2>Description</h2><p>@(Model.Description ?? "No description provided.")</p></section></div>
+        <div class="col-lg-4"><section class="detail-card"><h2>Thông tin sản phẩm</h2><p><strong>Danh mục:</strong> @(Model.CategoryName ?? "Chưa phân loại")</p><p><strong>Thương hiệu:</strong> @(Model.BrandName ?? "No brand")</p><p><strong>Giá:</strong> @Model.SalePrice.ToString("C")</p><p><strong>Số lượng tồn kho:</strong> @Model.QuantityInStock</p></section></div>
+        <div class="col-lg-8"><section class="detail-card"><h2>Mô tả</h2><p>@(Model.Description ?? "Chưa có mô tả.")</p></section></div>
     </div>
     <section class="related-orders mt-4 table-responsive">
-        <h2>Actions</h2>
-        <div class="d-flex gap-2"><a class="btn btn-primary" asp-controller="ProductManagement" asp-action="AddUpdateProduct" asp-route-id="@Model.ProductId">Edit</a><a class="btn btn-outline-secondary" asp-controller="ProductManagement" asp-action="ProductList">Back to List</a></div>
+        <h2>Thao tác</h2>
+        <div class="d-flex gap-2"><a class="btn btn-primary" asp-controller="ProductManagement" asp-action="AddUpdateProduct" asp-route-id="@Model.ProductId">Sửa</a><a class="btn btn-outline-secondary" asp-controller="ProductManagement" asp-action="ProductList">Quay lại danh sách</a></div>
     </section>
 </section>

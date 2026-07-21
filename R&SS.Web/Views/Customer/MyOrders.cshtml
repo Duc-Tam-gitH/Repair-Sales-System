@@ -1,9 +1,9 @@
 @model IReadOnlyCollection<OrderResponse>
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "My Orders";
+    ViewData["Title"] = "Đơn hàng của tôi";
     ViewData["ActiveRole"] = "Customer";
-    ViewData["RoleDisplay"] = "Customer User";
+    ViewData["RoleDisplay"] = "Khách hàng";
 }
 
 @section Styles {
@@ -12,18 +12,18 @@
 
 <section class="orders-page">
     <div class="orders-header">
-        <h1>My Orders</h1>
+        <h1>Đơn hàng của tôi</h1>
         <form method="get" asp-controller="Customer" asp-action="MyOrders">
-            <input class="form-control" name="keyword" type="search" value="@ViewData["Keyword"]" placeholder="Search by order code..." />
+            <input class="form-control" name="keyword" type="search" value="@ViewData["Keyword"]" placeholder="Tìm theo mã đơn hàng..." />
         </form>
     </div>
     <div class="orders-panel table-responsive">
         <table class="table align-middle">
-            <thead><tr><th>Order Code</th><th>Status</th><th>Total Amount</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Mã đơn hàng</th><th>Trạng thái</th><th>Tổng tiền</th><th>Thao tác</th></tr></thead>
             <tbody>
                 @if (!Model.Any())
                 {
-                    <tr><td colspan="4">No orders found.</td></tr>
+                    <tr><td colspan="4">Không tìm thấy đơn hàng.</td></tr>
                 }
                 else
                 {
@@ -33,7 +33,7 @@
                             <td>@order.SalesOrderCode</td>
                             <td><span class="badge text-bg-info">@order.Status</span></td>
                             <td>@order.TotalAmount.ToString("C")</td>
-                            <td><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="OrderDetails" asp-route-id="@order.SalesOrderId">View Details</a></td>
+                            <td><a class="btn btn-sm btn-outline-primary" asp-controller="Customer" asp-action="OrderDetails" asp-route-id="@order.SalesOrderId">Xem chi tiết</a></td>
                         </tr>
                     }
                 }

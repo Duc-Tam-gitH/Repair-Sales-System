@@ -1,9 +1,9 @@
 @model ProcessManagementViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Process Management";
+    ViewData["Title"] = "Quản lý quy trình";
     ViewData["ActiveRole"] = "SystemAdmin";
-    ViewData["RoleDisplay"] = "System Administrator";
+    ViewData["RoleDisplay"] = "Quản trị hệ thống";
 }
 
 @section Styles {
@@ -12,7 +12,7 @@
 
 <section class="process-management-page">
     <div class="admin-hero">
-        <div><span>Workflow Configuration</span><h1>Repair Process Management</h1><p>Configure workflow settings, operational limits, and process rules.</p></div>
+        <div><span>Cấu hình quy trình</span><h1>Quản lý quy trình sửa chữa</h1><p>Cấu hình thiết lập quy trình, giới hạn vận hành và quy tắc xử lý.</p></div>
     </div>
 
     @if (TempData["SuccessMessage"] is string success)
@@ -22,13 +22,13 @@
     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
     <div class="row g-4">
-        <div class="col-md-4"><article class="summary-card"><span>Current Process Status</span><strong class="status-active">Active</strong></article></div>
-        <div class="col-md-4"><article class="summary-card"><span>Total Settings</span><strong>@Model.Configurations.Count</strong></article></div>
-        <div class="col-md-4"><article class="summary-card"><span>Total Groups</span><strong>@Model.Configurations.Select(item => item.GroupName ?? "General").Distinct().Count()</strong></article></div>
+        <div class="col-md-4"><article class="summary-card"><span>Trạng thái quy trình hiện tại</span><strong class="status-active">Đang hoạt động</strong></article></div>
+        <div class="col-md-4"><article class="summary-card"><span>Tổng cấu hình</span><strong>@Model.Configurations.Count</strong></article></div>
+        <div class="col-md-4"><article class="summary-card"><span>Tổng nhóm</span><strong>@Model.Configurations.Select(item => item.GroupName ?? "General").Distinct().Count()</strong></article></div>
     </div>
 
     <section class="workflow-panel mt-4">
-        <h2>Configuration Entries</h2>
+        <h2>Mục cấu hình</h2>
         <div class="workflow-steps">
             @foreach (var configuration in Model.Configurations.OrderBy(item => item.GroupName).ThenBy(item => item.Key))
             {
@@ -36,27 +36,27 @@
             }
             @if (!Model.Configurations.Any())
             {
-                <article><span>0</span><strong>No configuration</strong><small>Add the first configuration below</small></article>
+                <article><span>0</span><strong>Chưa có cấu hình</strong><small>Thêm cấu hình đầu tiên bên dưới</small></article>
             }
         </div>
     </section>
 
     <section class="edit-panel mt-4">
-        <h2>Add / Update Configuration</h2>
+        <h2>Thêm / cập nhật cấu hình</h2>
         <form method="post" asp-controller="SystemAdmin" asp-action="UpdateConfiguration">
             @Html.AntiForgeryToken()
             <div class="row g-3">
-                <div class="col-md-4"><label class="form-label" for="Key">Key</label><input class="form-control" id="Key" name="Key" value="@Model.Configuration.Key" required /></div>
-                <div class="col-md-4"><label class="form-label" for="Value">Value</label><input class="form-control" id="Value" name="Value" value="@Model.Configuration.Value" required /></div>
-                <div class="col-md-4"><label class="form-label" for="GroupName">Group</label><input class="form-control" id="GroupName" name="GroupName" value="@Model.Configuration.GroupName" /></div>
-                <div class="col-12"><label class="form-label" for="Description">Description</label><textarea class="form-control" id="Description" name="Description" rows="3">@Model.Configuration.Description</textarea></div>
+                <div class="col-md-4"><label class="form-label" for="Key">Khóa</label><input class="form-control" id="Key" name="Key" value="@Model.Configuration.Key" required /></div>
+                <div class="col-md-4"><label class="form-label" for="Value">Giá trị</label><input class="form-control" id="Value" name="Value" value="@Model.Configuration.Value" required /></div>
+                <div class="col-md-4"><label class="form-label" for="GroupName">Nhóm</label><input class="form-control" id="GroupName" name="GroupName" value="@Model.Configuration.GroupName" /></div>
+                <div class="col-12"><label class="form-label" for="Description">Mô tả</label><textarea class="form-control" id="Description" name="Description" rows="3">@Model.Configuration.Description</textarea></div>
             </div>
-            <button class="btn btn-primary mt-4" type="submit">Save Changes</button>
+            <button class="btn btn-primary mt-4" type="submit">Lưu thay đổi</button>
         </form>
     </section>
 
     <section class="rules-panel mt-4 table-responsive">
-        <h2>Existing Settings</h2>
-        <table class="table align-middle"><thead><tr><th>Group</th><th>Key</th><th>Value</th><th>Description</th></tr></thead><tbody>@foreach (var configuration in Model.Configurations) { <tr><td>@(configuration.GroupName ?? "General")</td><td>@configuration.Key</td><td>@configuration.Value</td><td>@(configuration.Description ?? "-")</td></tr> }</tbody></table>
+        <h2>Cấu hình hiện có</h2>
+        <table class="table align-middle"><thead><tr><th>Nhóm</th><th>Khóa</th><th>Giá trị</th><th>Mô tả</th></tr></thead><tbody>@foreach (var configuration in Model.Configurations) { <tr><td>@(configuration.GroupName ?? "General")</td><td>@configuration.Key</td><td>@configuration.Value</td><td>@(configuration.Description ?? "-")</td></tr> }</tbody></table>
     </section>
 </section>

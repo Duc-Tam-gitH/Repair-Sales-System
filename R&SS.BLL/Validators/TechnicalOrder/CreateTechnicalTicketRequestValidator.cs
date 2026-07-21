@@ -9,6 +9,12 @@ public class CreateTechnicalTicketRequestValidator : AbstractValidator<CreateTec
     {
         RuleFor(request => request.CustomerId).GreaterThan(0);
         RuleFor(request => request.ReceivedByUserId).GreaterThan(0);
+        RuleFor(request => request.AssignedTechnicianId)
+            .GreaterThan(0)
+            .WithMessage("Please select a technician before submitting.");
+        RuleFor(request => request.SourceServiceRequestId)
+            .GreaterThan(0)
+            .When(request => request.SourceServiceRequestId.HasValue);
         RuleFor(request => request.ActorRole).NotEmpty();
         RuleFor(request => request.CustomerEmail).NotEmpty().EmailAddress().MaximumLength(100);
         RuleFor(request => request.CustomerPhone).NotEmpty().Matches(@"^\+?[0-9]{9,15}$");

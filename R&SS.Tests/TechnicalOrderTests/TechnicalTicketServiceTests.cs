@@ -26,11 +26,55 @@ public class TechnicalTicketServiceTests
 
         var response = await service.CreateAsync(BuildCreateRequest());
 
-        response.Status.Should().Be("Pending Reception");
+        response.Status.Should().Be("Handed Over to Technician");
+        response.AssignedTechnicianId.Should().Be(7);
+        response.IsHandedOverToTechnician.Should().BeTrue();
         response.TicketCode.Should().StartWith("TT-");
         mocks.RepairOrders.Verify(repo => repo.AddAsync(It.Is<RepairOrder>(order =>
-            order.RequestType == "Repair" && order.StatusHistories.Count == 1)), Times.Once);
+            order.RequestType == "Repair" &&
+            order.Status == "Handed Over to Technician" &&
+            order.AssignedTechnicianId == 7 &&
+            order.StatusHistories.Count == 2 &&
+            order.StatusHistories.Any(history => history.Status == "Received") &&
+            order.StatusHistories.Any(history => history.Status == "Handed Over to Technician") &&
+            order.AssignmentHistories.Count == 1 &&
+            order.AssignmentHistories.Any(history => history.Notes == "Assigned and handed over during ticket creation."))), Times.Once);
         mocks.EmailSender.Verify(sender => sender.SendTechnicalTicketCreatedAsync(customer.Email!, customer.FullName, It.IsAny<string>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task CreateAsync_ShouldMarkSourceRequestReceived_WhenRequestComesFromPendingQueue()
+    {
+        var mocks = CreateMocks();
+        var customer = BuildCustomer();
+        var sourceRequest = BuildServiceRequest();
+        mocks.Customers.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(customer);
+        mocks.ServiceRequests.Setup(repo => repo.GetByIdAsync(sourceRequest.ServiceRequestId)).ReturnsAsync(sourceRequest);
+        var service = CreateService(mocks);
+        var request = BuildCreateRequest();
+        request.SourceServiceRequestId = sourceRequest.ServiceRequestId;
+
+        await service.CreateAsync(request);
+
+        sourceRequest.Status.Should().Be("Received");
+        sourceRequest.RepairOrder.Should().NotBeNull();
+        mocks.ServiceRequests.Verify(repo => repo.Update(sourceRequest), Times.Once);
+        mocks.UnitOfWork.Verify(unit => unit.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task CreateAsync_ShouldThrowValidationException_WhenTechnicianIsNotSelected()
+    {
+        var service = CreateService(CreateMocks());
+        var request = BuildCreateRequest();
+        request.AssignedTechnicianId = 0;
+
+        var act = async () => await service.CreateAsync(request);
+
+        var exception = await act.Should().ThrowAsync<ValidationException>();
+        exception.Which.Errors.Should().Contain(error =>
+            error.PropertyName == nameof(CreateTechnicalTicketRequest.AssignedTechnicianId) &&
+            error.ErrorMessage == "Please select a technician before submitting.");
     }
 
     [Fact]
@@ -448,6 +492,7 @@ public class TechnicalTicketServiceTests
         mocks.UnitOfWork.SetupGet(unit => unit.Customers).Returns(mocks.Customers.Object);
         mocks.UnitOfWork.SetupGet(unit => unit.RepairOrders).Returns(mocks.RepairOrders.Object);
         mocks.UnitOfWork.SetupGet(unit => unit.RepairOrderStatusHistories).Returns(mocks.StatusHistories.Object);
+        mocks.UnitOfWork.SetupGet(unit => unit.ServiceRequests).Returns(mocks.ServiceRequests.Object);
         mocks.UnitOfWork.SetupGet(unit => unit.Users).Returns(mocks.Users.Object);
         mocks.UnitOfWork.SetupGet(unit => unit.Products).Returns(mocks.Products.Object);
         mocks.UnitOfWork.SetupGet(unit => unit.Payments).Returns(mocks.Payments.Object);
@@ -457,6 +502,7 @@ public class TechnicalTicketServiceTests
         mocks.UnitOfWork.Setup(unit => unit.CommitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         mocks.UnitOfWork.Setup(unit => unit.RollbackAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         mocks.UnitOfWork.Setup(unit => unit.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+        mocks.Users.Setup(repo => repo.GetTechniciansAsync()).ReturnsAsync(new[] { BuildTechnician() });
         mocks.EmailSender.Setup(sender => sender.SendTechnicalTicketCreatedAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
             .Returns(Task.CompletedTask);
         mocks.EmailSender.Setup(sender => sender.SendDeliveryConfirmationOtpAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
@@ -476,6 +522,7 @@ public class TechnicalTicketServiceTests
     {
         CustomerId = 1,
         ReceivedByUserId = 2,
+        AssignedTechnicianId = 7,
         ActorRole = RoleConstants.Receptionist,
         CustomerEmail = "john@example.com",
         CustomerPhone = "0123456789",
@@ -510,6 +557,18 @@ public class TechnicalTicketServiceTests
         Status = "Pending Reception"
     };
 
+    private static ServiceRequest BuildServiceRequest() => new()
+    {
+        ServiceRequestId = 11,
+        CustomerId = 1,
+        RequestCode = "SR-001",
+        ServiceType = "Repair",
+        DeviceType = "Laptop",
+        Brand = "Dell",
+        Description = "No power",
+        Status = "Pending Reception"
+    };
+
     private static User BuildTechnician() => new()
     {
         UserId = 7,
@@ -538,6 +597,7 @@ public class TechnicalTicketServiceTests
         public Mock<ICustomerRp> Customers { get; } = new();
         public Mock<IRepairOrderRp> RepairOrders { get; } = new();
         public Mock<IRepairOrderStatusHistoryRp> StatusHistories { get; } = new();
+        public Mock<IServiceRequestRp> ServiceRequests { get; } = new();
         public Mock<IUserRp> Users { get; } = new();
         public Mock<IProductRp> Products { get; } = new();
         public Mock<IPaymentRp> Payments { get; } = new();

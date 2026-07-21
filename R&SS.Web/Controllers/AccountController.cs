@@ -111,6 +111,15 @@ namespace R_SS.Web.Controllers
         [HttpGet]
         public IActionResult ForgotPassword()
         {
+            SetPasswordResetLayout();
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                return View("PasswordResetOptions", new ForgotPasswordRequest
+                {
+                    Email = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty
+                });
+            }
+
             return View(new ForgotPasswordRequest());
         }
 
@@ -118,9 +127,10 @@ namespace R_SS.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest request)
         {
+            SetPasswordResetLayout();
             if (!ModelState.IsValid)
             {
-                return View(request);
+                return View(User.Identity?.IsAuthenticated == true ? "PasswordResetOptions" : nameof(ForgotPassword), request);
             }
 
             try
@@ -132,13 +142,14 @@ namespace R_SS.Web.Controllers
             catch (Exception ex)
             {
                 AddError(ex);
-                return View(request);
+                return View(User.Identity?.IsAuthenticated == true ? "PasswordResetOptions" : nameof(ForgotPassword), request);
             }
         }
 
         [HttpGet]
         public IActionResult VerifyOTP(string? email)
         {
+            SetPasswordResetLayout();
             return View(new VerifyForgotPasswordOtpRequest { Email = email ?? string.Empty });
         }
 
@@ -146,6 +157,7 @@ namespace R_SS.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyOTP(VerifyForgotPasswordOtpRequest request)
         {
+            SetPasswordResetLayout();
             if (!ModelState.IsValid)
             {
                 return View(request);
@@ -167,6 +179,7 @@ namespace R_SS.Web.Controllers
         [HttpGet]
         public IActionResult ResetPassword(string? email)
         {
+            SetPasswordResetLayout();
             return View(new ResetPasswordRequest { Email = email ?? string.Empty });
         }
 
@@ -174,6 +187,7 @@ namespace R_SS.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
         {
+            SetPasswordResetLayout();
             if (!ModelState.IsValid)
             {
                 return View(request);
@@ -278,6 +292,11 @@ namespace R_SS.Web.Controllers
             return int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId)
                 ? userId
                 : 0;
+        }
+
+        private void SetPasswordResetLayout()
+        {
+            ViewData["UseAppLayout"] = User.Identity?.IsAuthenticated == true;
         }
 
         private IActionResult RedirectToRoleHome(string? roleName)

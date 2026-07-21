@@ -12,13 +12,13 @@
 
 <section class="assigned-tasks-page">
     <div class="task-list-header">
-        <div><h1>Assigned Tasks</h1><p>Search assigned repair requests and continue technical work.</p></div>
-        <a class="btn btn-primary" asp-controller="Technician" asp-action="WorkSchedule">View Schedule</a>
+        <div><h1>Phiếu được giao</h1><p>Tìm yêu cầu sửa chữa được giao và tiếp tục công việc kỹ thuật.</p></div>
+        <a class="btn btn-primary" asp-controller="Technician" asp-action="WorkSchedule">Xem lịch làm việc</a>
     </div>
 
     <div class="task-table table-responsive">
         <table class="table align-middle">
-            <thead><tr><th>Task ID</th><th>Customer Name</th><th>Device</th><th>Status</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Mã phiếu</th><th>Tên khách hàng</th><th>Thiết bị</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
             <tbody>
                 @if (!Model.Tickets.Any())
                 {
@@ -34,8 +34,8 @@
                             <td>@ticket.Brand @ticket.DeviceModel - @ticket.DeviceType</td>
                             <td><span class="badge text-bg-info">@ticket.Status</span></td>
                             <td>
-                                <a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@ticket.RepairOrderId">View Details</a>
-                                <a class="btn btn-sm btn-success" asp-controller="Technician" asp-action="RecordFaults" asp-route-id="@ticket.RepairOrderId">Start Processing</a>
+                                <a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@ticket.RepairOrderId">Xem chi tiết</a>
+                                <a class="btn btn-sm btn-success" asp-controller="Technician" asp-action="RecordFaults" asp-route-id="@ticket.RepairOrderId">Bắt đầu xử lý</a>
                             </td>
                         </tr>
                     }

@@ -1,9 +1,9 @@
 @model CartResponse
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Shopping Cart";
+    ViewData["Title"] = "Giỏ hàng";
     ViewData["ActiveRole"] = "Customer";
-    ViewData["RoleDisplay"] = "Customer User";
+    ViewData["RoleDisplay"] = "Khách hàng";
 }
 
 @section Styles {
@@ -12,8 +12,8 @@
 
 <section class="cart-page">
     <div class="cart-header">
-        <h1>Shopping Cart</h1>
-        <a class="btn btn-outline-primary" asp-controller="Customer" asp-action="ProductList">Continue Shopping</a>
+        <h1>Giỏ hàng</h1>
+        <a class="btn btn-outline-primary" asp-controller="Customer" asp-action="ProductList">Tiếp tục mua hàng</a>
     </div>
 
     @if (TempData["SuccessMessage"] is string successMessage)
@@ -23,11 +23,11 @@
     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
     <div class="cart-panel table-responsive">
         <table class="table align-middle">
-            <thead><tr><th>Product</th><th>Quantity</th><th>Unit Price</th><th>Subtotal</th><th></th></tr></thead>
+            <thead><tr><th>Sản phẩm</th><th>Số lượng</th><th>Đơn giá</th><th>Thành tiền</th><th></th></tr></thead>
             <tbody>
                 @if (!Model.Items.Any())
                 {
-                    <tr><td colspan="5">Your cart is empty.</td></tr>
+                    <tr><td colspan="5">Giỏ hàng của bạn đang trống.</td></tr>
                 }
                 else
                 {
@@ -38,7 +38,7 @@
                             <td><input class="form-control qty" type="number" value="@item.Quantity" min="1" readonly /></td>
                             <td>@item.UnitPrice.ToString("C")</td>
                             <td>@item.LineTotal.ToString("C")</td>
-                            <td><button class="btn btn-sm btn-outline-danger" disabled>Delete</button></td>
+                            <td><button class="btn btn-sm btn-outline-danger" disabled>Xóa</button></td>
                         </tr>
                     }
                 }
@@ -47,8 +47,8 @@
     </div>
 
     <div class="cart-summary">
-        <span>Total Amount</span>
+        <span>Tổng tiền</span>
         <strong>@Model.TotalAmount.ToString("C")</strong>
-        <a class="btn btn-primary btn-lg @(Model.Items.Any() ? "" : "disabled")" asp-controller="Customer" asp-action="Checkout">Proceed to Checkout</a>
+        <a class="btn btn-primary btn-lg @(Model.Items.Any() ? "" : "disabled")" asp-controller="Customer" asp-action="Checkout">Tiến hành thanh toán</a>
     </div>
 </section>

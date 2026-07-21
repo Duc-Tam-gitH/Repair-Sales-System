@@ -1,9 +1,9 @@
 @model ProductCatalogViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Product Management";
+    ViewData["Title"] = "Quản lý sản phẩm";
     ViewData["ActiveRole"] = "ProductManagement";
-    ViewData["RoleDisplay"] = "Product Staff";
+    ViewData["RoleDisplay"] = "Nhân viên sản phẩm";
 }
 
 @section Styles {
@@ -12,8 +12,8 @@
 
 <section class="product-management-list-page">
     <div class="product-admin-header">
-        <div><span>Product Catalog</span><h1>Product Management</h1><p>Maintain sellable products, prices, stock quantities, and catalog status.</p></div>
-        <a class="btn btn-primary" asp-controller="ProductManagement" asp-action="AddUpdateProduct">Add Product</a>
+        <div><span>Danh mục sản phẩm</span><h1>Quản lý sản phẩm</h1><p>Quản lý sản phẩm bán ra, giá, số lượng tồn kho và trạng thái danh mục.</p></div>
+        <a class="btn btn-primary" asp-controller="ProductManagement" asp-action="AddUpdateProduct">Thêm sản phẩm</a>
     </div>
 
     @if (TempData["SuccessMessage"] is string success)
@@ -25,17 +25,17 @@
         <div class="alert alert-danger" role="alert">@error</div>
     }
     <form class="product-tools" method="get" asp-controller="ProductManagement" asp-action="ProductList">
-        <input class="form-control" name="keyword" value="@Model.Keyword" placeholder="Search by Product Name or Code..." />
-        <button class="btn btn-outline-primary" type="submit">Search</button>
+        <input class="form-control" name="keyword" value="@Model.Keyword" placeholder="Tìm theo tên hoặc mã sản phẩm..." />
+        <button class="btn btn-outline-primary" type="submit">Tìm kiếm</button>
     </form>
 
     <div class="table-card table-responsive">
         <table class="table align-middle">
-            <thead><tr><th>Product Code</th><th>Product Name</th><th>Category</th><th>Price</th><th>Stock Quantity</th><th>Status</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Mã sản phẩm</th><th>Tên sản phẩm</th><th>Danh mục</th><th>Giá</th><th>Số lượng tồn kho</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
             <tbody>
                 @if (!Model.Products.Any())
                 {
-                    <tr><td colspan="7" class="text-center text-muted">No products found.</td></tr>
+                    <tr><td colspan="7" class="text-center text-muted">Không tìm thấy sản phẩm.</td></tr>
                 }
                 else
                 {
@@ -44,18 +44,18 @@
                         <tr>
                             <td>@product.ProductCode</td>
                             <td>@product.ProductName</td>
-                            <td>@(product.CategoryName ?? "Uncategorized")</td>
+                            <td>@(product.CategoryName ?? "Chưa phân loại")</td>
                             <td>@product.SalePrice.ToString("C")</td>
                             <td>@product.QuantityInStock</td>
-                            <td><span class="badge @(product.QuantityInStock > 0 ? "text-bg-success" : "text-bg-secondary")">@(product.QuantityInStock > 0 ? "Active" : "No Stock")</span></td>
+                            <td><span class="badge @(product.QuantityInStock > 0 ? "text-bg-success" : "text-bg-secondary")">@(product.QuantityInStock > 0 ? "Đang hoạt động" : "Hết hàng")</span></td>
                             <td>
                                 <div class="d-flex gap-2">
-                                    <a class="btn btn-sm btn-outline-primary" asp-controller="ProductManagement" asp-action="ProductDetails" asp-route-id="@product.ProductId">View</a>
-                                    <a class="btn btn-sm btn-outline-secondary" asp-controller="ProductManagement" asp-action="AddUpdateProduct" asp-route-id="@product.ProductId">Edit</a>
+                                    <a class="btn btn-sm btn-outline-primary" asp-controller="ProductManagement" asp-action="ProductDetails" asp-route-id="@product.ProductId">Xem</a>
+                                    <a class="btn btn-sm btn-outline-secondary" asp-controller="ProductManagement" asp-action="AddUpdateProduct" asp-route-id="@product.ProductId">Sửa</a>
                                     <form method="post" asp-controller="ProductManagement" asp-action="DeleteProduct">
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="productId" value="@product.ProductId" />
-                                        <button class="btn btn-sm btn-outline-warning" type="submit">Delete</button>
+                                        <button class="btn btn-sm btn-outline-warning" type="submit">Xóa</button>
                                     </form>
                                 </div>
                             </td>

@@ -1,9 +1,9 @@
 @model SendServiceRequestRequest
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Submit Repair Request";
+    ViewData["Title"] = "Gửi yêu cầu sửa chữa";
     ViewData["ActiveRole"] = "Customer";
-    ViewData["RoleDisplay"] = "Customer User";
+    ViewData["RoleDisplay"] = "Khách hàng";
 }
 
 @section Styles {
@@ -12,23 +12,23 @@
 
 <section class="submit-repair-page">
     <div class="repair-intro">
-        <span>Technical Service</span>
-        <h1>Submit Repair Request</h1>
-        <p>Tell us about your device issue so reception can process it.</p>
+        <span>Dịch vụ kỹ thuật</span>
+        <h1>Gửi yêu cầu sửa chữa</h1>
+        <p>Mô tả sự cố thiết bị để bộ phận tiếp nhận xử lý yêu cầu của bạn.</p>
     </div>
 
     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
     <form class="repair-form" method="post" asp-controller="Customer" asp-action="SubmitRepair">
         @Html.AntiForgeryToken()
-        <h2>Device Information</h2>
+        <h2>Thông tin thiết bị</h2>
         <div class="row g-3">
-            <div class="col-md-6"><label class="form-label" asp-for="ServiceType">Service Type</label><select class="form-select" asp-for="ServiceType"><option>Repair</option><option>Maintenance</option><option>Inspection</option></select></div>
-            <div class="col-md-6"><label class="form-label" asp-for="DeviceType">Device Type</label><select class="form-select" asp-for="DeviceType"><option>Phone</option><option>Laptop</option><option>Tablet</option><option>Printer</option><option>Other</option></select></div>
-            <div class="col-md-6"><label class="form-label" asp-for="Brand">Brand</label><input class="form-control" asp-for="Brand" placeholder="e.g., Dell" required /></div>
-            <div class="col-md-6"><label class="form-label" asp-for="DeviceModel">Device Model</label><input class="form-control" asp-for="DeviceModel" placeholder="e.g., Inspiron 15" /></div>
-            <div class="col-12"><label class="form-label" asp-for="Description">Fault Description</label><textarea class="form-control" asp-for="Description" rows="5" placeholder="Describe the issue, symptoms, and when it started." required></textarea></div>
+            <div class="col-md-6"><label class="form-label" asp-for="ServiceType">Loại dịch vụ</label><select class="form-select" asp-for="ServiceType"><option value="Repair">Sửa chữa</option><option value="Maintenance">Bảo trì</option><option value="Inspection">Kiểm tra</option></select></div>
+            <div class="col-md-6"><label class="form-label" asp-for="DeviceType">Loại thiết bị</label><select class="form-select" asp-for="DeviceType"><option value="Phone">Điện thoại</option><option value="Laptop">Máy tính xách tay</option><option value="Tablet">Máy tính bảng</option><option value="Printer">Máy in</option><option value="Other">Khác</option></select></div>
+            <div class="col-md-6"><label class="form-label" asp-for="Brand">Thương hiệu</label><input class="form-control" asp-for="Brand" placeholder="Ví dụ: Dell" required /></div>
+            <div class="col-md-6"><label class="form-label" asp-for="DeviceModel">Model thiết bị</label><input class="form-control" asp-for="DeviceModel" placeholder="Ví dụ: Inspiron 15" /></div>
+            <div class="col-12"><label class="form-label" asp-for="Description">Mô tả lỗi</label><textarea class="form-control" asp-for="Description" rows="5" placeholder="Mô tả sự cố, dấu hiệu lỗi và thời điểm bắt đầu." required></textarea></div>
         </div>
-        <button class="btn btn-primary mt-4" type="submit">Submit Repair Request</button>
+        <button class="btn btn-primary mt-4" type="submit">Gửi yêu cầu sửa chữa</button>
     </form>
 </section>

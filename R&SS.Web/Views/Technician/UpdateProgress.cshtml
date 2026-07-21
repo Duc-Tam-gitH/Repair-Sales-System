@@ -11,21 +11,21 @@
 }
 
 <section class="update-progress-page">
-    <div class="status-banner"><span>Current Status</span><h1>@Model.Ticket.Status</h1></div>
+    <div class="status-banner"><span>Trạng thái hiện tại</span><h1>@Model.Ticket.Status</h1></div>
     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
     <form class="progress-form" method="post" asp-controller="Technician" asp-action="UpdateProgress">
         @Html.AntiForgeryToken()
         <input name="RepairOrderId" type="hidden" value="@Model.Ticket.RepairOrderId" />
-        <h2>Update Section</h2>
+        <h2>Khu vực cập nhật</h2>
         <div class="row g-3">
-            <div class="col-md-4"><label class="form-label" for="StatusDecision">New Status</label><select class="form-select" id="StatusDecision" name="StatusDecision"><option value="">Keep Current</option><option>Pending Delivery</option></select></div>
-            <div class="col-md-8"><label class="form-label" for="WorkPerformed">Work Details / Tasks Performed</label><input class="form-control" id="WorkPerformed" name="WorkPerformed" value="@Model.Update.WorkPerformed" /></div>
-            <div class="col-12"><label class="form-label" for="RepairResult">Progress Notes</label><textarea class="form-control" id="RepairResult" name="RepairResult" rows="4">@Model.Update.RepairResult</textarea></div>
+            <div class="col-md-4"><label class="form-label" for="StatusDecision">Trạng thái mới</label><select class="form-select" id="StatusDecision" name="StatusDecision"><option value="">Giữ trạng thái hiện tại</option><option value="Pending Delivery">Chờ bàn giao</option></select></div>
+            <div class="col-md-8"><label class="form-label" for="WorkPerformed">Chi tiết công việc / việc đã thực hiện</label><input class="form-control" id="WorkPerformed" name="WorkPerformed" value="@Model.Update.WorkPerformed" /></div>
+            <div class="col-12"><label class="form-label" for="RepairResult">Ghi chú tiến độ</label><textarea class="form-control" id="RepairResult" name="RepairResult" rows="4">@Model.Update.RepairResult</textarea></div>
         </div>
-        <button class="btn btn-primary mt-4" type="submit">Save Update History</button>
+        <button class="btn btn-primary mt-4" type="submit">Lưu lịch sử cập nhật</button>
     </form>
     <section class="timeline-panel mt-4">
-        <h2>Previous Updates</h2>
+        <h2>Cập nhật trước đó</h2>
         <div class="timeline">
             @foreach (var item in Model.History)
             {

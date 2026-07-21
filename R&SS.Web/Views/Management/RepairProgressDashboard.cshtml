@@ -1,9 +1,9 @@
 @model ManagementViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Repair Progress Dashboard";
+    ViewData["Title"] = "Bảng tiến độ sửa chữa";
     ViewData["ActiveRole"] = "Management";
-    ViewData["RoleDisplay"] = "Manager";
+    ViewData["RoleDisplay"] = "Quản lý";
 }
 
 @section Styles {
@@ -11,7 +11,7 @@
 }
 
 <section class="repair-progress-dashboard-page">
-    <div class="admin-hero"><div><span>Repair Progress</span><h1>Repair Progress Dashboard</h1><p>Track repair workload and current ticket statuses.</p></div></div>
-    <div class="row g-4"><div class="col-md-4"><article class="summary-card"><span>Total Repairs</span><strong>@Model.RepairOrders.Count</strong></article></div><div class="col-md-4"><article class="summary-card"><span>Completed</span><strong>@Model.RepairOrders.Count(repair => repair.CompletedDate.HasValue || repair.Status.Contains("Completed", StringComparison.OrdinalIgnoreCase))</strong></article></div><div class="col-md-4"><article class="summary-card"><span>Unassigned</span><strong>@Model.RepairOrders.Count(repair => !repair.AssignedTechnicianId.HasValue)</strong></article></div></div>
-    <section class="table-card table-responsive mt-4"><table class="table"><thead><tr><th>Code</th><th>Customer</th><th>Technician</th><th>Status</th><th>Updated</th></tr></thead><tbody>@foreach (var repair in Model.RepairOrders.OrderByDescending(repair => repair.UpdatedAt)) { <tr><td>@repair.RepairOrderCode</td><td>@(repair.Customer?.FullName ?? "-")</td><td>@(repair.AssignedTechnician?.Username ?? "Unassigned")</td><td>@repair.Status</td><td>@repair.UpdatedAt.ToString("yyyy-MM-dd")</td></tr> }</tbody></table></section>
+    <div class="admin-hero"><div><span>Tiến độ sửa chữa</span><h1>Bảng tiến độ sửa chữa</h1><p>Theo dõi khối lượng sửa chữa và trạng thái phiếu hiện tại.</p></div></div>
+    <div class="row g-4"><div class="col-md-4"><article class="summary-card"><span>Tổng sửa chữa</span><strong>@Model.RepairOrders.Count</strong></article></div><div class="col-md-4"><article class="summary-card"><span>Hoàn tất</span><strong>@Model.RepairOrders.Count(repair => repair.CompletedDate.HasValue || repair.Status.Contains("Completed", StringComparison.OrdinalIgnoreCase))</strong></article></div><div class="col-md-4"><article class="summary-card"><span>Chưa phân công</span><strong>@Model.RepairOrders.Count(repair => !repair.AssignedTechnicianId.HasValue)</strong></article></div></div>
+    <section class="table-card table-responsive mt-4"><table class="table"><thead><tr><th>Mã</th><th>Khách hàng</th><th>Kỹ thuật viên</th><th>Trạng thái</th><th>Cập nhật</th></tr></thead><tbody>@foreach (var repair in Model.RepairOrders.OrderByDescending(repair => repair.UpdatedAt)) { <tr><td>@repair.RepairOrderCode</td><td>@(repair.Customer?.FullName ?? "-")</td><td>@(repair.AssignedTechnician?.Username ?? "Chưa phân công")</td><td>@repair.Status</td><td>@repair.UpdatedAt.ToString("yyyy-MM-dd")</td></tr> }</tbody></table></section>
 </section>

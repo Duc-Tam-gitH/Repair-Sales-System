@@ -1,9 +1,9 @@
 @model ManagementViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Customer Management";
+    ViewData["Title"] = "Quản lý khách hàng";
     ViewData["ActiveRole"] = "Management";
-    ViewData["RoleDisplay"] = "Manager";
+    ViewData["RoleDisplay"] = "Quản lý";
 }
 
 @section Styles {
@@ -11,6 +11,6 @@
 }
 
 <section class="customer-management-page">
-    <div class="admin-hero"><div><span>Customers</span><h1>Customer Management</h1><p>Review customer profiles, order counts, repair counts, and active status.</p></div></div>
-    <div class="table-card table-responsive mt-4"><table class="table align-middle"><thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>Orders</th><th>Repairs</th><th>Status</th></tr></thead><tbody>@foreach (var customer in Model.Customers) { <tr><td>@customer.FullName</td><td>@customer.Email</td><td>@(customer.Phone ?? "-")</td><td>@Model.SalesOrders.Count(order => order.CustomerId == customer.CustomerId)</td><td>@Model.RepairOrders.Count(repair => repair.CustomerId == customer.CustomerId)</td><td><span class="badge @(customer.IsActive ? "text-bg-success" : "text-bg-secondary")">@(customer.IsActive ? "Active" : "Inactive")</span></td></tr> }</tbody></table></div>
+    <div class="admin-hero"><div><span>Khách hàng</span><h1>Quản lý khách hàng</h1><p>Xem hồ sơ khách hàng, số đơn hàng, số lần sửa chữa và trạng thái hoạt động.</p></div></div>
+    <div class="table-card table-responsive mt-4"><table class="table align-middle"><thead><tr><th>Khách hàng</th><th>Email</th><th>Điện thoại</th><th>Đơn hàng</th><th>Sửa chữa</th><th>Trạng thái</th></tr></thead><tbody>@foreach (var customer in Model.Customers) { <tr><td>@customer.FullName</td><td>@customer.Email</td><td>@(customer.Phone ?? "-")</td><td>@Model.SalesOrders.Count(order => order.CustomerId == customer.CustomerId)</td><td>@Model.RepairOrders.Count(repair => repair.CustomerId == customer.CustomerId)</td><td><span class="badge @(customer.IsActive ? "text-bg-success" : "text-bg-secondary")">@(customer.IsActive ? "Đang hoạt động" : "Ngừng hoạt động")</span></td></tr> }</tbody></table></div>
 </section>

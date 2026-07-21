@@ -1,9 +1,9 @@
 @model ManagementViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Employee Management";
+    ViewData["Title"] = "Quản lý nhân viên";
     ViewData["ActiveRole"] = "Management";
-    ViewData["RoleDisplay"] = "Manager";
+    ViewData["RoleDisplay"] = "Quản lý";
 }
 
 @section Styles {
@@ -11,6 +11,6 @@
 }
 
 <section class="employee-management-page">
-    <div class="admin-hero"><div><span>Employees</span><h1>Employee Management</h1><p>Review employee records, roles, specialization, and work status.</p></div></div>
-    <div class="table-card table-responsive mt-4"><table class="table align-middle"><thead><tr><th>Code</th><th>Name</th><th>Email</th><th>Phone</th><th>Specialization</th><th>Status</th></tr></thead><tbody>@foreach (var employee in Model.Employees) { <tr><td>@employee.EmployeeCode</td><td>@employee.FullName</td><td>@employee.Email</td><td>@(employee.Phone ?? "-")</td><td>@(employee.Specialization ?? "-")</td><td><span class="badge @(employee.IsActive ? "text-bg-success" : "text-bg-secondary")">@employee.WorkStatus</span></td></tr> } @if (!Model.Employees.Any()) { <tr><td colspan="6" class="text-center text-muted">No employees found.</td></tr> }</tbody></table></div>
+    <div class="admin-hero"><div><span>Nhân viên</span><h1>Quản lý nhân viên</h1><p>Xem hồ sơ nhân viên, vai trò, chuyên môn và trạng thái làm việc.</p></div></div>
+    <div class="table-card table-responsive mt-4"><table class="table align-middle"><thead><tr><th>Mã</th><th>Tên</th><th>Email</th><th>Điện thoại</th><th>Chuyên môn</th><th>Trạng thái</th></tr></thead><tbody>@foreach (var employee in Model.Employees) { <tr><td>@employee.EmployeeCode</td><td>@employee.FullName</td><td>@employee.Email</td><td>@(employee.Phone ?? "-")</td><td>@(employee.Specialization ?? "-")</td><td><span class="badge @(employee.IsActive ? "text-bg-success" : "text-bg-secondary")">@employee.WorkStatus</span></td></tr> } @if (!Model.Employees.Any()) { <tr><td colspan="6" class="text-center text-muted">Không tìm thấy nhân viên.</td></tr> }</tbody></table></div>
 </section>

@@ -1,9 +1,9 @@
 @model ManagementViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "System Account Management";
+    ViewData["Title"] = "Quản lý tài khoản hệ thống";
     ViewData["ActiveRole"] = "Management";
-    ViewData["RoleDisplay"] = "Manager";
+    ViewData["RoleDisplay"] = "Quản lý";
 }
 
 @section Styles {
@@ -11,16 +11,16 @@
 }
 
 <section class="management-page">
-    <div class="admin-hero"><div><span>Accounts</span><h1>System Account Management</h1><p>Manage users, roles, lock state, and account activity.</p></div><a class="btn btn-light" asp-controller="Management" asp-action="AddAccount">Add Account</a></div>
+    <div class="admin-hero"><div><span>Tài khoản</span><h1>Quản lý tài khoản hệ thống</h1><p>Quản lý người dùng, vai trò, trạng thái khóa và hoạt động tài khoản.</p></div><a class="btn btn-light" asp-controller="Management" asp-action="AddAccount">Thêm tài khoản</a></div>
     @if (TempData["SuccessMessage"] is string success) { <div class="alert alert-success">@success</div> }
     @if (TempData["ErrorMessage"] is string error) { <div class="alert alert-danger">@error</div> }
     <div class="table-card table-responsive mt-4">
-        <table class="table align-middle"><thead><tr><th>User</th><th>Email</th><th>Phone</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+        <table class="table align-middle"><thead><tr><th>Người dùng</th><th>Email</th><th>Điện thoại</th><th>Vai trò</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody>
         @foreach (var user in Model.Users)
         {
-            <tr><td>@user.FullName<br /><small>@user.Username</small></td><td>@user.Email</td><td>@(user.Phone ?? "-")</td><td>@(user.UserRoles.FirstOrDefault()?.Role?.RoleName ?? "-")</td><td><span class="badge @(user.IsActive ? "text-bg-success" : "text-bg-secondary")">@(user.IsActive ? "Active" : "Locked")</span></td><td><div class="d-flex gap-2"><a class="btn btn-sm btn-outline-primary" asp-controller="Management" asp-action="AddAccount" asp-route-id="@user.UserId">Edit</a><form method="post" asp-controller="Management" asp-action="SetAccountLock">@Html.AntiForgeryToken()<input type="hidden" name="userId" value="@user.UserId" /><input type="hidden" name="isLocked" value="@user.IsActive.ToString()" /><button class="btn btn-sm btn-outline-warning" type="submit">@(user.IsActive ? "Lock" : "Unlock")</button></form><form method="post" asp-controller="Management" asp-action="DeleteAccount">@Html.AntiForgeryToken()<input type="hidden" name="userId" value="@user.UserId" /><button class="btn btn-sm btn-outline-danger" type="submit">Delete</button></form></div></td></tr>
+            <tr><td>@user.FullName<br /><small>@user.Username</small></td><td>@user.Email</td><td>@(user.Phone ?? "-")</td><td>@(user.UserRoles.FirstOrDefault()?.Role?.RoleName ?? "-")</td><td><span class="badge @(user.IsActive ? "text-bg-success" : "text-bg-secondary")">@(user.IsActive ? "Hoạt động" : "Đã khóa")</span></td><td><div class="d-flex gap-2"><a class="btn btn-sm btn-outline-primary" asp-controller="Management" asp-action="AddAccount" asp-route-id="@user.UserId">Sửa</a><form method="post" asp-controller="Management" asp-action="SetAccountLock">@Html.AntiForgeryToken()<input type="hidden" name="userId" value="@user.UserId" /><input type="hidden" name="isLocked" value="@user.IsActive.ToString()" /><button class="btn btn-sm btn-outline-warning" type="submit">@(user.IsActive ? "Khóa" : "Mở khóa")</button></form><form method="post" asp-controller="Management" asp-action="DeleteAccount">@Html.AntiForgeryToken()<input type="hidden" name="userId" value="@user.UserId" /><button class="btn btn-sm btn-outline-danger" type="submit">Xóa</button></form></div></td></tr>
         }
-        @if (!Model.Users.Any()) { <tr><td colspan="6" class="text-center text-muted">No accounts found.</td></tr> }
+        @if (!Model.Users.Any()) { <tr><td colspan="6" class="text-center text-muted">Không tìm thấy tài khoản.</td></tr> }
         </tbody></table>
     </div>
 </section>

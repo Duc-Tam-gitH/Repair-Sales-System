@@ -1,9 +1,9 @@
 @model IReadOnlyCollection<ServiceRequestResponse>
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Search Technical Order";
+    ViewData["Title"] = "Tra cứu yêu cầu kỹ thuật";
     ViewData["ActiveRole"] = "Customer";
-    ViewData["RoleDisplay"] = "Customer User";
+    ViewData["RoleDisplay"] = "Khách hàng";
 }
 
 @section Styles {
@@ -12,21 +12,21 @@
 
 <section class="search-repair-page">
     <div class="search-card">
-        <h1>Search Technical Order</h1>
-        <p>Enter your service request code to check repair intake status.</p>
+        <h1>Tra cứu yêu cầu kỹ thuật</h1>
+        <p>Nhập mã yêu cầu dịch vụ để kiểm tra trạng thái tiếp nhận sửa chữa.</p>
         @if (TempData["SuccessMessage"] is string successMessage)
         {
             <div class="alert alert-success" role="status">@successMessage</div>
         }
         <form class="input-group input-group-lg" method="get" asp-controller="Customer" asp-action="SearchRepair">
-            <input class="form-control" name="keyword" value="@ViewData["Keyword"]" placeholder="Request Code, e.g., SR-202607..." />
-            <button class="btn btn-primary" type="submit">Search</button>
+            <input class="form-control" name="keyword" value="@ViewData["Keyword"]" placeholder="Mã yêu cầu, ví dụ: SR-202607..." />
+            <button class="btn btn-primary" type="submit">Tìm kiếm</button>
         </form>
     </div>
 
     @if (!Model.Any())
     {
-        <div class="result-card"><h2>No repair requests found</h2></div>
+        <div class="result-card"><h2>Không tìm thấy yêu cầu sửa chữa</h2></div>
     }
     else
     {
@@ -34,14 +34,14 @@
         {
             <div class="result-card">
                 <div>
-                    <span>Repair Status</span>
+                    <span>Trạng thái sửa chữa</span>
                     <h2>@request.Status</h2>
                 </div>
                 <div class="row g-3">
-                    <div class="col-md-6"><strong>Request Code</strong><p>@request.RequestCode</p></div>
-                    <div class="col-md-6"><strong>Device Information</strong><p>@request.Brand @request.DeviceModel - @request.DeviceType</p></div>
-                    <div class="col-md-6"><strong>Service Type</strong><p>@request.ServiceType</p></div>
-                    <div class="col-md-6"><strong>Latest Note</strong><p>@request.Description</p></div>
+                    <div class="col-md-6"><strong>Mã yêu cầu</strong><p>@request.RequestCode</p></div>
+                    <div class="col-md-6"><strong>Thông tin thiết bị</strong><p>@request.Brand @request.DeviceModel - @request.DeviceType</p></div>
+                    <div class="col-md-6"><strong>Loại dịch vụ</strong><p>@request.ServiceType</p></div>
+                    <div class="col-md-6"><strong>Ghi chú mới nhất</strong><p>@request.Description</p></div>
                 </div>
             </div>
         }

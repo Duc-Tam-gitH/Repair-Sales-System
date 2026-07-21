@@ -1,37 +1,37 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Dashboard";
-    ViewData["RoleDisplay"] = "Admin User";
+    ViewData["RoleDisplay"] = "Quản trị viên";
 }
 
 <section class="dashboard-mockup" aria-labelledby="dashboard-title">
     <div class="dashboard-grid">
         <article class="dashboard-stat-card">
-            <span>Total Orders</span>
+            <span>Tổng đơn hàng</span>
             <strong>1,248</strong>
-            <small>+18 today</small>
+            <small>+18 hôm nay</small>
         </article>
         <article class="dashboard-stat-card">
-            <span>Revenue</span>
+            <span>Doanh thu</span>
             <strong>$48.9k</strong>
-            <small>+12% this month</small>
+            <small>+12% tháng này</small>
         </article>
         <article class="dashboard-stat-card">
-            <span>Clients</span>
+            <span>Khách hàng</span>
             <strong>642</strong>
-            <small>+7 this week</small>
+            <small>+7 tuần này</small>
         </article>
         <article class="dashboard-stat-card">
-            <span>Pending Repairs</span>
+            <span>Sửa chữa đang chờ</span>
             <strong>86</strong>
-            <small>14 urgent</small>
+            <small>14 việc khẩn cấp</small>
         </article>
     </div>
 
     <div class="dashboard-panel-grid">
         <section class="dashboard-panel" aria-labelledby="orders-chart-title">
-            <h2 id="orders-chart-title">Repair & Order Volume</h2>
-            <div class="mock-chart" aria-label="Simulated bar chart">
+            <h2 id="orders-chart-title">Số lượng sửa chữa & đơn hàng</h2>
+            <div class="mock-chart" aria-label="Biểu đồ cột mô phỏng">
                 <span style="height: 42%"></span>
                 <span style="height: 68%"></span>
                 <span style="height: 54%"></span>
@@ -43,23 +43,23 @@
         </section>
 
         <section class="dashboard-panel" aria-labelledby="activity-title">
-            <h2 id="activity-title">Recent Activity</h2>
+            <h2 id="activity-title">Hoạt động gần đây</h2>
             <div class="activity-list">
                 <div class="activity-item">
-                    <strong>Repair ticket TECH-2026-001 updated</strong>
-                    <span>Technician moved task to In-Repair.</span>
+                    <strong>Phiếu sửa chữa TECH-2026-001 đã được cập nhật</strong>
+                    <span>Kỹ thuật viên đã chuyển công việc sang trạng thái đang sửa.</span>
                 </div>
                 <div class="activity-item">
-                    <strong>Inventory alert</strong>
-                    <span>OLED screen assembly reached out-of-stock status.</span>
+                    <strong>Cảnh báo tồn kho</strong>
+                    <span>Cụm màn hình OLED đã hết hàng.</span>
                 </div>
                 <div class="activity-item">
-                    <strong>Order SO-2026-1042 confirmed</strong>
-                    <span>Payment is pending verification.</span>
+                    <strong>Đơn hàng SO-2026-1042 đã được xác nhận</strong>
+                    <span>Thanh toán đang chờ xác minh.</span>
                 </div>
                 <div class="activity-item">
-                    <strong>New customer registered</strong>
-                    <span>Minh Tran added by reception desk.</span>
+                    <strong>Khách hàng mới đã đăng ký</strong>
+                    <span>Minh Tran được thêm bởi bộ phận tiếp nhận.</span>
                 </div>
             </div>
         </section>

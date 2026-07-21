@@ -1,9 +1,9 @@
 @model TechnicalTicketResponse
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Technical Report Details";
+    ViewData["Title"] = "Chi tiết báo cáo kỹ thuật";
     ViewData["ActiveRole"] = "Reception";
-    ViewData["RoleDisplay"] = "Reception Staff";
+    ViewData["RoleDisplay"] = "Nhân viên tiếp nhận";
 }
 
 @section Styles {
@@ -12,13 +12,13 @@
 
 <section class="technical-details-page">
     <div class="details-hero">
-        <div><span>@Model.TicketCode</span><h1>Technical Report Details</h1><p>Status: @Model.Status</p></div>
-        <a class="btn btn-light" asp-controller="Reception" asp-action="TechnicalReportList">Back to Reports</a>
+        <div><span>@Model.TicketCode</span><h1>Chi tiết báo cáo kỹ thuật</h1><p>Trạng thái: @Model.Status</p></div>
+        <a class="btn btn-light" asp-controller="Reception" asp-action="TechnicalReportList">Quay lại báo cáo</a>
     </div>
 
     <div class="row g-4">
-        <div class="col-lg-4"><section class="detail-box"><h2>Customer Information</h2><p><strong>Name:</strong> @Model.CustomerName</p><p><strong>Phone:</strong> @Model.CustomerPhone</p><p><strong>Email:</strong> @Model.CustomerEmail</p></section></div>
-        <div class="col-lg-4"><section class="detail-box"><h2>Equipment Information</h2><p><strong>Device:</strong> @Model.Brand @Model.DeviceModel</p><p><strong>Type:</strong> @Model.DeviceType</p><p><strong>Status:</strong> @Model.DeviceCondition</p><p><strong>Issue:</strong> @Model.IssueDescription</p></section></div>
-        <div class="col-lg-4"><section class="detail-box"><h2>Assignment</h2><p><strong>Technician:</strong> @(Model.AssignedTechnicianName ?? "Unassigned")</p><p><strong>Request Type:</strong> @Model.RequestType</p><p><strong>Delivery Deadline:</strong> @Model.DeliveryConfirmationDeadlineUtc?.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</p></section></div>
+        <div class="col-lg-4"><section class="detail-box"><h2>Thông tin khách hàng</h2><p><strong>Tên:</strong> @Model.CustomerName</p><p><strong>Điện thoại:</strong> @Model.CustomerPhone</p><p><strong>Email:</strong> @Model.CustomerEmail</p></section></div>
+        <div class="col-lg-4"><section class="detail-box"><h2>Thông tin thiết bị</h2><p><strong>Thiết bị:</strong> @Model.Brand @Model.DeviceModel</p><p><strong>Loại:</strong> @Model.DeviceType</p><p><strong>Trạng thái:</strong> @Model.DeviceCondition</p><p><strong>Lỗi:</strong> @Model.IssueDescription</p></section></div>
+        <div class="col-lg-4"><section class="detail-box"><h2>Phân công</h2><p><strong>Kỹ thuật viên:</strong> @(Model.AssignedTechnicianName ?? "Chưa phân công")</p><p><strong>Loại yêu cầu:</strong> @Model.RequestType</p><p><strong>Hạn bàn giao:</strong> @Model.DeliveryConfirmationDeadlineUtc?.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</p></section></div>
     </div>
 </section>

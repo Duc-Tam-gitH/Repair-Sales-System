@@ -1,9 +1,9 @@
 @model AuditLogViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Audit Logs";
+    ViewData["Title"] = "Nhật ký kiểm toán";
     ViewData["ActiveRole"] = "SystemAdmin";
-    ViewData["RoleDisplay"] = "System Administrator";
+    ViewData["RoleDisplay"] = "Quản trị hệ thống";
     var logs = Model.Logs.Logs;
 }
 
@@ -13,7 +13,7 @@
 
 <section class="audit-log-page">
     <div class="admin-hero">
-        <div><span>Security Monitoring</span><h1>System Activity History</h1><p>Search, filter, review, and export user activity logs for auditing and security monitoring.</p></div>
+        <div><span>Giám sát bảo mật</span><h1>Lịch sử hoạt động hệ thống</h1><p>Tìm kiếm, lọc, xem và xuất nhật ký hoạt động người dùng phục vụ kiểm toán và giám sát bảo mật.</p></div>
     </div>
 
     @if (TempData["ErrorMessage"] is string error)
@@ -24,21 +24,21 @@
     <form class="filter-panel" method="get" asp-controller="SystemAdmin" asp-action="AuditLog">
         <input class="form-control" name="fromUtc" type="date" value="@Model.Search.FromUtc?.ToString("yyyy-MM-dd")" />
         <input class="form-control" name="toUtc" type="date" value="@Model.Search.ToUtc?.ToString("yyyy-MM-dd")" />
-        <input class="form-control" name="functionName" value="@Model.Search.FunctionName" placeholder="Module / function..." />
-        <input class="form-control" name="operationType" value="@Model.Search.OperationType" placeholder="Activity type..." />
-        <button class="btn btn-primary" type="submit">Apply Filters</button>
-        <a class="btn btn-outline-secondary" asp-controller="SystemAdmin" asp-action="AuditLog">Clear Filters</a>
+        <input class="form-control" name="functionName" value="@Model.Search.FunctionName" placeholder="Phân hệ / chức năng..." />
+        <input class="form-control" name="operationType" value="@Model.Search.OperationType" placeholder="Loại hoạt động..." />
+        <button class="btn btn-primary" type="submit">Áp dụng bộ lọc</button>
+        <a class="btn btn-outline-secondary" asp-controller="SystemAdmin" asp-action="AuditLog">Xóa bộ lọc</a>
     </form>
 
     <div class="row g-4">
-        <div class="col-md-4"><article class="summary-card"><span>Total Activities</span><strong>@logs.Count</strong></article></div>
-        <div class="col-md-4"><article class="summary-card active-user"><span>Most Active User</span><strong>@(logs.GroupBy(log => log.ActorUsername ?? "System").OrderByDescending(group => group.Count()).FirstOrDefault()?.Key ?? "-")</strong></article></div>
-        <div class="col-md-4"><article class="summary-card common"><span>Most Common Activity</span><strong>@(logs.GroupBy(log => log.OperationType).OrderByDescending(group => group.Count()).FirstOrDefault()?.Key ?? "-")</strong></article></div>
+        <div class="col-md-4"><article class="summary-card"><span>Tổng hoạt động</span><strong>@logs.Count</strong></article></div>
+        <div class="col-md-4"><article class="summary-card active-user"><span>Người dùng hoạt động nhiều nhất</span><strong>@(logs.GroupBy(log => log.ActorUsername ?? "System").OrderByDescending(group => group.Count()).FirstOrDefault()?.Key ?? "-")</strong></article></div>
+        <div class="col-md-4"><article class="summary-card common"><span>Hoạt động phổ biến nhất</span><strong>@(logs.GroupBy(log => log.OperationType).OrderByDescending(group => group.Count()).FirstOrDefault()?.Key ?? "-")</strong></article></div>
     </div>
 
     <div class="audit-table table-responsive mt-4">
         <table class="table align-middle">
-            <thead><tr><th>Date & Time</th><th>User Name</th><th>Activity Type</th><th>Module</th><th>Description</th><th>Result</th><th></th></tr></thead>
+            <thead><tr><th>Ngày & giờ</th><th>Tên người dùng</th><th>Loại hoạt động</th><th>Phân hệ</th><th>Mô tả</th><th>Kết quả</th><th></th></tr></thead>
             <tbody>
                 @if (!logs.Any())
                 {
@@ -48,7 +48,7 @@
                 {
                     @foreach (var log in logs.OrderByDescending(log => log.ExecutedAtUtc))
                     {
-                        <tr><td>@log.ExecutedAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td><td>@(log.ActorUsername ?? "System")</td><td><span class="badge text-bg-primary">@log.OperationType</span></td><td>@log.FunctionName</td><td>@(log.Details ?? log.AffectedData ?? "-")</td><td>@log.ExecutionResult</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="SystemAdmin" asp-action="AuditLogDetails" asp-route-id="@log.SystemActivityLogId">View Details</a></td></tr>
+                        <tr><td>@log.ExecutedAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td><td>@(log.ActorUsername ?? "System")</td><td><span class="badge text-bg-primary">@log.OperationType</span></td><td>@log.FunctionName</td><td>@(log.Details ?? log.AffectedData ?? "-")</td><td>@log.ExecutionResult</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="SystemAdmin" asp-action="AuditLogDetails" asp-route-id="@log.SystemActivityLogId">Xem chi tiết</a></td></tr>
                     }
                 }
             </tbody>

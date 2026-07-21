@@ -1,16 +1,16 @@
 @model PaymentInvoiceViewModel
 @{
     Layout = null;
-    ViewData["Title"] = "Invoice Print";
+    ViewData["Title"] = "In hóa đơn";
     var payment = Model.Payment;
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Invoice - Repair & Sales System</title>
+    <title>Hóa đơn - Repair & Sales System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/InvoicePrint.css" asp-append-version="true" />
 </head>
@@ -18,8 +18,8 @@
     <main class="invoice-page">
         <section class="invoice-sheet">
             <header class="invoice-header">
-                <div class="company-lockup"><div class="logo">R&SS</div><div><h1>Repair & Sales System</h1><p>123 Service Street, Operations District<br />Phone: 0123456789 / Email: billing@rss.local</p></div></div>
-                <div class="invoice-meta"><strong>Invoice #@(Model.Invoice?.InvoiceCode ?? payment?.PaymentCode ?? "-")</strong><span>Date: @(Model.Invoice?.PrintedAtUtc.ToLocalTime().ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd"))</span></div>
+                <div class="company-lockup"><div class="logo">R&SS</div><div><h1>Repair & Sales System</h1><p>123 Đường Dịch vụ, Khu Vận hành<br />Điện thoại: 0123456789 / Email: billing@rss.local</p></div></div>
+                <div class="invoice-meta"><strong>Hóa đơn #@(Model.Invoice?.InvoiceCode ?? payment?.PaymentCode ?? "-")</strong><span>Ngày: @(Model.Invoice?.PrintedAtUtc.ToLocalTime().ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd"))</span></div>
             </header>
 
             @if (TempData["ErrorMessage"] is string error)
@@ -28,33 +28,33 @@
             }
 
             <section class="customer-box">
-                <h2>Customer Information</h2>
-                <p><strong>Name:</strong> @(payment?.Customer?.FullName ?? Model.Invoice?.CustomerName ?? "-")</p>
-                <p><strong>Phone:</strong> @(payment?.Customer?.Phone ?? "-")</p>
-                <p><strong>Address:</strong> @(payment?.Customer?.Address ?? "-")</p>
+                <h2>Thông tin khách hàng</h2>
+                <p><strong>Tên:</strong> @(payment?.Customer?.FullName ?? Model.Invoice?.CustomerName ?? "-")</p>
+                <p><strong>Điện thoại:</strong> @(payment?.Customer?.Phone ?? "-")</p>
+                <p><strong>Địa chỉ:</strong> @(payment?.Customer?.Address ?? "-")</p>
             </section>
 
             <table class="table invoice-table">
-                <thead><tr><th>Description</th><th>Quantity</th><th>Unit Price</th><th>Total</th></tr></thead>
-                <tbody><tr><td>@(payment?.SalesOrder?.SalesOrderCode ?? payment?.RepairOrder?.RepairOrderCode ?? "Transaction")</td><td>1</td><td>@(payment?.Amount.ToString("C") ?? "-")</td><td>@(payment?.Amount.ToString("C") ?? "-")</td></tr></tbody>
+                <thead><tr><th>Mô tả</th><th>Số lượng</th><th>Đơn giá</th><th>Thành tiền</th></tr></thead>
+                <tbody><tr><td>@(payment?.SalesOrder?.SalesOrderCode ?? payment?.RepairOrder?.RepairOrderCode ?? "Giao dịch")</td><td>1</td><td>@(payment?.Amount.ToString("C") ?? "-")</td><td>@(payment?.Amount.ToString("C") ?? "-")</td></tr></tbody>
             </table>
 
             <section class="invoice-totals">
-                <div><span>Subtotal</span><strong>@(payment?.Amount.ToString("C") ?? "-")</strong></div>
-                <div><span>Tax/VAT</span><strong>$0.00</strong></div>
-                <div class="grand-total"><span>Total Amount</span><strong>@(payment?.Amount.ToString("C") ?? "-")</strong></div>
+                <div><span>Tạm tính</span><strong>@(payment?.Amount.ToString("C") ?? "-")</strong></div>
+                <div><span>Thuế/VAT</span><strong>$0.00</strong></div>
+                <div class="grand-total"><span>Tổng tiền</span><strong>@(payment?.Amount.ToString("C") ?? "-")</strong></div>
             </section>
 
             <section class="payment-info">
-                <h2>Payment Information</h2>
-                <p><strong>Payment Method:</strong> @(payment?.PaymentMethod ?? "-")</p>
-                <p><strong>Payment Date:</strong> @(payment?.PaymentDate.ToLocalTime().ToString("yyyy-MM-dd") ?? "-")</p>
-                <p><strong>Status:</strong> @(payment?.PaymentStatus ?? "-")</p>
+                <h2>Thông tin thanh toán</h2>
+                <p><strong>Phương thức thanh toán:</strong> @(payment?.PaymentMethod ?? "-")</p>
+                <p><strong>Ngày thanh toán:</strong> @(payment?.PaymentDate.ToLocalTime().ToString("yyyy-MM-dd") ?? "-")</p>
+                <p><strong>Trạng thái:</strong> @(payment?.PaymentStatus ?? "-")</p>
             </section>
 
             <footer class="invoice-footer">
-                <p>Thank you for choosing Repair & Sales System. Warranty and refund policies follow company service guidelines.</p>
-                <div class="print-actions"><button class="btn btn-primary" onclick="window.print()">Print</button><a class="btn btn-outline-secondary" asp-controller="Payment" asp-action="TransactionList">Close</a></div>
+                <p>Cảm ơn quý khách đã chọn Repair & Sales System. Chính sách bảo hành và hoàn tiền được áp dụng theo quy định dịch vụ của công ty.</p>
+                <div class="print-actions"><button class="btn btn-primary" onclick="window.print()">In</button><a class="btn btn-outline-secondary" asp-controller="Payment" asp-action="TransactionList">Đóng</a></div>
             </footer>
         </section>
     </main>

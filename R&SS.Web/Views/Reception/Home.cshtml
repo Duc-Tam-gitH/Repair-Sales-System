@@ -1,48 +1,48 @@
 @{
-    ViewData["Title"] = "Reception Home";
+    ViewData["Title"] = "Trang tiếp nhận";
     ViewData["ActiveRole"] = "Reception";
-    ViewData["RoleDisplay"] = "Signed in as Reception";
+    ViewData["RoleDisplay"] = "Đăng nhập với vai trò Tiếp nhận";
 }
 
 <section class="rss-role-home rss-reception-home" aria-labelledby="reception-home-title">
     <header class="mb-4">
-        <p class="text-muted mb-1">Front desk workspace</p>
-        <h1 id="reception-home-title">Reception Desk</h1>
-        <p class="text-muted mb-0">Create technical request tickets, manage customer profiles, and triage intake queues.</p>
+        <p class="text-muted mb-1">Không gian quầy tiếp nhận</p>
+        <h1 id="reception-home-title">Quầy tiếp nhận</h1>
+        <p class="text-muted mb-0">Tạo phiếu yêu cầu kỹ thuật, quản lý hồ sơ khách hàng và xử lý hàng đợi tiếp nhận.</p>
     </header>
 
-    <nav class="rss-role-menu mb-4" aria-label="Reception menu">
-        <a href="#">Tickets</a>
-        <a href="#">New Ticket</a>
-        <a href="#">Customers</a>
-        <a href="#">Service Queue</a>
+    <nav class="rss-role-menu mb-4" aria-label="Menu tiếp nhận">
+        <a href="#">Phiếu</a>
+        <a href="#">Phiếu mới</a>
+        <a href="#">Khách hàng</a>
+        <a href="#">Hàng đợi dịch vụ</a>
     </nav>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-3"><div class="rss-metric"><span>New Tickets Today</span><strong>12</strong></div></div>
-        <div class="col-md-3"><div class="rss-metric"><span>Waiting Assignment</span><strong>5</strong></div></div>
-        <div class="col-md-3"><div class="rss-metric"><span>Customer Updates</span><strong>8</strong></div></div>
-        <div class="col-md-3"><div class="rss-metric"><span>Pending Confirmation</span><strong>3</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Phiếu mới hôm nay</span><strong>12</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Chờ phân công</span><strong>5</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Cập nhật khách hàng</span><strong>8</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Chờ xác nhận</span><strong>3</strong></div></div>
     </div>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-3"><a class="rss-action rss-action-primary" href="#"><strong>New Ticket</strong><span>Create a technical request ticket.</span></a></div>
-        <div class="col-md-3"><a class="rss-action" href="#"><strong>Find Customer</strong><span>Search by phone, email, name, or code.</span></a></div>
-        <div class="col-md-3"><a class="rss-action" href="#"><strong>Register Customer</strong><span>Add a profile before intake.</span></a></div>
-        <div class="col-md-3"><a class="rss-action" href="#"><strong>Service Queue</strong><span>Review today's pending handoffs.</span></a></div>
+        <div class="col-md-3"><a class="rss-action rss-action-primary" href="#"><strong>Phiếu mới</strong><span>Tạo phiếu yêu cầu kỹ thuật.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Tìm khách hàng</strong><span>Tìm theo điện thoại, email, tên hoặc mã.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Đăng ký khách hàng</strong><span>Thêm hồ sơ trước khi tiếp nhận.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Hàng đợi dịch vụ</strong><span>Xem các bàn giao đang chờ hôm nay.</span></a></div>
     </div>
 
     <div class="row g-4">
         <div class="col-lg-8">
             <section class="rss-panel" aria-labelledby="intake-title">
-                <header><h2 id="intake-title">Intake Queue</h2></header>
+                <header><h2 id="intake-title">Hàng đợi tiếp nhận</h2></header>
                 <div class="table-responsive">
                     <table class="table align-middle">
-                        <thead><tr><th>Ticket</th><th>Customer</th><th>Device</th><th>Status</th><th>Action</th></tr></thead>
+                        <thead><tr><th>Phiếu</th><th>Khách hàng</th><th>Thiết bị</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
                         <tbody>
-                            <tr><td>TT-1051</td><td>Minh Tran</td><td>Desktop PC</td><td>Unassigned</td><td><a href="#">Open</a></td></tr>
-                            <tr><td>TT-1050</td><td>Anya Pham</td><td>Printer</td><td>Created</td><td><a href="#">Open</a></td></tr>
-                            <tr><td>TT-1049</td><td>David Lee</td><td>Tablet</td><td>Info needed</td><td><a href="#">Edit</a></td></tr>
+                            <tr><td>TT-1051</td><td>Minh Tran</td><td>Máy tính để bàn</td><td>Chưa phân công</td><td><a href="#">Mở</a></td></tr>
+                            <tr><td>TT-1050</td><td>Anya Pham</td><td>Máy in</td><td>Đã tạo</td><td><a href="#">Mở</a></td></tr>
+                            <tr><td>TT-1049</td><td>David Lee</td><td>Máy tính bảng</td><td>Cần bổ sung thông tin</td><td><a href="#">Sửa</a></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -50,10 +50,10 @@
         </div>
         <div class="col-lg-4">
             <section class="rss-panel" aria-labelledby="lookup-title">
-                <header><h2 id="lookup-title">Customer Lookup</h2></header>
+                <header><h2 id="lookup-title">Tra cứu khách hàng</h2></header>
                 <form>
-                    <label class="form-label" for="customerSearch">Search customer</label>
-                    <input class="form-control" id="customerSearch" type="search" placeholder="Name, phone, email, or code" />
+                    <label class="form-label" for="customerSearch">Tìm khách hàng</label>
+                    <input class="form-control" id="customerSearch" type="search" placeholder="Tên, điện thoại, email hoặc mã" />
                 </form>
             </section>
         </div>

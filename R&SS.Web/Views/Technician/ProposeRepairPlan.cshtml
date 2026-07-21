@@ -12,19 +12,19 @@
 
 <section class="repair-plan-page">
     <div class="plan-card">
-        <h1>Propose Repair Plan</h1>
-        <p>Prepare repair steps, estimated service fee, and expected processing time.</p>
+        <h1>Đề xuất phương án sửa chữa</h1>
+        <p>Chuẩn bị các bước sửa chữa, phí dịch vụ dự kiến và thời gian xử lý ước tính.</p>
         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
         <form method="post" asp-controller="Technician" asp-action="ProposeRepairPlan">
             @Html.AntiForgeryToken()
             <input name="RepairOrderId" type="hidden" value="@Model.Ticket.RepairOrderId" />
-            <label class="form-label" for="WorkPerformed">Proposed Repair Plan</label><textarea class="form-control" id="WorkPerformed" name="WorkPerformed" rows="5">@Model.Update.WorkPerformed</textarea>
-            <label class="form-label mt-3" for="RepairResult">Expected Repair Result</label><textarea class="form-control" id="RepairResult" name="RepairResult" rows="3">@Model.Update.RepairResult</textarea>
+            <label class="form-label" for="WorkPerformed">Phương án sửa chữa đề xuất</label><textarea class="form-control" id="WorkPerformed" name="WorkPerformed" rows="5">@Model.Update.WorkPerformed</textarea>
+            <label class="form-label mt-3" for="RepairResult">Kết quả sửa chữa dự kiến</label><textarea class="form-control" id="RepairResult" name="RepairResult" rows="3">@Model.Update.RepairResult</textarea>
             <div class="row g-3 mt-1">
-                <div class="col-md-6"><label class="form-label" for="ServiceFee">Estimated Service Fee</label><input class="form-control" id="ServiceFee" name="ServiceFee" type="number" step="0.01" min="0" value="@Model.Update.ServiceFee" /></div>
-                <div class="col-md-6"><label class="form-label" for="ProcessingMinutes">Estimated Minutes</label><input class="form-control" id="ProcessingMinutes" name="ProcessingMinutes" type="number" min="0" value="@Model.Update.ProcessingMinutes" /></div>
+                <div class="col-md-6"><label class="form-label" for="ServiceFee">Phí dịch vụ dự kiến</label><input class="form-control" id="ServiceFee" name="ServiceFee" type="number" step="0.01" min="0" value="@Model.Update.ServiceFee" /></div>
+                <div class="col-md-6"><label class="form-label" for="ProcessingMinutes">Số phút dự kiến</label><input class="form-control" id="ProcessingMinutes" name="ProcessingMinutes" type="number" min="0" value="@Model.Update.ProcessingMinutes" /></div>
             </div>
-            <div class="d-flex gap-2 mt-4"><button class="btn btn-primary" type="submit">Submit Repair Plan</button><a class="btn btn-outline-secondary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@Model.Ticket.RepairOrderId">Back</a></div>
+            <div class="d-flex gap-2 mt-4"><button class="btn btn-primary" type="submit">Gửi phương án sửa chữa</button><a class="btn btn-outline-secondary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@Model.Ticket.RepairOrderId">Quay lại</a></div>
         </form>
     </div>
 </section>

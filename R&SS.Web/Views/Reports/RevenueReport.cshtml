@@ -1,9 +1,9 @@
 @model RevenueReportViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Revenue Report";
+    ViewData["Title"] = "Báo cáo doanh thu";
     ViewData["ActiveRole"] = "Reports";
-    ViewData["RoleDisplay"] = "Reports Staff";
+    ViewData["RoleDisplay"] = "Nhân viên báo cáo";
 }
 
 @section Styles {
@@ -11,31 +11,31 @@
 }
 
 <section class="report-page revenue-report-page">
-    <div class="report-hero"><div><span>Financial Analytics</span><h1>Revenue Report</h1><p>Analyze order, repair, and service revenue by period.</p></div></div>
+    <div class="report-hero"><div><span>Phân tích tài chính</span><h1>Báo cáo doanh thu</h1><p>Phân tích doanh thu đơn hàng, sửa chữa và dịch vụ theo kỳ.</p></div></div>
     <div class="alert alert-success" role="status">@Model.Report.Message</div>
     <form class="filter-panel" method="get" asp-controller="Reports" asp-action="RevenueReport">
         <select class="form-select" name="revenueType">
-            <option value="all" selected="@(Model.Request.RevenueType == "all")">All Revenue</option>
-            <option value="sales" selected="@(Model.Request.RevenueType == "sales")">Sales</option>
-            <option value="repair" selected="@(Model.Request.RevenueType == "repair")">Repair</option>
+            <option value="all" selected="@(Model.Request.RevenueType == "all")">Tất cả doanh thu</option>
+            <option value="sales" selected="@(Model.Request.RevenueType == "sales")">Bán hàng</option>
+            <option value="repair" selected="@(Model.Request.RevenueType == "repair")">Sửa chữa</option>
         </select>
         <input class="form-control" name="fromUtc" type="date" value="@Model.Request.FromUtc.ToString("yyyy-MM-dd")" />
         <input class="form-control" name="toUtc" type="date" value="@Model.Request.ToUtc.ToString("yyyy-MM-dd")" />
-        <button class="btn btn-primary" type="submit">Generate Report</button>
-        <select class="form-select" name="exportFormat"><option value="none">No Export</option><option value="pdf">PDF</option><option value="excel">Excel</option></select>
+        <button class="btn btn-primary" type="submit">Tạo báo cáo</button>
+        <select class="form-select" name="exportFormat"><option value="none">Không xuất</option><option value="pdf">PDF</option><option value="excel">Excel</option></select>
     </form>
     <div class="row g-4">
-        <div class="col-md-3"><article class="summary-card"><span>Total Revenue</span><strong>@Model.Report.TotalRevenue.ToString("C")</strong></article></div>
-        <div class="col-md-3"><article class="summary-card"><span>Revenue from Orders</span><strong>@Model.Report.ProductSalesRevenue.ToString("C")</strong></article></div>
-        <div class="col-md-3"><article class="summary-card"><span>Revenue from Repairs</span><strong>@Model.Report.RepairServiceRevenue.ToString("C")</strong></article></div>
-        <div class="col-md-3"><article class="summary-card"><span>Transactions</span><strong>@Model.Report.TransactionCount</strong></article></div>
+        <div class="col-md-3"><article class="summary-card"><span>Tổng doanh thu</span><strong>@Model.Report.TotalRevenue.ToString("C")</strong></article></div>
+        <div class="col-md-3"><article class="summary-card"><span>Doanh thu từ đơn hàng</span><strong>@Model.Report.ProductSalesRevenue.ToString("C")</strong></article></div>
+        <div class="col-md-3"><article class="summary-card"><span>Doanh thu từ sửa chữa</span><strong>@Model.Report.RepairServiceRevenue.ToString("C")</strong></article></div>
+        <div class="col-md-3"><article class="summary-card"><span>Giao dịch</span><strong>@Model.Report.TransactionCount</strong></article></div>
     </div>
     <section class="table-card mt-4 table-responsive">
-        <h2>Revenue Details</h2>
-        <table class="table align-middle"><thead><tr><th>From</th><th>To</th><th>Order Revenue</th><th>Repair Revenue</th><th>Total Revenue</th></tr></thead><tbody><tr><td>@Model.Request.FromUtc.ToString("yyyy-MM-dd")</td><td>@Model.Request.ToUtc.ToString("yyyy-MM-dd")</td><td>@Model.Report.ProductSalesRevenue.ToString("C")</td><td>@Model.Report.RepairServiceRevenue.ToString("C")</td><td>@Model.Report.TotalRevenue.ToString("C")</td></tr></tbody></table>
+        <h2>Chi tiết doanh thu</h2>
+        <table class="table align-middle"><thead><tr><th>Từ</th><th>Đến</th><th>Doanh thu đơn hàng</th><th>Doanh thu sửa chữa</th><th>Tổng doanh thu</th></tr></thead><tbody><tr><td>@Model.Request.FromUtc.ToString("yyyy-MM-dd")</td><td>@Model.Request.ToUtc.ToString("yyyy-MM-dd")</td><td>@Model.Report.ProductSalesRevenue.ToString("C")</td><td>@Model.Report.RepairServiceRevenue.ToString("C")</td><td>@Model.Report.TotalRevenue.ToString("C")</td></tr></tbody></table>
         @if (!string.IsNullOrWhiteSpace(Model.Report.ExportFileName))
         {
-            <div class="analysis-box mt-3">Export prepared: @Model.Report.ExportFileName</div>
+            <div class="analysis-box mt-3">Đã chuẩn bị xuất file: @Model.Report.ExportFileName</div>
         }
     </section>
 </section>

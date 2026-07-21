@@ -1,6 +1,7 @@
 @model VerifyForgotPasswordOtpRequest
 @{
-    Layout = "_Layout";
+    var useAppLayout = ViewData["UseAppLayout"] is bool appLayout && appLayout;
+    Layout = useAppLayout ? "_Layout" : "_AuthLayout";
     ViewData["Title"] = "Xác thực OTP";
 }
 

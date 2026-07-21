@@ -1,9 +1,9 @@
 @model IReadOnlyCollection<TechnicalTicketResponse>
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Device Handover";
+    ViewData["Title"] = "Bàn giao thiết bị";
     ViewData["ActiveRole"] = "Reception";
-    ViewData["RoleDisplay"] = "Reception Staff";
+    ViewData["RoleDisplay"] = "Nhân viên tiếp nhận";
 }
 
 @section Styles {
@@ -12,17 +12,17 @@
 
 <section class="handover-page">
     <div class="handover-header">
-        <h1>Device Handover / Delivery</h1>
-        <a class="btn btn-outline-primary" asp-controller="Reception" asp-action="TechnicalReportList">All Reports</a>
+        <h1>Bàn giao / trả thiết bị</h1>
+        <a class="btn btn-outline-primary" asp-controller="Reception" asp-action="TechnicalReportList">Tất cả báo cáo</a>
     </div>
 
     <div class="row g-4">
         <div class="col-lg-12">
             <section class="handover-list">
-                <h2>Pending Handover</h2>
+                <h2>Chờ bàn giao</h2>
                 @if (!Model.Any())
                 {
-                    <article><strong>No pending handovers</strong><span>Completed repair tickets will appear here.</span></article>
+                    <article><strong>Không có phiếu chờ bàn giao</strong><span>Các phiếu sửa chữa đã hoàn tất sẽ hiển thị tại đây.</span></article>
                 }
                 else
                 {
@@ -31,7 +31,7 @@
                         <article>
                             <strong>@ticket.TicketCode</strong>
                             <span>@ticket.CustomerName - @ticket.Brand @ticket.DeviceModel</span>
-                            <a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="TechnicalReportDetails" asp-route-id="@ticket.RepairOrderId">View Report Details</a>
+                            <a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="TechnicalReportDetails" asp-route-id="@ticket.RepairOrderId">Xem chi tiết báo cáo</a>
                         </article>
                     }
                 }

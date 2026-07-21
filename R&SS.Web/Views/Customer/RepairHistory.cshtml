@@ -1,9 +1,9 @@
 @model IReadOnlyCollection<R_SS.Models.Entities.RepairOrder>
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Repair History";
+    ViewData["Title"] = "Lịch sử sửa chữa";
     ViewData["ActiveRole"] = "Customer";
-    ViewData["RoleDisplay"] = "Customer User";
+    ViewData["RoleDisplay"] = "Khách hàng";
 }
 
 @section Styles {
@@ -12,14 +12,14 @@
 
 <section class="repair-history-page">
     <div class="history-header">
-        <h1>Repair History</h1>
-        <p>Completed service reports for your previously repaired devices.</p>
+        <h1>Lịch sử sửa chữa</h1>
+        <p>Các báo cáo dịch vụ đã hoàn tất cho thiết bị bạn từng sửa chữa.</p>
     </div>
 
     <div class="row g-4">
         @if (!Model.Any())
         {
-            <div class="col-12"><article class="history-card"><h2>No repair history found</h2></article></div>
+            <div class="col-12"><article class="history-card"><h2>Chưa có lịch sử sửa chữa</h2></article></div>
         }
         else
         {
@@ -29,9 +29,9 @@
                     <article class="history-card">
                         <span>@repair.RepairOrderCode</span>
                         <h2>@repair.DeviceName</h2>
-                        <p><strong>Repair Solution:</strong> @(repair.WorkPerformed ?? repair.RepairResult ?? "No repair summary recorded.")</p>
-                        <p><strong>Replaced Parts:</strong> @string.Join(", ", repair.RepairOrderDetails.Select(detail => detail.Product?.ProductName).Where(name => !string.IsNullOrWhiteSpace(name)))</p>
-                        <p><strong>Repair Cost:</strong> @repair.TotalAmount.ToString("C")</p>
+                        <p><strong>Giải pháp sửa chữa:</strong> @(repair.WorkPerformed ?? repair.RepairResult ?? "Chưa ghi nhận tóm tắt sửa chữa.")</p>
+                        <p><strong>Linh kiện đã thay:</strong> @string.Join(", ", repair.RepairOrderDetails.Select(detail => detail.Product?.ProductName).Where(name => !string.IsNullOrWhiteSpace(name)))</p>
+                        <p><strong>Chi phí sửa chữa:</strong> @repair.TotalAmount.ToString("C")</p>
                     </article>
                 </div>
             }

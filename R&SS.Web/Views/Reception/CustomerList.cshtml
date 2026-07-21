@@ -1,9 +1,9 @@
 @model CustomerListResponse
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Customer List";
+    ViewData["Title"] = "Danh sách khách hàng";
     ViewData["ActiveRole"] = "Reception";
-    ViewData["RoleDisplay"] = "Reception Staff";
+    ViewData["RoleDisplay"] = "Nhân viên tiếp nhận";
 }
 
 @section Styles {
@@ -12,8 +12,8 @@
 
 <section class="customer-list-page">
     <div class="list-header">
-        <div><h1>Customer List</h1><p>Search, review, add, edit, or deactivate customer profiles.</p></div>
-        <a class="btn btn-primary" asp-controller="Reception" asp-action="AddCustomer">Add Customer</a>
+        <div><h1>Danh sách khách hàng</h1><p>Tìm kiếm, xem, thêm, sửa hoặc ngừng kích hoạt hồ sơ khách hàng.</p></div>
+        <a class="btn btn-primary" asp-controller="Reception" asp-action="AddCustomer">Thêm khách hàng</a>
     </div>
 
     @if (TempData["ErrorMessage"] is string errorMessage)
@@ -21,13 +21,13 @@
         <div class="alert alert-danger" role="alert">@errorMessage</div>
     }
     <form class="list-tools" method="get" asp-controller="Reception" asp-action="CustomerList">
-        <input class="form-control" name="keyword" value="@ViewData["Keyword"]" type="search" placeholder="Search by name or phone..." />
-        <button class="btn btn-outline-primary" type="submit">Search</button>
+        <input class="form-control" name="keyword" value="@ViewData["Keyword"]" type="search" placeholder="Tìm theo tên hoặc số điện thoại..." />
+        <button class="btn btn-outline-primary" type="submit">Tìm kiếm</button>
     </form>
 
     <div class="table-card table-responsive">
         <table class="table align-middle">
-            <thead><tr><th>Customer Code</th><th>Full Name</th><th>Phone Number</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Mã khách hàng</th><th>Họ tên</th><th>Số điện thoại</th><th>Email</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
             <tbody>
                 @if (!Model.Customers.Any())
                 {
@@ -42,8 +42,8 @@
                             <td>@customer.FullName</td>
                             <td>@customer.Phone</td>
                             <td>@customer.Email</td>
-                            <td><span class="badge @(customer.IsActive ? "text-bg-success" : "text-bg-secondary")">@(customer.IsActive ? "Active" : "Inactive")</span></td>
-                            <td><a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="CustomerDetails" asp-route-id="@customer.CustomerId">View Details</a></td>
+                            <td><span class="badge @(customer.IsActive ? "text-bg-success" : "text-bg-secondary")">@(customer.IsActive ? "Hoạt động" : "Ngừng hoạt động")</span></td>
+                            <td><a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="CustomerDetails" asp-route-id="@customer.CustomerId">Xem chi tiết</a></td>
                         </tr>
                     }
                 }

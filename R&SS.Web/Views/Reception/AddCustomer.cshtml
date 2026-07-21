@@ -1,9 +1,9 @@
 @model CreateCustomerRequest
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Add Customer";
+    ViewData["Title"] = "Thêm khách hàng";
     ViewData["ActiveRole"] = "Reception";
-    ViewData["RoleDisplay"] = "Reception Staff";
+    ViewData["RoleDisplay"] = "Nhân viên tiếp nhận";
 }
 
 @section Styles {
@@ -13,25 +13,25 @@
 <section class="add-customer-page">
     <div class="form-shell">
         <div class="form-heading">
-            <span>Customer Profile</span>
-            <h1>Add Customer</h1>
-            <p>Create a new customer profile for intake, orders, and repair reports.</p>
+            <span>Hồ sơ khách hàng</span>
+            <h1>Thêm khách hàng</h1>
+            <p>Tạo hồ sơ khách hàng mới cho tiếp nhận, đơn hàng và báo cáo sửa chữa.</p>
         </div>
 
         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
         <form method="post" asp-controller="Reception" asp-action="AddCustomer">
             @Html.AntiForgeryToken()
             <div class="row g-3">
-                <div class="col-md-6"><label class="form-label" asp-for="CustomerCode">Customer Code</label><input class="form-control" asp-for="CustomerCode" placeholder="CUS-004" required /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="FullName">Full Name</label><input class="form-control" asp-for="FullName" placeholder="Customer full name" required /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Phone">Phone Number</label><input class="form-control" asp-for="Phone" placeholder="Phone number" /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Email">Email Address</label><input class="form-control" asp-for="Email" type="email" placeholder="Email address" /></div>
-                <div class="col-12"><label class="form-label" asp-for="Address">Address</label><textarea class="form-control" asp-for="Address" rows="3"></textarea></div>
-                <div class="col-12"><label class="form-label" asp-for="Notes">Notes</label><textarea class="form-control" asp-for="Notes" rows="3"></textarea></div>
+                <div class="col-md-6"><label class="form-label" asp-for="CustomerCode">Mã khách hàng</label><input class="form-control" asp-for="CustomerCode" placeholder="CUS-004" required /></div>
+                <div class="col-md-6"><label class="form-label" asp-for="FullName">Họ tên</label><input class="form-control" asp-for="FullName" placeholder="Họ tên khách hàng" required /></div>
+                <div class="col-md-6"><label class="form-label" asp-for="Phone">Số điện thoại</label><input class="form-control" asp-for="Phone" placeholder="Số điện thoại" /></div>
+                <div class="col-md-6"><label class="form-label" asp-for="Email">Địa chỉ email</label><input class="form-control" asp-for="Email" type="email" placeholder="Địa chỉ email" /></div>
+                <div class="col-12"><label class="form-label" asp-for="Address">Địa chỉ</label><textarea class="form-control" asp-for="Address" rows="3"></textarea></div>
+                <div class="col-12"><label class="form-label" asp-for="Notes">Ghi chú</label><textarea class="form-control" asp-for="Notes" rows="3"></textarea></div>
             </div>
             <div class="d-flex gap-2 mt-4">
-                <button class="btn btn-primary" type="submit">Save Customer</button>
-                <a class="btn btn-outline-secondary" asp-controller="Reception" asp-action="CustomerList">Cancel</a>
+                <button class="btn btn-primary" type="submit">Lưu khách hàng</button>
+                <a class="btn btn-outline-secondary" asp-controller="Reception" asp-action="CustomerList">Hủy</a>
             </div>
         </form>
     </div>

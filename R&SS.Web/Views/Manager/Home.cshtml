@@ -1,50 +1,50 @@
 @{
-    ViewData["Title"] = "Manager Home";
+    ViewData["Title"] = "Trang quản lý";
     ViewData["ActiveRole"] = "Manager";
-    ViewData["RoleDisplay"] = "Signed in as Manager";
+    ViewData["RoleDisplay"] = "Đăng nhập với vai trò Quản lý";
 }
 
 <section class="rss-role-home rss-manager-home" aria-labelledby="manager-home-title">
     <header class="mb-4">
-        <p class="text-muted mb-1">Management dashboard</p>
-        <h1 id="manager-home-title">Manager Overview</h1>
-        <p class="text-muted mb-0">Monitor service workload, staff assignment, reports, inventory, and sales activity.</p>
+        <p class="text-muted mb-1">Bảng điều khiển quản lý</p>
+        <h1 id="manager-home-title">Tổng quan quản lý</h1>
+        <p class="text-muted mb-0">Theo dõi khối lượng dịch vụ, phân công nhân sự, báo cáo, tồn kho và hoạt động bán hàng.</p>
     </header>
 
-    <nav class="rss-role-menu mb-4" aria-label="Manager menu">
-        <a href="#">Dashboard</a>
-        <a href="#">Tickets</a>
-        <a href="#">Staff Assignment</a>
-        <a href="#">Reports</a>
-        <a href="#">Inventory</a>
-        <a href="#">Activity History</a>
+    <nav class="rss-role-menu mb-4" aria-label="Menu quản lý">
+        <a href="#">Bảng điều khiển</a>
+        <a href="#">Phiếu</a>
+        <a href="#">Phân công nhân sự</a>
+        <a href="#">Báo cáo</a>
+        <a href="#">Tồn kho</a>
+        <a href="#">Lịch sử hoạt động</a>
     </nav>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-3"><div class="rss-metric"><span>Open Tickets</span><strong>31</strong></div></div>
-        <div class="col-md-3"><div class="rss-metric"><span>Awaiting Assignment</span><strong>6</strong></div></div>
-        <div class="col-md-3"><div class="rss-metric"><span>Orders Today</span><strong>18</strong></div></div>
-        <div class="col-md-3"><div class="rss-metric"><span>Revenue Today</span><strong>$4.8k</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Phiếu đang mở</span><strong>31</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Chờ phân công</span><strong>6</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Đơn hôm nay</span><strong>18</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Doanh thu hôm nay</span><strong>$4.8k</strong></div></div>
     </div>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-3"><a class="rss-action rss-action-primary" href="#"><strong>Assign Staff</strong><span>Balance tickets across technicians.</span></a></div>
-        <div class="col-md-3"><a class="rss-action" href="#"><strong>View Reports</strong><span>Open revenue and activity reports.</span></a></div>
-        <div class="col-md-3"><a class="rss-action" href="#"><strong>Review Inventory</strong><span>Check stock and low inventory.</span></a></div>
-        <div class="col-md-3"><a class="rss-action" href="#"><strong>Ticket Backlog</strong><span>Monitor overdue and blocked work.</span></a></div>
+        <div class="col-md-3"><a class="rss-action rss-action-primary" href="#"><strong>Phân công nhân sự</strong><span>Cân bằng phiếu giữa các kỹ thuật viên.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Xem báo cáo</strong><span>Mở báo cáo doanh thu và hoạt động.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Kiểm tra tồn kho</strong><span>Xem tồn kho và hàng sắp hết.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Phiếu tồn đọng</strong><span>Theo dõi việc quá hạn và bị chặn.</span></a></div>
     </div>
 
     <div class="row g-4">
         <div class="col-lg-8">
             <section class="rss-panel" aria-labelledby="workload-title">
-                <header><h2 id="workload-title">Technician Workload</h2></header>
+                <header><h2 id="workload-title">Khối lượng kỹ thuật viên</h2></header>
                 <div class="table-responsive">
                     <table class="table align-middle">
-                        <thead><tr><th>Technician</th><th>Assigned</th><th>In Progress</th><th>Waiting</th><th>Capacity</th></tr></thead>
+                        <thead><tr><th>Kỹ thuật viên</th><th>Đã giao</th><th>Đang xử lý</th><th>Đang chờ</th><th>Tải công việc</th></tr></thead>
                         <tbody>
-                            <tr><td>Huy Nguyen</td><td>7</td><td>4</td><td>2</td><td>High</td></tr>
-                            <tr><td>Lan Ho</td><td>4</td><td>3</td><td>0</td><td>Available</td></tr>
-                            <tr><td>Son Vo</td><td>6</td><td>4</td><td>1</td><td>Normal</td></tr>
+                            <tr><td>Huy Nguyen</td><td>7</td><td>4</td><td>2</td><td>Cao</td></tr>
+                            <tr><td>Lan Ho</td><td>4</td><td>3</td><td>0</td><td>Sẵn sàng</td></tr>
+                            <tr><td>Son Vo</td><td>6</td><td>4</td><td>1</td><td>Bình thường</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -52,11 +52,11 @@
         </div>
         <div class="col-lg-4">
             <section class="rss-panel" aria-labelledby="report-shortcuts-title">
-                <header><h2 id="report-shortcuts-title">Report Shortcuts</h2></header>
+                <header><h2 id="report-shortcuts-title">Lối tắt báo cáo</h2></header>
                 <ul>
-                    <li><a href="#">Revenue Report</a></li>
-                    <li><a href="#">Inventory Statistics</a></li>
-                    <li><a href="#">Activity History</a></li>
+                    <li><a href="#">Báo cáo doanh thu</a></li>
+                    <li><a href="#">Thống kê tồn kho</a></li>
+                    <li><a href="#">Lịch sử hoạt động</a></li>
                 </ul>
             </section>
         </div>

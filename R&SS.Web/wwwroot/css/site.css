@@ -71,12 +71,16 @@ a {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  max-height: 100vh;
   left: 0;
+  min-height: 100vh;
+  overflow: hidden;
   padding: 20px 16px;
   position: fixed;
   top: 0;
   width: var(--tech-sidebar-width);
   z-index: 1040;
+  box-sizing: border-box;
 }
 
 .tech-brand {
@@ -84,6 +88,7 @@ a {
   border-bottom: 1px solid rgba(226, 232, 240, .12);
   color: #fff;
   display: flex;
+  flex: 0 0 auto;
   gap: 12px;
   padding: 4px 8px 20px;
   text-decoration: none;
@@ -121,11 +126,82 @@ a {
 }
 
 .tech-sidebar-nav {
-  display: grid;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
   gap: 6px;
   margin-top: 18px;
+  min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding-right: 4px;
+  scrollbar-gutter: stable;
+  overflow-anchor: none;
+}
+
+.tech-sidebar-nav-legacy[hidden] {
+  display: none !important;
+}
+
+.tech-nav-section {
+  flex: 0 0 auto;
+}
+
+.tech-nav-section-toggle {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  color: #94A3B8;
+  display: flex;
+  font-size: .76rem;
+  font-weight: 800;
+  justify-content: space-between;
+  letter-spacing: 0;
+  min-height: 36px;
+  padding: 8px 10px;
+  text-align: left;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.tech-nav-section-toggle span {
+  align-items: center;
+  display: inline-flex;
+  gap: 10px;
+  min-width: 0;
+}
+
+.tech-nav-section-toggle i:first-child {
+  color: var(--tech-accent);
+  text-align: center;
+  width: 18px;
+}
+
+.tech-nav-section-toggle:hover {
+  background: rgba(8, 145, 178, .10);
+  color: #E2E8F0;
+}
+
+.tech-nav-chevron {
+  color: #64748B;
+  font-size: .72rem;
+  transition: transform .16s ease;
+}
+
+.tech-nav-section.is-open .tech-nav-chevron {
+  transform: rotate(180deg);
+}
+
+.tech-nav-section-panel {
+  display: none;
+  gap: 4px;
+  padding-left: 6px;
+}
+
+.tech-nav-section.is-open .tech-nav-section-panel {
+  display: grid;
 }
 
 .tech-nav-link {
@@ -163,6 +239,7 @@ a {
 .tech-sidebar-footer {
   border-top: 1px solid rgba(226, 232, 240, .12);
   display: grid;
+  flex: 0 0 auto;
   gap: 4px;
   margin-top: auto;
   padding: 16px 8px 0;

@@ -12,8 +12,8 @@
 
 <section class="transaction-list-page">
     <div class="payment-hero">
-        <div><span>Payment Management</span><h1>Transaction List</h1><p>Track order payments, repair payments, payment methods, status, and revenue activity.</p></div>
-        <a class="btn btn-light" asp-controller="Payment" asp-action="RepairPayment">Repair Payments</a>
+        <div><span>Quản lý thanh toán</span><h1>Danh sách giao dịch</h1><p>Theo dõi thanh toán đơn hàng, thanh toán sửa chữa, phương thức thanh toán, trạng thái và doanh thu.</p></div>
+        <a class="btn btn-light" asp-controller="Payment" asp-action="RepairPayment">Thanh toán sửa chữa</a>
     </div>
 
     @if (TempData["ErrorMessage"] is string error)
@@ -21,30 +21,30 @@
         <div class="alert alert-danger" role="alert">@error</div>
     }
     <div class="row g-4">
-        <div class="col-md-4"><article class="summary-card"><span>Total Transactions</span><strong>@Model.Payments.Count</strong><small>All records</small></article></div>
-        <div class="col-md-4"><article class="summary-card revenue"><span>Total Revenue</span><strong>@Model.Payments.Where(payment => payment.PaymentStatus == "Completed").Sum(payment => payment.Amount).ToString("C")</strong><small>Completed payments</small></article></div>
-        <div class="col-md-4"><article class="summary-card pending"><span>Pending Payments</span><strong>@Model.Payments.Count(payment => payment.PaymentStatus.Contains("Pending", StringComparison.OrdinalIgnoreCase))</strong><small>Awaiting confirmation</small></article></div>
+        <div class="col-md-4"><article class="summary-card"><span>Tổng giao dịch</span><strong>@Model.Payments.Count</strong><small>Tất cả bản ghi</small></article></div>
+        <div class="col-md-4"><article class="summary-card revenue"><span>Tổng doanh thu</span><strong>@Model.Payments.Where(payment => payment.PaymentStatus == "Completed").Sum(payment => payment.Amount).ToString("C")</strong><small>Thanh toán đã hoàn tất</small></article></div>
+        <div class="col-md-4"><article class="summary-card pending"><span>Thanh toán đang chờ</span><strong>@Model.Payments.Count(payment => payment.PaymentStatus.Contains("Pending", StringComparison.OrdinalIgnoreCase))</strong><small>Đang chờ xác nhận</small></article></div>
     </div>
 
     <form class="transaction-tools" method="get" asp-controller="Payment" asp-action="TransactionList">
         <input class="form-control" name="keyword" value="@Model.Keyword" placeholder="Search by Transaction ID or Customer Name..." />
-        <select class="form-select" name="status"><option value="">All Status</option><option value="Pending">Pending</option><option value="Completed">Completed</option><option value="Failed">Failed</option><option value="Refunded">Refunded</option></select>
-        <button class="btn btn-outline-primary" type="submit">Filter</button>
+        <select class="form-select" name="status"><option value="">Tất cả trạng thái</option><option value="Pending">Đang chờ</option><option value="Completed">Đã hoàn tất</option><option value="Failed">Thất bại</option><option value="Refunded">Đã hoàn tiền</option></select>
+        <button class="btn btn-outline-primary" type="submit">Lọc</button>
     </form>
 
     <div class="table-card table-responsive">
         <table class="table align-middle">
-            <thead><tr><th>Transaction ID</th><th>Customer Name</th><th>Transaction Type</th><th>Amount</th><th>Payment Method</th><th>Status</th><th>Date</th><th></th></tr></thead>
+            <thead><tr><th>Mã giao dịch</th><th>Tên khách hàng</th><th>Loại giao dịch</th><th>Số tiền</th><th>Phương thức thanh toán</th><th>Trạng thái</th><th>Ngày</th><th></th></tr></thead>
             <tbody>
                 @if (!Model.Payments.Any())
                 {
-                    <tr><td colspan="8" class="text-center text-muted">No transactions found.</td></tr>
+                    <tr><td colspan="8" class="text-center text-muted">Không tìm thấy giao dịch.</td></tr>
                 }
                 else
                 {
                     @foreach (var payment in Model.Payments)
                     {
-                        <tr><td>@payment.PaymentCode</td><td>@(payment.Customer?.FullName ?? "Customer")</td><td>@(payment.SalesOrderId.HasValue ? "Order Payment" : "Repair Payment")</td><td>@payment.Amount.ToString("C")</td><td>@payment.PaymentMethod</td><td><span class="badge text-bg-info">@payment.PaymentStatus</span></td><td>@payment.PaymentDate.ToLocalTime().ToString("yyyy-MM-dd")</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Payment" asp-action="TransactionDetails" asp-route-id="@payment.PaymentId">View Details</a></td></tr>
+                        <tr><td>@payment.PaymentCode</td><td>@(payment.Customer?.FullName ?? "Khách hàng")</td><td>@(payment.SalesOrderId.HasValue ? "Thanh toán đơn hàng" : "Thanh toán sửa chữa")</td><td>@payment.Amount.ToString("C")</td><td>@payment.PaymentMethod</td><td><span class="badge text-bg-info">@payment.PaymentStatus</span></td><td>@payment.PaymentDate.ToLocalTime().ToString("yyyy-MM-dd")</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Payment" asp-action="TransactionDetails" asp-route-id="@payment.PaymentId">Xem chi tiết</a></td></tr>
                     }
                 }
             </tbody>

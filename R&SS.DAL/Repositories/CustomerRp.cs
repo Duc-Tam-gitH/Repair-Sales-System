@@ -7,13 +7,21 @@ namespace R_SS.DAL.Repositories
 {
     public class CustomerRp : GenericRp<Customer>, ICustomerRp
     {
+        private const string CustomerRoleName = "Customer";
+
         public CustomerRp(AppDbContext context) : base(context)
         {
         }
 
+        public new async Task<IEnumerable<Customer>> GetAllAsync()
+        {
+            return await ApplyCurrentCustomerRoleFilter(_context.Customers.AsNoTracking())
+                .ToListAsync();
+        }
+
         public async Task<IReadOnlyCollection<Customer>> SearchAsync(string? keyword)
         {
-            var query = _context.Customers.AsNoTracking().AsQueryable();
+            var query = ApplyCurrentCustomerRoleFilter(_context.Customers.AsNoTracking());
 
             if (!string.IsNullOrWhiteSpace(keyword))
             {
@@ -64,6 +72,16 @@ namespace R_SS.DAL.Repositories
             return await _context.Customers.AnyAsync(customer =>
                 customer.CustomerCode.ToLower() == customerCode.ToLower() &&
                 (!excludedCustomerId.HasValue || customer.CustomerId != excludedCustomerId.Value));
+        }
+
+        private static IQueryable<Customer> ApplyCurrentCustomerRoleFilter(IQueryable<Customer> query)
+        {
+            return query.Where(customer =>
+                !customer.UserId.HasValue ||
+                (customer.User != null &&
+                    customer.User.UserRoles.Any(userRole =>
+                        userRole.Role != null &&
+                        userRole.Role.RoleName == CustomerRoleName)));
         }
     }
 }

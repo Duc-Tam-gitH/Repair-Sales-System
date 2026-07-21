@@ -1,9 +1,9 @@
 @model IReadOnlyCollection<R_SS.Models.Entities.RepairOrder>
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Repair Progress";
+    ViewData["Title"] = "Tiến độ sửa chữa";
     ViewData["ActiveRole"] = "Customer";
-    ViewData["RoleDisplay"] = "Customer User";
+    ViewData["RoleDisplay"] = "Khách hàng";
 }
 
 @section Styles {
@@ -12,13 +12,13 @@
 
 <section class="repair-progress-page">
     <div class="progress-header">
-        <h1>Track Repair Progress</h1>
-        <a class="btn btn-primary" asp-controller="Customer" asp-action="SubmitRepair">New Repair Request</a>
+        <h1>Theo dõi tiến độ sửa chữa</h1>
+        <a class="btn btn-primary" asp-controller="Customer" asp-action="SubmitRepair">Yêu cầu sửa chữa mới</a>
     </div>
 
     @if (!Model.Any())
     {
-        <article class="repair-ticket"><h2>No active repairs found</h2></article>
+        <article class="repair-ticket"><h2>Không có phiếu sửa chữa đang hoạt động</h2></article>
     }
     else
     {
@@ -29,15 +29,15 @@
                     <div><span>@repair.RepairOrderCode</span><h2>@repair.DeviceName</h2></div>
                     <strong class="state progress-state">@repair.Status</strong>
                 </div>
-                <p><strong>Assigned Technician:</strong> @(repair.AssignedTechnician?.FullName ?? "Pending assignment")</p>
+                <p><strong>Kỹ thuật viên phụ trách:</strong> @(repair.AssignedTechnician?.FullName ?? "Đang chờ phân công")</p>
                 <div class="timeline">
                     @foreach (var history in repair.StatusHistories.OrderBy(history => history.UpdatedAtUtc))
                     {
                         <div><span>@history.UpdatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd")</span><p>@(history.Notes ?? history.Status)</p></div>
                     }
                 </div>
-                <div class="parts-box"><strong>Parts Used:</strong> @string.Join(", ", repair.RepairOrderDetails.Select(detail => detail.Product?.ProductName).Where(name => !string.IsNullOrWhiteSpace(name)))</div>
-                <div class="result-box"><strong>Final Repair Results:</strong> @(repair.RepairResult ?? "Pending final result.")</div>
+                <div class="parts-box"><strong>Linh kiện đã dùng:</strong> @string.Join(", ", repair.RepairOrderDetails.Select(detail => detail.Product?.ProductName).Where(name => !string.IsNullOrWhiteSpace(name)))</div>
+                <div class="result-box"><strong>Kết quả sửa chữa cuối cùng:</strong> @(repair.RepairResult ?? "Đang chờ kết quả cuối cùng.")</div>
             </article>
         }
     }

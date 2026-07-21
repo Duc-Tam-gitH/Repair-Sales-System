@@ -17,6 +17,7 @@ public class TechnicalTicketResponse
     public string Status { get; set; } = string.Empty;
     public int? AssignedTechnicianId { get; set; }
     public string? AssignedTechnicianName { get; set; }
+    public bool IsHandedOverToTechnician { get; set; }
     public DateTime? DeliveryConfirmationDeadlineUtc { get; set; }
     public bool ShowConfirmDeliveryButton { get; set; }
     public string? DeliveryOtpSentToEmail { get; set; }

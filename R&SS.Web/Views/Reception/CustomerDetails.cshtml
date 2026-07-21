@@ -1,9 +1,9 @@
 @model CustomerResponse
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Customer Details";
+    ViewData["Title"] = "Chi tiết khách hàng";
     ViewData["ActiveRole"] = "Reception";
-    ViewData["RoleDisplay"] = "Reception Staff";
+    ViewData["RoleDisplay"] = "Nhân viên tiếp nhận";
 }
 
 @section Styles {
@@ -15,15 +15,15 @@
         <div>
             <span>@Model.CustomerCode</span>
             <h1>@Model.FullName</h1>
-            <p>@(Model.IsActive ? "Active customer profile" : "Inactive customer profile")</p>
+            <p>@(Model.IsActive ? "Hồ sơ khách hàng đang hoạt động" : "Hồ sơ khách hàng ngừng hoạt động")</p>
         </div>
-        <a class="btn btn-primary" asp-controller="Reception" asp-action="EquipmentReception">Create Intake</a>
+        <a class="btn btn-primary" asp-controller="Reception" asp-action="EquipmentReception">Tạo phiếu tiếp nhận</a>
     </div>
 
     <div class="info-grid">
-        <div><strong>Phone</strong><p>@Model.Phone</p></div>
+        <div><strong>Điện thoại</strong><p>@Model.Phone</p></div>
         <div><strong>Email</strong><p>@Model.Email</p></div>
-        <div><strong>Address</strong><p>@Model.Address</p></div>
-        <div><strong>Notes</strong><p>@Model.Notes</p></div>
+        <div><strong>Địa chỉ</strong><p>@Model.Address</p></div>
+        <div><strong>Ghi chú</strong><p>@Model.Notes</p></div>
     </div>
 </section>

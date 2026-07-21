@@ -4,6 +4,8 @@ public class CreateTechnicalTicketRequest
 {
     public int CustomerId { get; set; }
     public int ReceivedByUserId { get; set; }
+    public int AssignedTechnicianId { get; set; }
+    public int? SourceServiceRequestId { get; set; }
     public string ActorRole { get; set; } = string.Empty;
     public string CustomerEmail { get; set; } = string.Empty;
     public string CustomerPhone { get; set; } = string.Empty;

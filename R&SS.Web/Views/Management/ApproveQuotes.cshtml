@@ -1,9 +1,9 @@
 @model ManagementViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Approve Quotes";
+    ViewData["Title"] = "Duyệt báo giá";
     ViewData["ActiveRole"] = "Management";
-    ViewData["RoleDisplay"] = "Manager";
+    ViewData["RoleDisplay"] = "Quản lý";
     var quotedRepairs = Model.RepairOrders.Where(repair => repair.TotalAmount > 0 || repair.ServiceFee > 0).ToArray();
 }
 
@@ -12,6 +12,6 @@
 }
 
 <section class="approve-quotes-page">
-    <div class="admin-hero"><div><span>Quotes</span><h1>Approve Quotes</h1><p>Review repair quotes and service totals currently recorded in the system.</p></div></div>
-    <div class="table-card table-responsive mt-4"><table class="table align-middle"><thead><tr><th>Repair Code</th><th>Customer</th><th>Device</th><th>Service Fee</th><th>Total</th><th>Status</th></tr></thead><tbody>@foreach (var repair in quotedRepairs) { <tr><td>@repair.RepairOrderCode</td><td>@(repair.Customer?.FullName ?? "-")</td><td>@repair.DeviceType</td><td>@repair.ServiceFee.ToString("C")</td><td>@repair.TotalAmount.ToString("C")</td><td>@repair.Status</td></tr> } @if (!quotedRepairs.Any()) { <tr><td colspan="6" class="text-center text-muted">No repair quotes found.</td></tr> }</tbody></table></div>
+    <div class="admin-hero"><div><span>Báo giá</span><h1>Duyệt báo giá</h1><p>Xem báo giá sửa chữa và tổng phí dịch vụ hiện được ghi nhận trong hệ thống.</p></div></div>
+    <div class="table-card table-responsive mt-4"><table class="table align-middle"><thead><tr><th>Mã sửa chữa</th><th>Khách hàng</th><th>Thiết bị</th><th>Phí dịch vụ</th><th>Tổng cộng</th><th>Trạng thái</th></tr></thead><tbody>@foreach (var repair in quotedRepairs) { <tr><td>@repair.RepairOrderCode</td><td>@(repair.Customer?.FullName ?? "-")</td><td>@repair.DeviceType</td><td>@repair.ServiceFee.ToString("C")</td><td>@repair.TotalAmount.ToString("C")</td><td>@repair.Status</td></tr> } @if (!quotedRepairs.Any()) { <tr><td colspan="6" class="text-center text-muted">Không tìm thấy báo giá sửa chữa.</td></tr> }</tbody></table></div>
 </section>

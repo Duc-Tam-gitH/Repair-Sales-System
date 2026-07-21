@@ -102,6 +102,7 @@
             && string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase)
                 ? "active"
                 : "";
+        var menuSections = GetMenuSections(activeRole);
     }
 
     <div class="tech-app-shell" id="techAppShell">
@@ -114,7 +115,32 @@
                 </span>
             </a>
 
-            <nav class="tech-sidebar-nav">
+            <nav class="tech-sidebar-nav" aria-label="Điều hướng theo vai trò">
+                @for (var sectionIndex = 0; sectionIndex < menuSections.Count; sectionIndex++)
+                {
+                    var menuGroup = menuSections[sectionIndex];
+                    var isSectionActive = menuGroup.Items.Any(item =>
+                        string.Equals(currentController, item.Controller, StringComparison.OrdinalIgnoreCase) &&
+                        string.Equals(currentAction, item.Action, StringComparison.OrdinalIgnoreCase));
+                    var sectionId = $"sidebar-section-{sectionIndex}";
+                    <section class="tech-nav-section @(isSectionActive ? "is-open" : "")" data-menu-section>
+                        <button class="tech-nav-section-toggle" type="button" aria-expanded="@(isSectionActive ? "true" : "false")" aria-controls="@sectionId">
+                            <span><i class="@menuGroup.Icon"></i>@menuGroup.Title</span>
+                            <i class="fa-solid fa-chevron-down tech-nav-chevron"></i>
+                        </button>
+                        <div class="tech-nav-section-panel" id="@sectionId">
+                            @foreach (var item in menuGroup.Items)
+                            {
+                                <a class="tech-nav-link @IsActive(item.Controller, item.Action)" asp-controller="@item.Controller" asp-action="@item.Action">
+                                    <i class="@item.Icon"></i><span>@item.Title</span>
+                                </a>
+                            }
+                        </div>
+                    </section>
+                }
+            </nav>
+
+            <nav class="tech-sidebar-nav tech-sidebar-nav-legacy" hidden>
                 @if (activeRole == "Customer")
                 {
                     <a class="tech-nav-link @IsActive("Customer", "CustomerHome")" asp-controller="Customer" asp-action="CustomerHome"><i class="fa-solid fa-house"></i><span>Bảng điều khiển</span></a>
@@ -245,3 +271,211 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+@functions {
+    private sealed class SidebarMenuItem
+    {
+        public SidebarMenuItem(string title, string icon, string controller, string action)
+        {
+            Title = title;
+            Icon = icon;
+            Controller = controller;
+            Action = action;
+        }
+
+        public string Title { get; }
+        public string Icon { get; }
+        public string Controller { get; }
+        public string Action { get; }
+    }
+
+    private sealed class SidebarMenuSection
+    {
+        public SidebarMenuSection(string title, string icon, params SidebarMenuItem[] items)
+        {
+            Title = title;
+            Icon = icon;
+            Items = items;
+        }
+
+        public string Title { get; }
+        public string Icon { get; }
+        public IReadOnlyList<SidebarMenuItem> Items { get; }
+    }
+
+    private static SidebarMenuItem Item(string title, string icon, string controller, string action)
+    {
+        return new SidebarMenuItem(title, icon, controller, action);
+    }
+
+    private static SidebarMenuSection Section(string title, string icon, params SidebarMenuItem[] items)
+    {
+        return new SidebarMenuSection(title, icon, items);
+    }
+
+    private static List<SidebarMenuSection> GetMenuSections(string? role)
+    {
+        role ??= string.Empty;
+
+        if (role.Equals("Customer", StringComparison.OrdinalIgnoreCase))
+        {
+            return new()
+            {
+                Section("Tổng quan", "fa-solid fa-house",
+                    Item("Trang chủ", "fa-solid fa-house", "Customer", "CustomerHome"),
+                    Item("Thông tin cá nhân", "fa-regular fa-user", "Account", "PersonalInfo"),
+                    Item("Đổi mật khẩu", "fa-solid fa-key", "Account", "ChangePassword")),
+                Section("Mua hàng", "fa-solid fa-cart-shopping",
+                    Item("Sản phẩm", "fa-solid fa-laptop", "Customer", "ProductList"),
+                    Item("Giỏ hàng", "fa-solid fa-cart-shopping", "Customer", "Cart"),
+                    Item("Đơn hàng của tôi", "fa-solid fa-clipboard-list", "Customer", "MyOrders")),
+                Section("Sửa chữa", "fa-solid fa-screwdriver-wrench",
+                    Item("Gửi yêu cầu kỹ thuật", "fa-solid fa-file-circle-plus", "Customer", "SubmitRepair"),
+                    Item("Tra cứu yêu cầu kỹ thuật", "fa-solid fa-magnifying-glass", "Customer", "SearchRepair"),
+                    Item("Theo dõi tiến độ sửa chữa", "fa-solid fa-chart-line", "Customer", "RepairProgress"),
+                    Item("Lịch sử sửa chữa", "fa-solid fa-clock-rotate-left", "Customer", "RepairHistory"),
+                    Item("Đánh giá dịch vụ", "fa-solid fa-star", "Customer", "ServiceRating"))
+            };
+        }
+
+        if (role.Equals("Reception", StringComparison.OrdinalIgnoreCase) || role.Equals("Receptionist", StringComparison.OrdinalIgnoreCase))
+        {
+            return new()
+            {
+                Section("Tổng quan", "fa-solid fa-house",
+                    Item("Bảng điều khiển", "fa-solid fa-house", "Reception", "ReceptionDashboard")),
+                Section("Khách hàng", "fa-solid fa-users",
+                    Item("Quản lý khách hàng", "fa-solid fa-users", "Reception", "CustomerList")),
+                Section("Tiếp nhận kỹ thuật", "fa-solid fa-clipboard-list",
+                    Item("Yêu cầu kỹ thuật", "fa-solid fa-clipboard-list", "Reception", "RepairRequestList"),
+                    Item("Tiếp nhận thiết bị", "fa-solid fa-inbox", "Reception", "EquipmentReception"),
+                    Item("Tạo phiếu yêu cầu kỹ thuật", "fa-solid fa-file-circle-plus", "Reception", "CreateTechnicalReport"),
+                    Item("Danh sách phiếu kỹ thuật", "fa-solid fa-file-lines", "Reception", "TechnicalReportList"),
+                    Item("Bàn giao thiết bị", "fa-solid fa-handshake", "Reception", "DeviceHandover")),
+                Section("Thanh toán", "fa-solid fa-money-check-dollar",
+                    Item("Thanh toán sửa chữa", "fa-solid fa-screwdriver-wrench", "Payment", "RepairPayment"))
+            };
+        }
+
+        if (role.Equals("Technician", StringComparison.OrdinalIgnoreCase))
+        {
+            return new()
+            {
+                Section("Tổng quan", "fa-solid fa-house",
+                    Item("Bảng điều khiển", "fa-solid fa-house", "Technician", "TechnicianDashboard"),
+                    Item("Lịch làm việc", "fa-solid fa-calendar-days", "Technician", "WorkSchedule")),
+                Section("Phiếu kỹ thuật", "fa-solid fa-list-check",
+                    Item("Phiếu được giao", "fa-solid fa-list-check", "Technician", "AssignedTasks"),
+                    Item("Ghi nhận lỗi thiết bị", "fa-solid fa-bug", "Technician", "RecordFaults"),
+                    Item("Cập nhật tiến độ sửa chữa", "fa-solid fa-chart-line", "Technician", "UpdateProgress"),
+                    Item("Ghi nhận kết quả sửa chữa", "fa-solid fa-clipboard-check", "Technician", "RecordResults")),
+                Section("Linh kiện", "fa-solid fa-microchip",
+                    Item("Tìm kiếm linh kiện", "fa-solid fa-magnifying-glass-chart", "Technician", "ComponentSearch"),
+                    Item("Cập nhật linh kiện sử dụng", "fa-solid fa-screwdriver", "Technician", "UpdateComponents"))
+            };
+        }
+
+        if (role.Equals("Manager", StringComparison.OrdinalIgnoreCase) ||
+            role.Equals("Management", StringComparison.OrdinalIgnoreCase) ||
+            role.Equals("Administrator", StringComparison.OrdinalIgnoreCase) ||
+            role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+        {
+            return new()
+            {
+                Section("Tổng quan", "fa-solid fa-house",
+                    Item("Bảng điều khiển quản trị", "fa-solid fa-house", "Management", "ManagementDashboard"),
+                    Item("Bảng tiến độ sửa chữa", "fa-solid fa-chart-line", "Management", "RepairProgressDashboard")),
+                Section("Nhân sự & tài khoản", "fa-solid fa-user-shield",
+                    Item("Quản lý tài khoản hệ thống", "fa-solid fa-user-shield", "Management", "SystemAccountManagement"),
+                    Item("Quản lý nhân viên", "fa-solid fa-id-card", "Management", "EmployeeManagement"),
+                    Item("Thông tin cá nhân", "fa-regular fa-user", "Account", "PersonalInfo"),
+                    Item("Đổi mật khẩu", "fa-solid fa-key", "Account", "ChangePassword")),
+                Section("Khách hàng & kỹ thuật", "fa-solid fa-screwdriver-wrench",
+                    Item("Quản lý khách hàng", "fa-solid fa-users", "Management", "CustomerManagement"),
+                    Item("Quản lý phiếu yêu cầu kỹ thuật", "fa-solid fa-clipboard-list", "Management", "TechnicalRequestManagement")),
+                Section("Kho & nhà cung cấp", "fa-solid fa-warehouse",
+                    Item("Quản lý tồn kho", "fa-solid fa-boxes-stacked", "Warehouse", "InventoryManagement"),
+                    Item("Nhà cung cấp", "fa-solid fa-truck-field", "Warehouse", "SupplierManagement")),
+                Section("Sản phẩm & đơn hàng", "fa-solid fa-laptop",
+                    Item("Danh mục sản phẩm", "fa-solid fa-layer-group", "ProductManagement", "CategoryManagement"),
+                    Item("Quản lý sản phẩm", "fa-solid fa-laptop", "ProductManagement", "ProductList"),
+                    Item("Quản lý đơn hàng", "fa-solid fa-clipboard-list", "ProductManagement", "OrderList")),
+                Section("Thanh toán", "fa-solid fa-money-check-dollar",
+                    Item("Quản lý thanh toán", "fa-solid fa-money-check-dollar", "Payment", "TransactionList")),
+                Section("Báo cáo", "fa-solid fa-chart-column",
+                    Item("Báo cáo bán hàng", "fa-solid fa-chart-column", "Reports", "RevenueReport"),
+                    Item("Báo cáo sửa chữa", "fa-solid fa-screwdriver-wrench", "Reports", "RepairReport"),
+                    Item("Báo cáo tồn kho", "fa-solid fa-boxes-stacked", "Reports", "InventoryReport"),
+                    Item("Thống kê khách hàng", "fa-solid fa-users", "Reports", "CustomerStatistics"),
+                    Item("Sản phẩm bán chạy", "fa-solid fa-ranking-star", "Reports", "ProductSalesStatistics")),
+                Section("Hệ thống", "fa-solid fa-shield-halved",
+                    Item("Lịch sử hoạt động", "fa-solid fa-shield-halved", "SystemAdmin", "AuditLog"),
+                    Item("Quản lý quy trình sửa chữa", "fa-solid fa-diagram-project", "SystemAdmin", "ProcessManagement"))
+            };
+        }
+
+        if (role.Equals("Warehouse", StringComparison.OrdinalIgnoreCase))
+        {
+            return new()
+            {
+                Section("Kho hàng", "fa-solid fa-warehouse",
+                    Item("Bảng điều khiển", "fa-solid fa-house", "Warehouse", "WarehouseDashboard"),
+                    Item("Danh sách tồn kho", "fa-solid fa-boxes-stacked", "Warehouse", "StockList"),
+                    Item("Quản lý kho", "fa-solid fa-warehouse", "Warehouse", "InventoryManagement"),
+                    Item("Theo dõi kho", "fa-solid fa-route", "Warehouse", "InventoryTracking"),
+                    Item("Nhà cung cấp", "fa-solid fa-truck-field", "Warehouse", "SupplierManagement"))
+            };
+        }
+
+        if (role.Equals("ProductManagement", StringComparison.OrdinalIgnoreCase))
+        {
+            return new()
+            {
+                Section("Sản phẩm", "fa-solid fa-laptop",
+                    Item("Danh mục", "fa-solid fa-layer-group", "ProductManagement", "CategoryManagement"),
+                    Item("Sản phẩm", "fa-solid fa-laptop", "ProductManagement", "ProductList"),
+                    Item("Đơn hàng", "fa-solid fa-clipboard-list", "ProductManagement", "OrderList"))
+            };
+        }
+
+        if (role.Equals("Payment", StringComparison.OrdinalIgnoreCase))
+        {
+            return new()
+            {
+                Section("Thanh toán", "fa-solid fa-money-check-dollar",
+                    Item("Giao dịch", "fa-solid fa-money-check-dollar", "Payment", "TransactionList"),
+                    Item("Thanh toán sửa chữa", "fa-solid fa-screwdriver-wrench", "Payment", "RepairPayment"),
+                    Item("Hóa đơn", "fa-solid fa-file-invoice-dollar", "Payment", "InvoicePrint"))
+            };
+        }
+
+        if (role.Equals("Reports", StringComparison.OrdinalIgnoreCase))
+        {
+            return new()
+            {
+                Section("Báo cáo", "fa-solid fa-chart-column",
+                    Item("Doanh thu", "fa-solid fa-chart-column", "Reports", "RevenueReport"),
+                    Item("Sửa chữa", "fa-solid fa-screwdriver-wrench", "Reports", "RepairReport"),
+                    Item("Kho", "fa-solid fa-boxes-stacked", "Reports", "InventoryReport"),
+                    Item("Khách hàng", "fa-solid fa-users", "Reports", "CustomerStatistics"),
+                    Item("Sản phẩm", "fa-solid fa-laptop", "Reports", "ProductSalesStatistics"))
+            };
+        }
+
+        if (role.Equals("SystemAdmin", StringComparison.OrdinalIgnoreCase))
+        {
+            return new()
+            {
+                Section("Hệ thống", "fa-solid fa-shield-halved",
+                    Item("Nhật ký hệ thống", "fa-solid fa-shield-halved", "SystemAdmin", "AuditLog"),
+                    Item("Cấu hình quy trình", "fa-solid fa-diagram-project", "SystemAdmin", "ProcessManagement"))
+            };
+        }
+
+        return new()
+        {
+            Section("Tổng quan", "fa-solid fa-house",
+                Item("Bảng điều khiển", "fa-solid fa-house", "Home", "Home"))
+        };
+    }
+}

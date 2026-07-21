@@ -12,8 +12,8 @@ using R_SS.DAL.Data;
 namespace R_SS.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260711022906_Update_DB_From_UC02_To_UC37_Fix")]
-    partial class Update_DB_From_UC02_To_UC37_Fix
+    [Migration("20260719154700_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -136,10 +136,17 @@ namespace R_SS.DAL.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("CustomerId");
 
                     b.HasIndex("CustomerCode")
                         .IsUnique();
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Customers", (string)null);
                 });
@@ -175,6 +182,78 @@ namespace R_SS.DAL.Migrations
                     b.HasIndex("UpdatedByUserId");
 
                     b.ToTable("CustomerUpdateHistories", (string)null);
+                });
+
+            modelBuilder.Entity("R_SS.Models.Entities.Employee", b =>
+                {
+                    b.Property<int>("EmployeeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("EmployeeCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Specialization")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WorkStatus")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)")
+                        .HasDefaultValue("Working");
+
+                    b.HasKey("EmployeeId");
+
+                    b.HasIndex("EmployeeCode")
+                        .IsUnique();
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("R_SS.Models.Entities.InventoryTransaction", b =>
@@ -1673,10 +1752,6 @@ namespace R_SS.DAL.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("Specialization")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1686,13 +1761,6 @@ namespace R_SS.DAL.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("WorkStatus")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasDefaultValue("Working");
 
                     b.HasKey("UserId");
 
@@ -1759,6 +1827,16 @@ namespace R_SS.DAL.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("R_SS.Models.Entities.Customer", b =>
+                {
+                    b.HasOne("R_SS.Models.Entities.User", "User")
+                        .WithOne("CustomerProfile")
+                        .HasForeignKey("R_SS.Models.Entities.Customer", "UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("R_SS.Models.Entities.CustomerUpdateHistory", b =>
                 {
                     b.HasOne("R_SS.Models.Entities.Customer", "Customer")
@@ -1768,6 +1846,25 @@ namespace R_SS.DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("R_SS.Models.Entities.Employee", b =>
+                {
+                    b.HasOne("R_SS.Models.Entities.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("R_SS.Models.Entities.User", "User")
+                        .WithOne("EmployeeProfile")
+                        .HasForeignKey("R_SS.Models.Entities.Employee", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("R_SS.Models.Entities.InventoryTransaction", b =>
@@ -2199,6 +2296,10 @@ namespace R_SS.DAL.Migrations
 
             modelBuilder.Entity("R_SS.Models.Entities.User", b =>
                 {
+                    b.Navigation("CustomerProfile");
+
+                    b.Navigation("EmployeeProfile");
+
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618

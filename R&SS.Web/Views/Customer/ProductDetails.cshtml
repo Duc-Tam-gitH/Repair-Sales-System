@@ -1,9 +1,9 @@
 @model ProductDetailResponse
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Product Details";
+    ViewData["Title"] = "Chi tiết sản phẩm";
     ViewData["ActiveRole"] = "Customer";
-    ViewData["RoleDisplay"] = "Customer User";
+    ViewData["RoleDisplay"] = "Khách hàng";
 }
 
 @section Styles {
@@ -29,34 +29,34 @@
         </div>
         <div class="col-lg-6">
             <div class="detail-panel">
-                <span class="availability">@(Model.QuantityInStock > 0 ? "In Stock" : "Out of Stock")</span>
+                <span class="availability">@(Model.QuantityInStock > 0 ? "Còn hàng" : "Hết hàng")</span>
                 <h1>@Model.ProductName</h1>
-                <p>@(Model.Description ?? "No description is available for this product.")</p>
+                <p>@(Model.Description ?? "Sản phẩm này chưa có mô tả.")</p>
                 <strong class="price">@Model.SalePrice.ToString("C")</strong>
                 <form method="post" asp-controller="Customer" asp-action="AddToCart">
                     @Html.AntiForgeryToken()
                     <input name="ProductId" type="hidden" value="@Model.ProductId" />
-                    <label class="form-label mt-3" for="quantity">Quantity</label>
+                    <label class="form-label mt-3" for="quantity">Số lượng</label>
                     <input class="form-control quantity-input" id="quantity" name="Quantity" type="number" min="1" max="@Model.QuantityInStock" value="1" />
-                    <button class="btn btn-primary w-100 mt-4" type="submit" disabled="@(Model.QuantityInStock <= 0)">Add to Cart</button>
+                    <button class="btn btn-primary w-100 mt-4" type="submit" disabled="@(Model.QuantityInStock <= 0)">Thêm vào giỏ</button>
                 </form>
                 <div class="d-flex gap-2 mt-3">
-                    <a class="btn btn-outline-primary flex-fill" asp-controller="Customer" asp-action="ProductList">Back to Products</a>
-                    <a class="btn btn-success flex-fill" asp-controller="Customer" asp-action="Checkout">Buy Now</a>
+                    <a class="btn btn-outline-primary flex-fill" asp-controller="Customer" asp-action="ProductList">Quay lại sản phẩm</a>
+                    <a class="btn btn-success flex-fill" asp-controller="Customer" asp-action="Checkout">Mua ngay</a>
                 </div>
             </div>
         </div>
     </div>
 
     <section class="spec-panel mt-4">
-        <h2>Specifications</h2>
+        <h2>Thông số</h2>
         <table class="table">
             <tbody>
                 <tr><th>CPU</th><td>Intel Core i5</td></tr>
-                <tr><th>Product Code</th><td>@Model.ProductCode</td></tr>
-                <tr><th>Category</th><td>@(Model.CategoryName ?? "Uncategorized")</td></tr>
-                <tr><th>Brand/Supplier</th><td>@(Model.BrandName ?? "N/A")</td></tr>
-                <tr><th>Available Stock</th><td>@Model.QuantityInStock</td></tr>
+                <tr><th>Mã sản phẩm</th><td>@Model.ProductCode</td></tr>
+                <tr><th>Danh mục</th><td>@(Model.CategoryName ?? "Chưa phân loại")</td></tr>
+                <tr><th>Thương hiệu/Nhà cung cấp</th><td>@(Model.BrandName ?? "N/A")</td></tr>
+                <tr><th>Tồn kho khả dụng</th><td>@Model.QuantityInStock</td></tr>
             </tbody>
         </table>
     </section>

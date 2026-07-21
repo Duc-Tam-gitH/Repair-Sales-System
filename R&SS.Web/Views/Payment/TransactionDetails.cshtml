@@ -12,21 +12,21 @@
 
 <section class="transaction-details-page">
     <div class="details-hero">
-        <div><span>Transaction ID</span><h1>@Model.PaymentCode</h1><p>Date: @Model.PaymentDate.ToLocalTime().ToString("yyyy-MM-dd")</p></div>
+        <div><span>Mã giao dịch</span><h1>@Model.PaymentCode</h1><p>Ngày: @Model.PaymentDate.ToLocalTime().ToString("yyyy-MM-dd")</p></div>
         <strong>@Model.PaymentStatus</strong>
     </div>
 
     <div class="row g-4">
-        <div class="col-lg-4"><section class="detail-card"><h2>Customer Information</h2><p><strong>Name:</strong> @(Model.Customer?.FullName ?? "-")</p><p><strong>Phone:</strong> @(Model.Customer?.Phone ?? "-")</p><p><strong>Email:</strong> @(Model.Customer?.Email ?? "-")</p></section></div>
-        <div class="col-lg-4"><section class="detail-card"><h2>Transaction Details</h2><p><strong>Type:</strong> @(Model.SalesOrderId.HasValue ? "Order Payment" : "Repair Payment")</p><p><strong>Amount:</strong> @Model.Amount.ToString("C")</p><p><strong>Payment Method:</strong> @Model.PaymentMethod</p><p><strong>Payment Reference:</strong> @(Model.ReferenceNumber ?? "-")</p></section></div>
-        <div class="col-lg-4"><section class="detail-card"><h2>Related Documents</h2><p><strong>Order Code:</strong> @(Model.SalesOrder?.SalesOrderCode ?? "-")</p><p><strong>Repair Code:</strong> @(Model.RepairOrder?.RepairOrderCode ?? "-")</p></section></div>
+        <div class="col-lg-4"><section class="detail-card"><h2>Thông tin khách hàng</h2><p><strong>Tên:</strong> @(Model.Customer?.FullName ?? "-")</p><p><strong>Điện thoại:</strong> @(Model.Customer?.Phone ?? "-")</p><p><strong>Email:</strong> @(Model.Customer?.Email ?? "-")</p></section></div>
+        <div class="col-lg-4"><section class="detail-card"><h2>Chi tiết giao dịch</h2><p><strong>Loại:</strong> @(Model.SalesOrderId.HasValue ? "Thanh toán đơn hàng" : "Thanh toán sửa chữa")</p><p><strong>Số tiền:</strong> @Model.Amount.ToString("C")</p><p><strong>Phương thức thanh toán:</strong> @Model.PaymentMethod</p><p><strong>Mã tham chiếu thanh toán:</strong> @(Model.ReferenceNumber ?? "-")</p></section></div>
+        <div class="col-lg-4"><section class="detail-card"><h2>Chứng từ liên quan</h2><p><strong>Mã đơn hàng:</strong> @(Model.SalesOrder?.SalesOrderCode ?? "-")</p><p><strong>Mã sửa chữa:</strong> @(Model.RepairOrder?.RepairOrderCode ?? "-")</p></section></div>
     </div>
 
     <div class="d-flex flex-wrap gap-2 mt-4">
         @if (Model.PaymentStatus.Equals("Completed", StringComparison.OrdinalIgnoreCase))
         {
-            <a class="btn btn-primary" asp-controller="Payment" asp-action="InvoicePrint" asp-route-paymentId="@Model.PaymentId">Print Receipt</a>
+            <a class="btn btn-primary" asp-controller="Payment" asp-action="InvoicePrint" asp-route-paymentId="@Model.PaymentId">In biên nhận</a>
         }
-        <a class="btn btn-outline-secondary" asp-controller="Payment" asp-action="TransactionList">Back to List</a>
+        <a class="btn btn-outline-secondary" asp-controller="Payment" asp-action="TransactionList">Quay lại danh sách</a>
     </div>
 </section>

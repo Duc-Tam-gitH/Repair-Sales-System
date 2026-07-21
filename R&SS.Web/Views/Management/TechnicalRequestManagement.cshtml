@@ -1,9 +1,9 @@
 @model ManagementViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Technical Request Management";
+    ViewData["Title"] = "Quản lý yêu cầu kỹ thuật";
     ViewData["ActiveRole"] = "Management";
-    ViewData["RoleDisplay"] = "Manager";
+    ViewData["RoleDisplay"] = "Quản lý";
 }
 
 @section Styles {
@@ -11,6 +11,6 @@
 }
 
 <section class="technical-request-management-page">
-    <div class="admin-hero"><div><span>Technical Requests</span><h1>Technical Request Management</h1><p>Monitor customer service requests and conversion into repair tickets.</p></div></div>
-    <div class="table-card table-responsive mt-4"><table class="table align-middle"><thead><tr><th>Code</th><th>Customer</th><th>Service Type</th><th>Device</th><th>Status</th><th>Created</th></tr></thead><tbody>@foreach (var request in Model.ServiceRequests) { <tr><td>@request.RequestCode</td><td>@request.CustomerId</td><td>@request.ServiceType</td><td>@request.DeviceType @request.DeviceModel</td><td>@request.Status</td><td>@request.CreatedAtUtc.ToString("yyyy-MM-dd")</td></tr> } @if (!Model.ServiceRequests.Any()) { <tr><td colspan="6" class="text-center text-muted">No technical requests found.</td></tr> }</tbody></table></div>
+    <div class="admin-hero"><div><span>Yêu cầu kỹ thuật</span><h1>Quản lý yêu cầu kỹ thuật</h1><p>Theo dõi yêu cầu dịch vụ của khách hàng và việc chuyển thành phiếu sửa chữa.</p></div></div>
+    <div class="table-card table-responsive mt-4"><table class="table align-middle"><thead><tr><th>Mã</th><th>Khách hàng</th><th>Loại dịch vụ</th><th>Thiết bị</th><th>Trạng thái</th><th>Ngày tạo</th></tr></thead><tbody>@foreach (var request in Model.ServiceRequests) { <tr><td>@request.RequestCode</td><td>@request.CustomerId</td><td>@request.ServiceType</td><td>@request.DeviceType @request.DeviceModel</td><td>@request.Status</td><td>@request.CreatedAtUtc.ToString("yyyy-MM-dd")</td></tr> } @if (!Model.ServiceRequests.Any()) { <tr><td colspan="6" class="text-center text-muted">Không tìm thấy yêu cầu kỹ thuật.</td></tr> }</tbody></table></div>
 </section>

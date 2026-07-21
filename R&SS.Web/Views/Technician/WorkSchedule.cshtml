@@ -11,15 +11,15 @@
 }
 
 <section class="work-schedule-page">
-    <div class="schedule-header"><h1>Work Schedule</h1><p>Assigned technical tickets and completion deadlines.</p></div>
+    <div class="schedule-header"><h1>Lịch làm việc</h1><p>Các phiếu kỹ thuật được giao và thời hạn hoàn tất.</p></div>
     <div class="schedule-list table-responsive mt-4">
-        <h2>Task List</h2>
+        <h2>Danh sách công việc</h2>
         <table class="table align-middle">
-            <thead><tr><th>Task</th><th>Device</th><th>Customer</th><th>Status</th><th></th></tr></thead>
+            <thead><tr><th>Phiếu</th><th>Thiết bị</th><th>Khách hàng</th><th>Trạng thái</th><th></th></tr></thead>
             <tbody>
                 @foreach (var ticket in Model.Tickets)
                 {
-                    <tr><td>@ticket.TicketCode</td><td>@ticket.Brand @ticket.DeviceModel</td><td>@ticket.CustomerName</td><td><span class="badge text-bg-info">@ticket.Status</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@ticket.RepairOrderId">Open</a></td></tr>
+                    <tr><td>@ticket.TicketCode</td><td>@ticket.Brand @ticket.DeviceModel</td><td>@ticket.CustomerName</td><td><span class="badge text-bg-info">@ticket.Status</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@ticket.RepairOrderId">Mở</a></td></tr>
                 }
             </tbody>
         </table>

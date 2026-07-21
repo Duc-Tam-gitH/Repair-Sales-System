@@ -597,10 +597,30 @@ public class AuthService : IAuthService
 
     private async Task EnsureCustomerProfileAsync(User user)
     {
+        var existingCustomerForUser = await _unitOfWork.Customers.GetByUserIdAsync(user.UserId);
+        if (existingCustomerForUser is not null)
+        {
+            return;
+        }
+
         var customerCode = user.Username.Trim();
         var existingCustomer = await _unitOfWork.Customers.GetByCodeAsync(customerCode);
         if (existingCustomer is not null)
         {
+            if (existingCustomer.UserId.HasValue && existingCustomer.UserId.Value != user.UserId)
+            {
+                throw new InvalidOperationException("Customer code already belongs to another user.");
+            }
+
+            existingCustomer.UserId = user.UserId;
+            existingCustomer.User = user;
+            existingCustomer.FullName = user.FullName.Trim();
+            existingCustomer.Phone = string.IsNullOrWhiteSpace(user.Phone) ? null : user.Phone.Trim();
+            existingCustomer.Email = string.IsNullOrWhiteSpace(user.Email) ? null : user.Email.Trim();
+            existingCustomer.Address = string.IsNullOrWhiteSpace(user.Address) ? null : user.Address.Trim();
+            existingCustomer.IsActive = user.IsActive;
+            existingCustomer.UpdatedAt = DateTime.UtcNow;
+            _unitOfWork.Customers.Update(existingCustomer);
             return;
         }
 

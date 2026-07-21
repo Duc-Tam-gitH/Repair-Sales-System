@@ -13,6 +13,8 @@ namespace R_SS.BLL.Services;
 public class TechnicalTicketService : ITechnicalTicketService
 {
     private const string PendingReceptionStatus = "Pending Reception";
+    private const string ReceivedStatus = "Received";
+    private const string HandedOverToTechnicianStatus = "Handed Over to Technician";
     private const string PendingDeliveryConfirmationStatus = "Pending Delivery Confirmation";
     private const string PendingManualDeliveryStatus = "Pending Manual Delivery";
     private const string PendingDeliveryStatus = "Pending Delivery";
@@ -70,48 +72,116 @@ public class TechnicalTicketService : ITechnicalTicketService
             throw new NotFoundException("Customer not found.");
         }
 
-        customer.Email = request.CustomerEmail.Trim();
-        customer.Phone = request.CustomerPhone.Trim();
-        _unitOfWork.Customers.Update(customer);
-
-        var ticket = new RepairOrder
+        var technician = await GetAssignableTechnicianAsync(request.AssignedTechnicianId);
+        ServiceRequest? sourceRequest = null;
+        if (request.SourceServiceRequestId.HasValue)
         {
-            RepairOrderCode = CreateTicketCode(),
-            CustomerId = customer.CustomerId,
-            Customer = customer,
-            ReceivedByUserId = request.ReceivedByUserId,
-            DeviceType = request.DeviceType.Trim(),
-            Brand = request.Brand.Trim(),
-            DeviceName = Normalize(request.DeviceName),
-            DeviceModel = Normalize(request.DeviceModel),
-            SerialNumber = Normalize(request.SerialNumber),
-            RequestType = request.RequestType.Trim(),
-            IssueDescription = request.IssueDescription.Trim(),
-            DeviceCondition = request.DeviceCondition.Trim(),
-            Status = PendingReceptionStatus,
-            Notes = Normalize(request.Notes),
-            ReceivedDate = DateTime.UtcNow,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
+            sourceRequest = await _unitOfWork.ServiceRequests.GetByIdAsync(request.SourceServiceRequestId.Value);
+            if (sourceRequest is null || !sourceRequest.Status.Equals(PendingReceptionStatus, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("Service request is no longer pending reception.");
+            }
+        }
 
-        ticket.StatusHistories.Add(new RepairOrderStatusHistory
+        await _unitOfWork.BeginTransactionAsync();
+        RepairOrder ticket;
+        try
         {
-            RepairOrder = ticket,
-            UpdatedByUserId = request.ReceivedByUserId,
-            Status = PendingReceptionStatus,
-            Notes = "Ticket created.",
-            UpdatedAtUtc = DateTime.UtcNow
-        });
+            customer.Email = request.CustomerEmail.Trim();
+            customer.Phone = request.CustomerPhone.Trim();
+            _unitOfWork.Customers.Update(customer);
 
-        await _unitOfWork.RepairOrders.AddAsync(ticket);
-        await _unitOfWork.SaveChangesAsync();
+            ticket = new RepairOrder
+            {
+                RepairOrderCode = CreateTicketCode(),
+                CustomerId = customer.CustomerId,
+                Customer = customer,
+                ReceivedByUserId = request.ReceivedByUserId,
+                AssignedTechnicianId = technician.UserId,
+                AssignedTechnician = technician,
+                DeviceType = request.DeviceType.Trim(),
+                Brand = request.Brand.Trim(),
+                DeviceName = Normalize(request.DeviceName),
+                DeviceModel = Normalize(request.DeviceModel),
+                SerialNumber = Normalize(request.SerialNumber),
+                RequestType = request.RequestType.Trim(),
+                IssueDescription = request.IssueDescription.Trim(),
+                DeviceCondition = request.DeviceCondition.Trim(),
+                Status = HandedOverToTechnicianStatus,
+                Notes = Normalize(request.Notes),
+                ReceivedDate = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            ticket.StatusHistories.Add(new RepairOrderStatusHistory
+            {
+                RepairOrder = ticket,
+                UpdatedByUserId = request.ReceivedByUserId,
+                Status = ReceivedStatus,
+                Notes = "Ticket received by receptionist.",
+                UpdatedAtUtc = DateTime.UtcNow
+            });
+
+            ticket.StatusHistories.Add(new RepairOrderStatusHistory
+            {
+                RepairOrder = ticket,
+                UpdatedByUserId = request.ReceivedByUserId,
+                Status = HandedOverToTechnicianStatus,
+                Notes = $"Work handed over to technician {technician.FullName}.",
+                UpdatedAtUtc = DateTime.UtcNow
+            });
+
+            ticket.AssignmentHistories.Add(new TechnicianAssignmentHistory
+            {
+                RepairOrder = ticket,
+                AssignedByUserId = request.ReceivedByUserId,
+                AssignedTechnicianId = technician.UserId,
+                Notes = "Assigned and handed over during ticket creation.",
+                AssignedAtUtc = DateTime.UtcNow
+            });
+
+            if (sourceRequest is not null)
+            {
+                sourceRequest.Status = ReceivedStatus;
+                sourceRequest.RepairOrder = ticket;
+                sourceRequest.UpdatedAtUtc = DateTime.UtcNow;
+                _unitOfWork.ServiceRequests.Update(sourceRequest);
+            }
+
+            await _unitOfWork.RepairOrders.AddAsync(ticket);
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitAsync();
+        }
+        catch
+        {
+            await _unitOfWork.RollbackAsync();
+            throw new InvalidOperationException("Failed to assign technician. Please try again.");
+        }
+
         await _emailSender.SendTechnicalTicketCreatedAsync(customer.Email!, customer.FullName, ticket.RepairOrderCode);
         _logger.LogInformation("Created technical ticket {TicketCode}.", ticket.RepairOrderCode);
 
         var response = MapTicket(ticket, RoleConstants.Receptionist, customer.CustomerId);
         response.Message = "Technical ticket created successfully.";
         return response;
+    }
+
+    private async Task<User> GetAssignableTechnicianAsync(int technicianId)
+    {
+        var technicians = await _unitOfWork.Users.GetTechniciansAsync();
+        var technician = technicians.FirstOrDefault(user => user.UserId == technicianId);
+        if (technician is null)
+        {
+            throw new InvalidOperationException("Failed to assign technician. Please try again.");
+        }
+
+        if (!technician.IsActive || technician.AccountLockedUntilUtc > DateTime.UtcNow)
+        {
+            throw new InvalidOperationException("Failed to assign technician. Please try again.");
+        }
+
+        return technician;
     }
 
     public async Task<TechnicalTicketListResponse> GetTicketsAsync(ViewTechnicalTicketsRequest request)
@@ -591,6 +661,7 @@ public class TechnicalTicketService : ITechnicalTicketService
             Status = ticket.Status,
             AssignedTechnicianId = ticket.AssignedTechnicianId,
             AssignedTechnicianName = ticket.AssignedTechnician?.FullName,
+            IsHandedOverToTechnician = HasBeenHandedOverToTechnician(ticket),
             DeliveryConfirmationDeadlineUtc = ticket.DeliveryConfirmationDeadlineUtc,
             ShowConfirmDeliveryButton = isOwner && ticket.Status == PendingDeliveryConfirmationStatus,
             DeliveryOtpSentAtUtc = isStaffOtpViewer ? ticket.DeliveryOtpSentAtUtc : null,
@@ -616,6 +687,27 @@ public class TechnicalTicketService : ITechnicalTicketService
             viewer.ActorRole.Equals(RoleConstants.Admin, StringComparison.OrdinalIgnoreCase);
     }
 
+    private static bool HasBeenHandedOverToTechnician(RepairOrder ticket)
+    {
+        if (!ticket.AssignedTechnicianId.HasValue)
+        {
+            return false;
+        }
+
+        if (ticket.Status.Equals(HandedOverToTechnicianStatus, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (ticket.StatusHistories.Any(history => history.Status.Equals(HandedOverToTechnicianStatus, StringComparison.OrdinalIgnoreCase)))
+        {
+            return true;
+        }
+
+        return !ticket.Status.Equals(PendingReceptionStatus, StringComparison.OrdinalIgnoreCase) &&
+            !ticket.Status.Equals(ReceivedStatus, StringComparison.OrdinalIgnoreCase);
+    }
+
     private static void EnsureReceptionRole(string role)
     {
         if (!role.Equals(RoleConstants.Receptionist, StringComparison.OrdinalIgnoreCase) &&
@@ -638,6 +730,7 @@ public class TechnicalTicketService : ITechnicalTicketService
     private static bool CanCancelTicketStatus(string status)
     {
         return status.Equals(PendingReceptionStatus, StringComparison.OrdinalIgnoreCase) ||
+            status.Equals(HandedOverToTechnicianStatus, StringComparison.OrdinalIgnoreCase) ||
             status.Equals("Pending Receipt", StringComparison.OrdinalIgnoreCase) ||
             status.Equals("Under Inspection", StringComparison.OrdinalIgnoreCase) ||
             status.Equals("Pending Assignment", StringComparison.OrdinalIgnoreCase) ||

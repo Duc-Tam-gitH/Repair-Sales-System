@@ -18,20 +18,20 @@
     <div class="task-hero">
         <div><span>@Model.Ticket.TicketCode</span><h1>@Model.Ticket.Brand @Model.Ticket.DeviceModel Repair</h1><p>Status: @Model.Ticket.Status</p></div>
         <div class="action-stack">
-            <a class="btn btn-light" asp-controller="Technician" asp-action="RecordFaults" asp-route-id="@Model.Ticket.RepairOrderId">Record Faults</a>
-            <a class="btn btn-outline-light" asp-controller="Technician" asp-action="UpdateProgress" asp-route-id="@Model.Ticket.RepairOrderId">Update Progress</a>
-            <a class="btn btn-outline-light" asp-controller="Technician" asp-action="RecordResults" asp-route-id="@Model.Ticket.RepairOrderId">Record Results</a>
+            <a class="btn btn-light" asp-controller="Technician" asp-action="RecordFaults" asp-route-id="@Model.Ticket.RepairOrderId">Ghi nhận lỗi</a>
+            <a class="btn btn-outline-light" asp-controller="Technician" asp-action="UpdateProgress" asp-route-id="@Model.Ticket.RepairOrderId">Cập nhật tiến độ</a>
+            <a class="btn btn-outline-light" asp-controller="Technician" asp-action="RecordResults" asp-route-id="@Model.Ticket.RepairOrderId">Ghi nhận kết quả</a>
         </div>
     </div>
 
     <div class="row g-4">
-        <div class="col-lg-4"><section class="detail-card"><h2>Customer Info</h2><p><strong>Name:</strong> @Model.Ticket.CustomerName</p><p><strong>Phone:</strong> @Model.Ticket.CustomerPhone</p><p><strong>Email:</strong> @Model.Ticket.CustomerEmail</p></section></div>
-        <div class="col-lg-4"><section class="detail-card"><h2>Device Info</h2><p><strong>Type:</strong> @Model.Ticket.DeviceType</p><p><strong>Brand/Model:</strong> @Model.Ticket.Brand / @Model.Ticket.DeviceModel</p><p><strong>Condition:</strong> @Model.Ticket.DeviceCondition</p></section></div>
-        <div class="col-lg-4"><section class="detail-card"><h2>Initial Fault</h2><p>@Model.Ticket.IssueDescription</p></section></div>
+        <div class="col-lg-4"><section class="detail-card"><h2>Thông tin khách hàng</h2><p><strong>Tên:</strong> @Model.Ticket.CustomerName</p><p><strong>Điện thoại:</strong> @Model.Ticket.CustomerPhone</p><p><strong>Email:</strong> @Model.Ticket.CustomerEmail</p></section></div>
+        <div class="col-lg-4"><section class="detail-card"><h2>Thông tin thiết bị</h2><p><strong>Loại:</strong> @Model.Ticket.DeviceType</p><p><strong>Hãng/Model:</strong> @Model.Ticket.Brand / @Model.Ticket.DeviceModel</p><p><strong>Tình trạng:</strong> @Model.Ticket.DeviceCondition</p></section></div>
+        <div class="col-lg-4"><section class="detail-card"><h2>Lỗi ban đầu</h2><p>@Model.Ticket.IssueDescription</p></section></div>
     </div>
 
     <section class="progress-log mt-4">
-        <h2>Repair History / Progress Log</h2>
+        <h2>Lịch sử sửa chữa / nhật ký tiến độ</h2>
         <div class="timeline">
             @foreach (var item in Model.History)
             {

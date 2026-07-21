@@ -1,9 +1,9 @@
 @model ServiceRatingViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Service Rating";
+    ViewData["Title"] = "Đánh giá dịch vụ";
     ViewData["ActiveRole"] = "Customer";
-    ViewData["RoleDisplay"] = "Customer User";
+    ViewData["RoleDisplay"] = "Khách hàng";
 }
 
 @section Styles {
@@ -12,8 +12,8 @@
 
 <section class="rating-page">
     <div class="rating-card">
-        <h1>Service Rating</h1>
-        <p>Select a completed order or delivered repair and share your feedback.</p>
+        <h1>Đánh giá dịch vụ</h1>
+        <p>Chọn đơn hàng đã hoàn tất hoặc phiếu sửa chữa đã bàn giao để gửi phản hồi.</p>
 
         @if (TempData["SuccessMessage"] is string successMessage)
         {
@@ -23,22 +23,22 @@
 
         <form method="post" asp-controller="Customer" asp-action="ServiceRating">
             @Html.AntiForgeryToken()
-            <label class="form-label" for="eligibleItem">Completed Item</label>
+            <label class="form-label" for="eligibleItem">Mục đã hoàn tất</label>
             <select class="form-select form-select-lg" id="eligibleItem" name="ItemId">
                 @foreach (var item in Model.EligibleItems.Items)
                 {
-                    <option value="@item.Id" data-type="@item.Type">@item.Code - @item.Type</option>
+                    <option value="@item.Id" data-type="@item.Type">@item.Code - @(item.Type == "repair" ? "Sửa chữa" : "Đơn hàng")</option>
                 }
             </select>
             <input id="feedbackType" name="Type" type="hidden" value="@(Model.EligibleItems.Items.FirstOrDefault()?.Type ?? "order")" />
 
-            <label class="form-label mt-4" for="Rating">Rating</label>
+            <label class="form-label mt-4" for="Rating">Điểm đánh giá</label>
             <input class="form-control" id="Rating" name="Rating" type="number" min="1" max="5" value="@Model.Feedback.Rating" />
 
-            <label class="form-label mt-4" for="comment">Comment / Feedback</label>
-            <textarea class="form-control" id="comment" name="Comment" rows="5" placeholder="Tell us what went well or what we can improve.">@Model.Feedback.Comment</textarea>
+            <label class="form-label mt-4" for="comment">Nhận xét / Phản hồi</label>
+            <textarea class="form-control" id="comment" name="Comment" rows="5" placeholder="Hãy cho chúng tôi biết điểm tốt hoặc điều cần cải thiện.">@Model.Feedback.Comment</textarea>
 
-            <button class="btn btn-primary btn-lg mt-4" type="submit" disabled="@(!Model.EligibleItems.Items.Any())">Submit Rating</button>
+            <button class="btn btn-primary btn-lg mt-4" type="submit" disabled="@(!Model.EligibleItems.Items.Any())">Gửi đánh giá</button>
         </form>
     </div>
 </section>

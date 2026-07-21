@@ -1,9 +1,9 @@
 @model IReadOnlyCollection<ServiceRequestResponse>
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Online Repair Requests";
+    ViewData["Title"] = "Yêu cầu sửa chữa trực tuyến";
     ViewData["ActiveRole"] = "Reception";
-    ViewData["RoleDisplay"] = "Reception Staff";
+    ViewData["RoleDisplay"] = "Nhân viên tiếp nhận";
 }
 
 @section Styles {
@@ -12,20 +12,20 @@
 
 <section class="repair-request-page">
     <div class="request-header">
-        <h1>Online Repair Request List</h1>
-        <a class="btn btn-primary" asp-controller="Reception" asp-action="EquipmentReception">Create Intake</a>
+        <h1>Danh sách yêu cầu sửa chữa trực tuyến</h1>
+        <a class="btn btn-primary" asp-controller="Reception" asp-action="EquipmentReception">Tạo phiếu tiếp nhận</a>
     </div>
     <form class="request-tools" method="get" asp-controller="Reception" asp-action="RepairRequestList">
-        <input class="form-control" name="keyword" value="@ViewData["Keyword"]" type="search" placeholder="Search request or device..." />
-        <button class="btn btn-outline-primary" type="submit">Search</button>
+        <input class="form-control" name="keyword" value="@ViewData["Keyword"]" type="search" placeholder="Tìm yêu cầu hoặc thiết bị..." />
+        <button class="btn btn-outline-primary" type="submit">Tìm kiếm</button>
     </form>
     <div class="table-card table-responsive">
         <table class="table align-middle">
-            <thead><tr><th>Request ID</th><th>Service Type</th><th>Device Type</th><th>Fault Description</th><th>Status</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Mã yêu cầu</th><th>Loại dịch vụ</th><th>Loại thiết bị</th><th>Mô tả lỗi</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
             <tbody>
                 @if (!Model.Any())
                 {
-                    <tr><td colspan="6">No pending online repair requests found.</td></tr>
+                    <tr><td colspan="6">Không tìm thấy yêu cầu sửa chữa trực tuyến đang chờ.</td></tr>
                 }
                 else
                 {
@@ -37,7 +37,7 @@
                             <td>@request.Brand @request.DeviceModel - @request.DeviceType</td>
                             <td>@request.Description</td>
                             <td><span class="badge text-bg-warning">@request.Status</span></td>
-                            <td><a class="btn btn-sm btn-success" asp-controller="Reception" asp-action="EquipmentReception" asp-route-requestId="@request.ServiceRequestId">Accept Request</a></td>
+                            <td><a class="btn btn-sm btn-success" asp-controller="Reception" asp-action="EquipmentReception" asp-route-requestId="@request.ServiceRequestId">Tiếp nhận yêu cầu</a></td>
                         </tr>
                     }
                 }

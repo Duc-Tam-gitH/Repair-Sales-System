@@ -1,9 +1,9 @@
 @model TechnicalTicketListResponse
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Technical Reports";
+    ViewData["Title"] = "Báo cáo kỹ thuật";
     ViewData["ActiveRole"] = "Reception";
-    ViewData["RoleDisplay"] = "Reception Staff";
+    ViewData["RoleDisplay"] = "Nhân viên tiếp nhận";
 }
 
 @section Styles {
@@ -12,8 +12,8 @@
 
 <section class="technical-report-list-page">
     <div class="report-list-header">
-        <h1>Technical Report List</h1>
-        <a class="btn btn-primary" asp-controller="Reception" asp-action="EquipmentReception">New Technical Report</a>
+        <h1>Danh sách báo cáo kỹ thuật</h1>
+        <a class="btn btn-primary" asp-controller="Reception" asp-action="EquipmentReception">Báo cáo kỹ thuật mới</a>
     </div>
     @if (TempData["ErrorMessage"] is string errorMessage)
     {
@@ -21,7 +21,7 @@
     }
     <div class="table-card table-responsive">
         <table class="table align-middle">
-            <thead><tr><th>Report Code</th><th>Customer Name</th><th>Equipment</th><th>Status</th><th>Technician</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Mã báo cáo</th><th>Tên khách hàng</th><th>Thiết bị</th><th>Trạng thái</th><th>Kỹ thuật viên</th><th>Thao tác</th></tr></thead>
             <tbody>
                 @if (!Model.Tickets.Any())
                 {
@@ -36,8 +36,8 @@
                             <td>@ticket.CustomerName</td>
                             <td>@ticket.Brand @ticket.DeviceModel - @ticket.DeviceType</td>
                             <td><span class="badge text-bg-info">@ticket.Status</span></td>
-                            <td>@(ticket.AssignedTechnicianName ?? "Unassigned")</td>
-                            <td><a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="TechnicalReportDetails" asp-route-id="@ticket.RepairOrderId">View Details</a></td>
+                            <td>@(ticket.AssignedTechnicianName ?? "Chưa phân công")</td>
+                            <td><a class="btn btn-sm btn-outline-primary" asp-controller="Reception" asp-action="TechnicalReportDetails" asp-route-id="@ticket.RepairOrderId">Xem chi tiết</a></td>
                         </tr>
                     }
                 }

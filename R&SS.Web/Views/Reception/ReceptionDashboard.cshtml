@@ -1,8 +1,8 @@
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Reception Dashboard";
+    ViewData["Title"] = "Bảng điều khiển tiếp nhận";
     ViewData["ActiveRole"] = "Reception";
-    ViewData["RoleDisplay"] = "Reception Staff";
+    ViewData["RoleDisplay"] = "Nhân viên tiếp nhận";
 }
 
 @section Styles {
@@ -13,38 +13,38 @@
 <section class="reception-dashboard-page">
     <div class="reception-hero">
         <div>
-            <span>Front Desk</span>
-            <h1>Reception Dashboard</h1>
-            <p>Track online requests, device intake, repair slips, and handover work from one operational view.</p>
+            <span>Quầy tiếp nhận</span>
+            <h1>Bảng điều khiển tiếp nhận</h1>
+            <p>Theo dõi yêu cầu trực tuyến, tiếp nhận thiết bị, phiếu sửa chữa và bàn giao trong một màn hình vận hành.</p>
         </div>
-        <a class="btn btn-light" asp-controller="Reception" asp-action="EquipmentReception">Receive Device</a>
+        <a class="btn btn-light" asp-controller="Reception" asp-action="EquipmentReception">Tiếp nhận thiết bị</a>
     </div>
 
     <div class="row g-4">
-        <div class="col-md-6 col-xl-3"><article class="metric-card pending"><i class="fa-regular fa-clock"></i><span>Total Pending Requests</span><strong>18</strong><a asp-controller="Reception" asp-action="RepairRequestList">View Pending Requests</a></article></div>
-        <div class="col-md-6 col-xl-3"><article class="metric-card processing"><i class="fa-solid fa-screwdriver-wrench"></i><span>Total Processing Slips</span><strong>42</strong><a asp-controller="Reception" asp-action="TechnicalReportList">View Processing Slips</a></article></div>
-        <div class="col-md-6 col-xl-3"><article class="metric-card handover"><i class="fa-solid fa-handshake"></i><span>Total Handover Slips</span><strong>9</strong><a asp-controller="Reception" asp-action="DeviceHandover">View Handover Slips</a></article></div>
-        <div class="col-md-6 col-xl-3"><article class="metric-card tasks"><i class="fa-solid fa-inbox"></i><span>Total Tasks to be Processed</span><strong>27</strong><a asp-controller="Reception" asp-action="EquipmentReception">Process Incoming Devices</a></article></div>
+        <div class="col-md-6 col-xl-3"><article class="metric-card pending"><i class="fa-regular fa-clock"></i><span>Tổng yêu cầu đang chờ</span><strong>18</strong><a asp-controller="Reception" asp-action="RepairRequestList">Xem yêu cầu đang chờ</a></article></div>
+        <div class="col-md-6 col-xl-3"><article class="metric-card processing"><i class="fa-solid fa-screwdriver-wrench"></i><span>Tổng phiếu đang xử lý</span><strong>42</strong><a asp-controller="Reception" asp-action="TechnicalReportList">Xem phiếu đang xử lý</a></article></div>
+        <div class="col-md-6 col-xl-3"><article class="metric-card handover"><i class="fa-solid fa-handshake"></i><span>Tổng phiếu bàn giao</span><strong>9</strong><a asp-controller="Reception" asp-action="DeviceHandover">Xem phiếu bàn giao</a></article></div>
+        <div class="col-md-6 col-xl-3"><article class="metric-card tasks"><i class="fa-solid fa-inbox"></i><span>Tổng việc cần xử lý</span><strong>27</strong><a asp-controller="Reception" asp-action="EquipmentReception">Xử lý thiết bị tiếp nhận</a></article></div>
     </div>
 
     <section class="reception-flow mt-4" aria-labelledby="flow-title">
-        <h2 id="flow-title">Front Desk Workflow</h2>
+        <h2 id="flow-title">Quy trình quầy tiếp nhận</h2>
         <div class="flow-steps">
-            <article><span>01</span><strong>Approve Request</strong><small>Validate online customer repair submissions.</small></article>
-            <article><span>02</span><strong>Receive Device</strong><small>Record customer, equipment, accessories, and initial fault.</small></article>
-            <article><span>03</span><strong>Create Report</strong><small>Assign technician and issue a technical report code.</small></article>
-            <article><span>04</span><strong>Handover</strong><small>Confirm pickup, payment, and delivery completion.</small></article>
+            <article><span>01</span><strong>Duyệt yêu cầu</strong><small>Xác thực yêu cầu sửa chữa trực tuyến của khách hàng.</small></article>
+            <article><span>02</span><strong>Tiếp nhận thiết bị</strong><small>Ghi nhận khách hàng, thiết bị, phụ kiện và lỗi ban đầu.</small></article>
+            <article><span>03</span><strong>Tạo báo cáo</strong><small>Phân công kỹ thuật viên và cấp mã báo cáo kỹ thuật.</small></article>
+            <article><span>04</span><strong>Bàn giao</strong><small>Xác nhận nhận máy, thanh toán và hoàn tất bàn giao.</small></article>
         </div>
     </section>
 
     <div class="dashboard-panel mt-4">
-        <h2>Today's Front Desk Queue</h2>
+        <h2>Hàng đợi quầy tiếp nhận hôm nay</h2>
         <table class="table align-middle">
-            <thead><tr><th>Task</th><th>Customer</th><th>Priority</th><th>Status</th></tr></thead>
+            <thead><tr><th>Công việc</th><th>Khách hàng</th><th>Ưu tiên</th><th>Trạng thái</th></tr></thead>
             <tbody>
-                <tr><td>Approve online request</td><td>Minh Tran</td><td>High</td><td><span class="badge text-bg-warning">Pending</span></td></tr>
-                <tr><td>Receive laptop</td><td>Anya Pham</td><td>Normal</td><td><span class="badge text-bg-info">Waiting</span></td></tr>
-                <tr><td>Handover phone</td><td>David Lee</td><td>Normal</td><td><span class="badge text-bg-success">Ready</span></td></tr>
+                <tr><td>Duyệt yêu cầu trực tuyến</td><td>Minh Tran</td><td>Cao</td><td><span class="badge text-bg-warning">Đang chờ</span></td></tr>
+                <tr><td>Tiếp nhận laptop</td><td>Anya Pham</td><td>Bình thường</td><td><span class="badge text-bg-info">Đang chờ</span></td></tr>
+                <tr><td>Bàn giao điện thoại</td><td>David Lee</td><td>Bình thường</td><td><span class="badge text-bg-success">Sẵn sàng</span></td></tr>
             </tbody>
         </table>
     </div>

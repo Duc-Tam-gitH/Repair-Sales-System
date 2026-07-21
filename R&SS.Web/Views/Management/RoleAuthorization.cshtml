@@ -1,9 +1,9 @@
 @model ManagementViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Role Authorization";
+    ViewData["Title"] = "Phân quyền vai trò";
     ViewData["ActiveRole"] = "Management";
-    ViewData["RoleDisplay"] = "Manager";
+    ViewData["RoleDisplay"] = "Quản lý";
 }
 
 @section Styles {
@@ -11,6 +11,6 @@
 }
 
 <section class="role-authorization-page">
-    <div class="admin-hero"><div><span>Roles</span><h1>Role Authorization</h1><p>Review roles and account assignments.</p></div></div>
-    <div class="table-card table-responsive mt-4"><table class="table align-middle"><thead><tr><th>Role</th><th>Description</th><th>Assigned Users</th></tr></thead><tbody>@foreach (var role in Model.Roles) { <tr><td>@role.RoleName</td><td>@(role.Description ?? "-")</td><td>@Model.Users.Count(user => user.UserRoles.Any(userRole => userRole.RoleId == role.RoleId))</td></tr> }</tbody></table></div>
+    <div class="admin-hero"><div><span>Vai trò</span><h1>Phân quyền vai trò</h1><p>Xem vai trò và phân công tài khoản.</p></div></div>
+    <div class="table-card table-responsive mt-4"><table class="table align-middle"><thead><tr><th>Vai trò</th><th>Mô tả</th><th>Người dùng được phân công</th></tr></thead><tbody>@foreach (var role in Model.Roles) { <tr><td>@role.RoleName</td><td>@(role.Description ?? "-")</td><td>@Model.Users.Count(user => user.UserRoles.Any(userRole => userRole.RoleId == role.RoleId))</td></tr> }</tbody></table></div>
 </section>

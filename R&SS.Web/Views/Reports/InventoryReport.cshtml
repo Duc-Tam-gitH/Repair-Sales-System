@@ -1,9 +1,9 @@
 @model InventoryReportViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Inventory Report";
+    ViewData["Title"] = "Báo cáo tồn kho";
     ViewData["ActiveRole"] = "Reports";
-    ViewData["RoleDisplay"] = "Reports Staff";
+    ViewData["RoleDisplay"] = "Nhân viên báo cáo";
     var items = Model.Report.Items;
 }
 
@@ -12,9 +12,9 @@
 }
 
 <section class="report-page inventory-report-page">
-    <div class="report-hero"><div><span>Inventory Analytics</span><h1>Inventory Report</h1><p>Review current stock, movement history, and estimated value.</p></div></div>
-    <form class="filter-panel" method="get" asp-controller="Reports" asp-action="InventoryReport"><select class="form-select" name="stockStatus"><option value="all">All Stock</option><option value="low">Low Stock</option></select><button class="btn btn-primary" type="submit">Generate Report</button></form>
-    <div class="row g-4"><div class="col-md-3"><article class="summary-card"><span>Total Items in Stock</span><strong>@items.Sum(item => item.StockQuantity)</strong></article></div><div class="col-md-3"><article class="summary-card"><span>Total Products</span><strong>@items.Count</strong></article></div><div class="col-md-3"><article class="summary-card low"><span>Low Stock Items</span><strong>@items.Count(item => item.InventoryStatus == "Low Stock")</strong></article></div><div class="col-md-3"><article class="summary-card empty"><span>Out of Stock Items</span><strong>@items.Count(item => item.StockQuantity <= 0)</strong></article></div></div>
-    <section class="table-card mt-4 table-responsive"><h2>Inventory Details</h2><table class="table align-middle"><thead><tr><th>Item Code</th><th>Item Name</th><th>Receipts</th><th>Issues</th><th>Current Quantity</th><th>Status</th></tr></thead><tbody>@foreach (var item in items) { <tr><td>@item.ProductCode</td><td>@item.ProductName</td><td>@item.ReceiptQuantity</td><td>@item.IssueQuantity</td><td>@item.StockQuantity</td><td>@item.InventoryStatus</td></tr> } @if (!items.Any()) { <tr><td colspan="6" class="text-center text-muted">@Model.Report.Message</td></tr> }</tbody></table></section>
-    <section class="table-card mt-4 table-responsive"><h2>Inventory Movement</h2><div class="value-box">Total estimated value of current stock: <strong>@Model.EstimatedValue.ToString("C")</strong></div></section>
+    <div class="report-hero"><div><span>Phân tích tồn kho</span><h1>Báo cáo tồn kho</h1><p>Xem tồn kho hiện tại, lịch sử biến động và giá trị ước tính.</p></div></div>
+    <form class="filter-panel" method="get" asp-controller="Reports" asp-action="InventoryReport"><select class="form-select" name="stockStatus"><option value="all">Tất cả tồn kho</option><option value="low">Sắp hết hàng</option></select><button class="btn btn-primary" type="submit">Tạo báo cáo</button></form>
+    <div class="row g-4"><div class="col-md-3"><article class="summary-card"><span>Tổng số lượng tồn kho</span><strong>@items.Sum(item => item.StockQuantity)</strong></article></div><div class="col-md-3"><article class="summary-card"><span>Tổng sản phẩm</span><strong>@items.Count</strong></article></div><div class="col-md-3"><article class="summary-card low"><span>Mặt hàng sắp hết</span><strong>@items.Count(item => item.InventoryStatus == "Sắp hết hàng")</strong></article></div><div class="col-md-3"><article class="summary-card empty"><span>Mặt hàng hết hàng</span><strong>@items.Count(item => item.StockQuantity <= 0)</strong></article></div></div>
+    <section class="table-card mt-4 table-responsive"><h2>Chi tiết tồn kho</h2><table class="table align-middle"><thead><tr><th>Mã mặt hàng</th><th>Tên mặt hàng</th><th>Nhập kho</th><th>Xuất kho</th><th>Số lượng hiện tại</th><th>Trạng thái</th></tr></thead><tbody>@foreach (var item in items) { <tr><td>@item.ProductCode</td><td>@item.ProductName</td><td>@item.ReceiptQuantity</td><td>@item.IssueQuantity</td><td>@item.StockQuantity</td><td>@item.InventoryStatus</td></tr> } @if (!items.Any()) { <tr><td colspan="6" class="text-center text-muted">@Model.Report.Message</td></tr> }</tbody></table></section>
+    <section class="table-card mt-4 table-responsive"><h2>Biến động tồn kho</h2><div class="value-box">Tổng giá trị ước tính của tồn kho hiện tại: <strong>@Model.EstimatedValue.ToString("C")</strong></div></section>
 </section>

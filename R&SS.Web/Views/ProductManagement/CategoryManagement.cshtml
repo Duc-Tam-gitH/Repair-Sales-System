@@ -1,9 +1,9 @@
 @model ProductCategoryManagementViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Category Management";
+    ViewData["Title"] = "Quản lý danh mục";
     ViewData["ActiveRole"] = "ProductManagement";
-    ViewData["RoleDisplay"] = "Product Staff";
+    ViewData["RoleDisplay"] = "Nhân viên sản phẩm";
 }
 
 @section Styles {
@@ -12,8 +12,8 @@
 
 <section class="category-management-page">
     <div class="product-admin-header">
-        <div><span>Catalog Setup</span><h1>Product Category Management</h1><p>Manage active and discontinued sales categories used by the product catalog.</p></div>
-        <a class="btn btn-primary" asp-controller="ProductManagement" asp-action="ProductList">Products</a>
+        <div><span>Thiết lập danh mục</span><h1>Quản lý danh mục sản phẩm</h1><p>Quản lý các danh mục bán hàng đang dùng và đã ngừng dùng trong danh mục sản phẩm.</p></div>
+        <a class="btn btn-primary" asp-controller="ProductManagement" asp-action="ProductList">Sản phẩm</a>
     </div>
 
     @if (TempData["SuccessMessage"] is string success)
@@ -27,19 +27,19 @@
     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
     <form class="category-tools" method="get" asp-controller="ProductManagement" asp-action="CategoryManagement">
-        <input class="form-control" name="keyword" value="@Model.Keyword" type="search" placeholder="Search by Category Name..." />
-        <button class="btn btn-outline-primary" type="submit">Search</button>
+        <input class="form-control" name="keyword" value="@Model.Keyword" type="search" placeholder="Tìm theo tên danh mục..." />
+        <button class="btn btn-outline-primary" type="submit">Tìm kiếm</button>
     </form>
 
     <div class="row g-4">
         <div class="col-lg-8">
             <div class="table-card table-responsive">
                 <table class="table align-middle">
-                    <thead><tr><th>Category ID</th><th>Category Name</th><th>Description</th><th>Status</th><th>Actions</th></tr></thead>
+                    <thead><tr><th>Mã danh mục</th><th>Tên danh mục</th><th>Mô tả</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
                     <tbody>
                         @if (!Model.Categories.Any())
                         {
-                            <tr><td colspan="5" class="text-center text-muted">No categories found.</td></tr>
+                            <tr><td colspan="5" class="text-center text-muted">Không tìm thấy danh mục.</td></tr>
                         }
                         else
                         {
@@ -59,18 +59,18 @@
                                     <td><input class="form-control" form="@editFormId" name="Description" value="@category.Description" maxlength="255" /></td>
                                     <td>
                                         <select class="form-select form-select-sm" form="@editFormId" name="IsActive">
-                                            <option value="true" selected="@category.IsActive">Active</option>
-                                            <option value="false" selected="@(!category.IsActive)">Discontinued</option>
+                                            <option value="true" selected="@category.IsActive">Đang hoạt động</option>
+                                            <option value="false" selected="@(!category.IsActive)">Ngừng sử dụng</option>
                                         </select>
                                     </td>
                                     <td>
                                         <div class="d-flex gap-2">
-                                            <button class="btn btn-sm btn-outline-secondary" form="@editFormId" type="submit">Edit</button>
+                                            <button class="btn btn-sm btn-outline-secondary" form="@editFormId" type="submit">Sửa</button>
                                             <form id="@deleteFormId" method="post" asp-controller="ProductManagement" asp-action="DeleteCategory">
                                                 @Html.AntiForgeryToken()
                                                 <input type="hidden" name="categoryId" value="@category.ProductCategoryId" />
                                             </form>
-                                            <button class="btn btn-sm btn-outline-danger" form="@deleteFormId" type="submit">Delete</button>
+                                            <button class="btn btn-sm btn-outline-danger" form="@deleteFormId" type="submit">Xóa</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -83,12 +83,12 @@
         <div class="col-lg-4">
             <form class="category-form" method="post" asp-controller="ProductManagement" asp-action="AddCategory">
                 @Html.AntiForgeryToken()
-                <h2>Add Category</h2>
-                <label class="form-label" for="CategoryName">Category Name</label>
+                <h2>Thêm danh mục</h2>
+                <label class="form-label" for="CategoryName">Tên danh mục</label>
                 <input class="form-control" id="CategoryName" name="CategoryName" value="@Model.Category.CategoryName" required maxlength="100" />
-                <label class="form-label mt-3" for="Description">Description</label>
+                <label class="form-label mt-3" for="Description">Mô tả</label>
                 <textarea class="form-control" id="Description" name="Description" rows="4" maxlength="255">@Model.Category.Description</textarea>
-                <button class="btn btn-primary w-100 mt-4" type="submit">Save</button>
+                <button class="btn btn-primary w-100 mt-4" type="submit">Lưu</button>
             </form>
         </div>
     </div>

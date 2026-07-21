@@ -1,8 +1,8 @@
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Customer Home";
+    ViewData["Title"] = "Trang khách hàng";
     ViewData["ActiveRole"] = "Customer";
-    ViewData["RoleDisplay"] = "Customer User";
+    ViewData["RoleDisplay"] = "Khách hàng";
 }
 
 @section Styles {
@@ -13,62 +13,62 @@
 <section class="customer-home-page">
     <div class="customer-hero">
         <div>
-            <span>Repair & Sales Store</span>
-            <h1>Reliable repairs, genuine parts, and everyday tech essentials.</h1>
-            <p>Book technical services, browse featured products, and track every order from one customer workspace.</p>
+            <span>Cửa hàng sửa chữa & bán hàng</span>
+            <h1>Sửa chữa uy tín, linh kiện chính hãng và thiết bị công nghệ thiết yếu.</h1>
+            <p>Đặt dịch vụ kỹ thuật, xem sản phẩm nổi bật và theo dõi mọi đơn hàng trong một không gian khách hàng.</p>
             <div class="hero-actions">
-                <a class="btn btn-light" asp-controller="Customer" asp-action="ProductList">Browse Product Catalog</a>
-                <a class="btn btn-outline-light" asp-controller="Customer" asp-action="SubmitRepair">Submit Repair Request</a>
-                <a class="btn btn-outline-light" asp-controller="Customer" asp-action="SearchRepair">Check Repair Progress</a>
+                <a class="btn btn-light" asp-controller="Customer" asp-action="ProductList">Xem danh mục sản phẩm</a>
+                <a class="btn btn-outline-light" asp-controller="Customer" asp-action="SubmitRepair">Gửi yêu cầu sửa chữa</a>
+                <a class="btn btn-outline-light" asp-controller="Customer" asp-action="SearchRepair">Kiểm tra tiến độ sửa chữa</a>
             </div>
         </div>
     </div>
 
-    <div class="customer-stat-grid" aria-label="Customer overview">
+    <div class="customer-stat-grid" aria-label="Tổng quan khách hàng">
         <article class="customer-stat-card">
             <i class="fa-solid fa-screwdriver-wrench"></i>
-            <span>Active Repairs</span>
+            <span>Phiếu sửa chữa đang xử lý</span>
             <strong>2</strong>
-            <small>1 awaiting parts</small>
+            <small>1 phiếu đang chờ linh kiện</small>
         </article>
         <article class="customer-stat-card">
             <i class="fa-solid fa-box-open"></i>
-            <span>Open Orders</span>
+            <span>Đơn hàng đang mở</span>
             <strong>3</strong>
-            <small>1 pending payment</small>
+            <small>1 đơn đang chờ thanh toán</small>
         </article>
         <article class="customer-stat-card">
             <i class="fa-solid fa-cart-shopping"></i>
-            <span>Cart Items</span>
+            <span>Sản phẩm trong giỏ</span>
             <strong>4</strong>
-            <small>Ready for checkout</small>
+            <small>Sẵn sàng thanh toán</small>
         </article>
         <article class="customer-stat-card">
             <i class="fa-solid fa-bell"></i>
-            <span>Notifications</span>
+            <span>Thông báo</span>
             <strong>6</strong>
-            <small>Repair and delivery updates</small>
+            <small>Cập nhật sửa chữa và giao hàng</small>
         </article>
     </div>
 
     <div class="section-heading">
-        <h2>Featured Products</h2>
-        <a asp-controller="Customer" asp-action="ProductList">View all</a>
+        <h2>Sản phẩm nổi bật</h2>
+        <a asp-controller="Customer" asp-action="ProductList">Xem tất cả</a>
     </div>
     <div class="row g-4">
-        <div class="col-md-4"><article class="product-card"><div class="product-image">Laptop</div><h3>ProBook 14</h3><p>Business laptop with SSD storage and warranty support.</p><strong>$849</strong></article></div>
-        <div class="col-md-4"><article class="product-card"><div class="product-image">Phone</div><h3>Nova X Phone</h3><p>Bright display, fast charging, and dual SIM support.</p><strong>$499</strong></article></div>
-        <div class="col-md-4"><article class="product-card"><div class="product-image">Accessory</div><h3>USB-C Service Kit</h3><p>Adapters and cables selected by our technicians.</p><strong>$39</strong></article></div>
+        <div class="col-md-4"><article class="product-card"><div class="product-image">Laptop</div><h3>ProBook 14</h3><p>Laptop doanh nghiệp có ổ SSD và hỗ trợ bảo hành.</p><strong>$849</strong></article></div>
+        <div class="col-md-4"><article class="product-card"><div class="product-image">Điện thoại</div><h3>Nova X Phone</h3><p>Màn hình sáng, sạc nhanh và hỗ trợ hai SIM.</p><strong>$499</strong></article></div>
+        <div class="col-md-4"><article class="product-card"><div class="product-image">Phụ kiện</div><h3>Bộ USB-C</h3><p>Bộ chuyển đổi và cáp được kỹ thuật viên lựa chọn.</p><strong>$39</strong></article></div>
     </div>
 
     <div class="section-heading mt-5">
-        <h2>Best-Selling Products</h2>
-        <span>Popular with repair customers this month</span>
+        <h2>Sản phẩm bán chạy</h2>
+        <span>Được khách sửa chữa lựa chọn nhiều trong tháng này</span>
     </div>
     <div class="row g-4">
-        <div class="col-md-3"><article class="mini-card"><h3>Wireless Mouse</h3><p>In Stock</p><strong>$24</strong></article></div>
-        <div class="col-md-3"><article class="mini-card"><h3>16GB RAM Module</h3><p>In Stock</p><strong>$68</strong></article></div>
-        <div class="col-md-3"><article class="mini-card"><h3>Phone Charger</h3><p>In Stock</p><strong>$19</strong></article></div>
-        <div class="col-md-3"><article class="mini-card"><h3>SSD 1TB</h3><p>Limited Stock</p><strong>$92</strong></article></div>
+        <div class="col-md-3"><article class="mini-card"><h3>Chuột không dây</h3><p>Còn hàng</p><strong>$24</strong></article></div>
+        <div class="col-md-3"><article class="mini-card"><h3>RAM 16GB</h3><p>Còn hàng</p><strong>$68</strong></article></div>
+        <div class="col-md-3"><article class="mini-card"><h3>Sạc điện thoại</h3><p>Còn hàng</p><strong>$19</strong></article></div>
+        <div class="col-md-3"><article class="mini-card"><h3>SSD 1TB</h3><p>Số lượng có hạn</p><strong>$92</strong></article></div>
     </div>
 </section>

@@ -1,9 +1,9 @@
 @model CustomerCheckoutViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Checkout";
+    ViewData["Title"] = "Thanh toán";
     ViewData["ActiveRole"] = "Customer";
-    ViewData["RoleDisplay"] = "Customer User";
+    ViewData["RoleDisplay"] = "Khách hàng";
 }
 
 @section Styles {
@@ -11,44 +11,44 @@
 }
 
 <section class="checkout-page">
-    <h1>Checkout</h1>
+    <h1>Thanh toán</h1>
     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
     <div class="row g-4">
         <div class="col-lg-7">
             <form class="checkout-form" method="post" asp-controller="Customer" asp-action="Checkout">
                 @Html.AntiForgeryToken()
-                <h2>Customer Information</h2>
+                <h2>Thông tin khách hàng</h2>
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label" for="RecipientName">Name</label>
+                        <label class="form-label" for="RecipientName">Tên người nhận</label>
                         <input class="form-control" id="RecipientName" name="RecipientName" value="@Model.Order.RecipientName" required />
                     </div>
                     <div class="col-12">
-                        <label class="form-label" for="DeliveryAddress">Delivery Address</label>
+                        <label class="form-label" for="DeliveryAddress">Địa chỉ giao hàng</label>
                         <textarea class="form-control" id="DeliveryAddress" name="DeliveryAddress" rows="4" required>@Model.Order.DeliveryAddress</textarea>
                     </div>
                     <div class="col-12">
-                        <label class="form-label" for="PaymentMethod">Payment Method</label>
+                        <label class="form-label" for="PaymentMethod">Phương thức thanh toán</label>
                         <select class="form-select" id="PaymentMethod" name="PaymentMethod" required>
-                            <option selected="@(Model.Order.PaymentMethod == "Cash")">Cash</option>
-                            <option selected="@(Model.Order.PaymentMethod == "Credit Card")">Credit Card</option>
-                            <option selected="@(Model.Order.PaymentMethod == "e-Wallet")">e-Wallet</option>
+                            <option value="Cash" selected="@(Model.Order.PaymentMethod == "Cash")">Tiền mặt</option>
+                            <option value="Credit Card" selected="@(Model.Order.PaymentMethod == "Credit Card")">Thẻ tín dụng</option>
+                            <option value="e-Wallet" selected="@(Model.Order.PaymentMethod == "e-Wallet")">Ví điện tử</option>
                         </select>
                     </div>
                 </div>
-                <button class="btn btn-success mt-4" type="submit" disabled="@(!Model.Cart.Items.Any())">Confirm Order</button>
+                <button class="btn btn-success mt-4" type="submit" disabled="@(!Model.Cart.Items.Any())">Xác nhận đơn hàng</button>
             </form>
         </div>
         <div class="col-lg-5">
             <aside class="order-summary">
-                <h2>Order Summary</h2>
+                <h2>Tóm tắt đơn hàng</h2>
                 <ul>
                     @foreach (var item in Model.Cart.Items)
                     {
                         <li><span>@item.ProductName x @item.Quantity</span><strong>@item.LineTotal.ToString("C")</strong></li>
                     }
                 </ul>
-                <div class="summary-total"><span>Total</span><strong>@Model.Cart.TotalAmount.ToString("C")</strong></div>
+                <div class="summary-total"><span>Tổng cộng</span><strong>@Model.Cart.TotalAmount.ToString("C")</strong></div>
             </aside>
         </div>
     </div>

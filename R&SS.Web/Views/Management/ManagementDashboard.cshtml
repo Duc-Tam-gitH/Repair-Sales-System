@@ -1,9 +1,9 @@
 @model ManagementViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Management Dashboard";
+    ViewData["Title"] = "Bảng điều khiển quản lý";
     ViewData["ActiveRole"] = "Management";
-    ViewData["RoleDisplay"] = "Manager";
+    ViewData["RoleDisplay"] = "Quản lý";
 }
 
 @section Styles {
@@ -11,7 +11,7 @@
 }
 
 <section class="management-dashboard-page">
-    <div class="admin-hero"><div><span>Operations</span><h1>Management Dashboard</h1><p>Monitor accounts, customers, repairs, requests, and sales performance.</p></div></div>
-    <div class="row g-4"><div class="col-md-3"><article class="summary-card"><span>Users</span><strong>@Model.Users.Count</strong></article></div><div class="col-md-3"><article class="summary-card"><span>Customers</span><strong>@Model.Customers.Count</strong></article></div><div class="col-md-3"><article class="summary-card"><span>Active Repairs</span><strong>@Model.RepairOrders.Count(repair => !repair.Status.Contains("Completed", StringComparison.OrdinalIgnoreCase))</strong></article></div><div class="col-md-3"><article class="summary-card"><span>Sales Revenue</span><strong>@Model.SalesOrders.Sum(order => order.TotalAmount).ToString("C")</strong></article></div></div>
-    <section class="table-card table-responsive mt-4"><h2>Recent Repair Orders</h2><table class="table"><thead><tr><th>Code</th><th>Customer</th><th>Device</th><th>Status</th></tr></thead><tbody>@foreach (var repair in Model.RepairOrders.OrderByDescending(repair => repair.ReceivedDate).Take(8)) { <tr><td>@repair.RepairOrderCode</td><td>@(repair.Customer?.FullName ?? "Customer")</td><td>@repair.DeviceType</td><td>@repair.Status</td></tr> }</tbody></table></section>
+    <div class="admin-hero"><div><span>Vận hành</span><h1>Bảng điều khiển quản lý</h1><p>Theo dõi tài khoản, khách hàng, sửa chữa, yêu cầu và hiệu quả bán hàng.</p></div></div>
+    <div class="row g-4"><div class="col-md-3"><article class="summary-card"><span>Người dùng</span><strong>@Model.Users.Count</strong></article></div><div class="col-md-3"><article class="summary-card"><span>Khách hàng</span><strong>@Model.Customers.Count</strong></article></div><div class="col-md-3"><article class="summary-card"><span>Sửa chữa đang xử lý</span><strong>@Model.RepairOrders.Count(repair => !repair.Status.Contains("Completed", StringComparison.OrdinalIgnoreCase))</strong></article></div><div class="col-md-3"><article class="summary-card"><span>Doanh thu bán hàng</span><strong>@Model.SalesOrders.Sum(order => order.TotalAmount).ToString("C")</strong></article></div></div>
+    <section class="table-card table-responsive mt-4"><h2>Đơn sửa chữa gần đây</h2><table class="table"><thead><tr><th>Mã</th><th>Khách hàng</th><th>Thiết bị</th><th>Trạng thái</th></tr></thead><tbody>@foreach (var repair in Model.RepairOrders.OrderByDescending(repair => repair.ReceivedDate).Take(8)) { <tr><td>@repair.RepairOrderCode</td><td>@(repair.Customer?.FullName ?? "Khách hàng")</td><td>@repair.DeviceType</td><td>@repair.Status</td></tr> }</tbody></table></section>
 </section>

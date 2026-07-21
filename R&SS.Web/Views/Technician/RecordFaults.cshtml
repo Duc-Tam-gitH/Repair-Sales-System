@@ -11,15 +11,15 @@
 }
 
 <section class="record-faults-page">
-    <div class="workflow-header"><span>Inspection</span><h1>Record Equipment Faults</h1><p>Document actual findings before proposing a repair plan.</p></div>
+    <div class="workflow-header"><span>Kiểm tra</span><h1>Ghi nhận lỗi thiết bị</h1><p>Ghi lại kết quả thực tế trước khi đề xuất phương án sửa chữa.</p></div>
     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
     <form class="workflow-form" method="post" asp-controller="Technician" asp-action="RecordFaults">
         @Html.AntiForgeryToken()
         <input name="RepairOrderId" type="hidden" value="@Model.Ticket.RepairOrderId" />
-        <section class="readonly-box"><h2>Device Information</h2><p><strong>@Model.Ticket.Brand @Model.Ticket.DeviceModel</strong> - @Model.Ticket.DeviceType</p><p>Initial fault: @Model.Ticket.IssueDescription</p></section>
-        <label class="form-label" for="InspectionResult">Inspection Results</label><textarea class="form-control" id="InspectionResult" name="InspectionResult" rows="4">@Model.Update.InspectionResult</textarea>
-        <label class="form-label mt-3" for="Diagnosis">Actual Faults / Diagnosis</label><textarea class="form-control" id="Diagnosis" name="Diagnosis" rows="4">@Model.Update.Diagnosis</textarea>
-        <label class="form-label mt-3" for="DeviceCondition">Equipment Condition</label><input class="form-control" id="DeviceCondition" name="DeviceCondition" value="@Model.Update.DeviceCondition" />
-        <div class="d-flex gap-2 mt-4"><button class="btn btn-primary" type="submit">Save Inspection Results</button><a class="btn btn-outline-secondary" asp-controller="Technician" asp-action="ProposeRepairPlan" asp-route-id="@Model.Ticket.RepairOrderId">Skip to Plan</a></div>
+        <section class="readonly-box"><h2>Thông tin thiết bị</h2><p><strong>@Model.Ticket.Brand @Model.Ticket.DeviceModel</strong> - @Model.Ticket.DeviceType</p><p>Lỗi ban đầu: @Model.Ticket.IssueDescription</p></section>
+        <label class="form-label" for="InspectionResult">Kết quả kiểm tra</label><textarea class="form-control" id="InspectionResult" name="InspectionResult" rows="4">@Model.Update.InspectionResult</textarea>
+        <label class="form-label mt-3" for="Diagnosis">Lỗi thực tế / chẩn đoán</label><textarea class="form-control" id="Diagnosis" name="Diagnosis" rows="4">@Model.Update.Diagnosis</textarea>
+        <label class="form-label mt-3" for="DeviceCondition">Tình trạng thiết bị</label><input class="form-control" id="DeviceCondition" name="DeviceCondition" value="@Model.Update.DeviceCondition" />
+        <div class="d-flex gap-2 mt-4"><button class="btn btn-primary" type="submit">Lưu kết quả kiểm tra</button><a class="btn btn-outline-secondary" asp-controller="Technician" asp-action="ProposeRepairPlan" asp-route-id="@Model.Ticket.RepairOrderId">Chuyển sang phương án</a></div>
     </form>
 </section>

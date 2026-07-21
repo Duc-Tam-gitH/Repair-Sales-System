@@ -53,3 +53,13 @@
     border-radius: 10px;
     padding: 10px 14px;
 }
+
+.assignment-note {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    color: #64748b;
+    font-weight: 600;
+    height: 100%;
+    padding: 12px 14px;
+}

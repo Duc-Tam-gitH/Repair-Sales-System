@@ -12,19 +12,19 @@
 
 <section class="repair-payment-page">
     <div class="repair-payment-header">
-        <span>Repair Payment Processing</span>
-        <h1>Completed Repair Payments</h1>
-        <p>Review completed repair tickets and print invoices for completed payment records.</p>
+        <span>Xử lý thanh toán sửa chữa</span>
+        <h1>Thanh toán sửa chữa đã hoàn tất</h1>
+        <p>Xem các phiếu sửa chữa đã hoàn tất và in hóa đơn cho các bản ghi thanh toán hoàn tất.</p>
     </div>
 
     <section class="step-card">
-        <h2>Completed Repair Tickets</h2>
+        <h2>Phiếu sửa chữa đã hoàn tất</h2>
         <table class="table align-middle">
-            <thead><tr><th>Repair Code</th><th>Customer</th><th>Device</th><th>Status</th><th>Total</th><th>Completed</th></tr></thead>
+            <thead><tr><th>Mã sửa chữa</th><th>Khách hàng</th><th>Thiết bị</th><th>Trạng thái</th><th>Tổng tiền</th><th>Ngày hoàn tất</th></tr></thead>
             <tbody>
                 @if (!Model.CompletedRepairs.Any())
                 {
-                    <tr><td colspan="6" class="text-center text-muted">No completed repair tickets found.</td></tr>
+                    <tr><td colspan="6" class="text-center text-muted">Không tìm thấy phiếu sửa chữa đã hoàn tất.</td></tr>
                 }
                 else
                 {
@@ -36,7 +36,7 @@
             </tbody>
         </table>
         <div class="d-flex flex-wrap gap-2 mt-4">
-            <a class="btn btn-outline-secondary" asp-controller="Payment" asp-action="TransactionList">Back to Transactions</a>
+            <a class="btn btn-outline-secondary" asp-controller="Payment" asp-action="TransactionList">Quay lại giao dịch</a>
         </div>
     </section>
 </section>

@@ -1,49 +1,49 @@
 @{
-    ViewData["Title"] = "Customer Home";
+    ViewData["Title"] = "Trang khách hàng";
     ViewData["ActiveRole"] = "Customer";
-    ViewData["RoleDisplay"] = "Signed in as Customer";
+    ViewData["RoleDisplay"] = "Đăng nhập với vai trò Khách hàng";
 }
 
 <section class="rss-role-home rss-customer-home" aria-labelledby="customer-home-title">
     <header class="mb-4">
-        <p class="text-muted mb-1">Customer portal</p>
-        <h1 id="customer-home-title">Customer Home</h1>
-        <p class="text-muted mb-0">Create service tickets, shop products, track orders, and review repair updates.</p>
+        <p class="text-muted mb-1">Cổng khách hàng</p>
+        <h1 id="customer-home-title">Trang khách hàng</h1>
+        <p class="text-muted mb-0">Tạo phiếu dịch vụ, mua sản phẩm, theo dõi đơn hàng và xem cập nhật sửa chữa.</p>
     </header>
 
-    <nav class="rss-role-menu mb-4" aria-label="Customer menu">
-        <a href="#">My Tickets</a>
-        <a href="#">New Service Ticket</a>
-        <a href="#">Products</a>
-        <a href="#">Cart</a>
-        <a href="#">My Orders</a>
-        <a href="#">Feedback</a>
+    <nav class="rss-role-menu mb-4" aria-label="Menu khách hàng">
+        <a href="#">Phiếu của tôi</a>
+        <a href="#">Phiếu dịch vụ mới</a>
+        <a href="#">Sản phẩm</a>
+        <a href="#">Giỏ hàng</a>
+        <a href="#">Đơn hàng của tôi</a>
+        <a href="#">Phản hồi</a>
     </nav>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-3"><div class="rss-metric"><span>Active Tickets</span><strong>2</strong></div></div>
-        <div class="col-md-3"><div class="rss-metric"><span>Orders In Progress</span><strong>1</strong></div></div>
-        <div class="col-md-3"><div class="rss-metric"><span>Cart Items</span><strong>3</strong></div></div>
-        <div class="col-md-3"><div class="rss-metric"><span>Unread Updates</span><strong>4</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Phiếu đang xử lý</span><strong>2</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Đơn đang xử lý</span><strong>1</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Sản phẩm trong giỏ</span><strong>3</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Cập nhật chưa đọc</span><strong>4</strong></div></div>
     </div>
 
     <div class="row g-3 mb-4">
         <div class="col-md-4">
             <a class="rss-action rss-action-primary" href="#">
-                <strong>Create Service Ticket</strong>
-                <span>Request repair or diagnostics for a device.</span>
+                <strong>Tạo phiếu dịch vụ</strong>
+                <span>Yêu cầu sửa chữa hoặc chẩn đoán thiết bị.</span>
             </a>
         </div>
         <div class="col-md-4">
             <a class="rss-action" href="#">
-                <strong>Make Purchase</strong>
-                <span>Browse products and add items to the cart.</span>
+                <strong>Mua hàng</strong>
+                <span>Xem sản phẩm và thêm vào giỏ hàng.</span>
             </a>
         </div>
         <div class="col-md-4">
             <a class="rss-action" href="#">
-                <strong>Track Orders</strong>
-                <span>Check purchase and repair order progress.</span>
+                <strong>Theo dõi đơn hàng</strong>
+                <span>Kiểm tra tiến độ mua hàng và sửa chữa.</span>
             </a>
         </div>
     </div>
@@ -51,16 +51,16 @@
     <div class="row g-4">
         <div class="col-lg-8">
             <section class="rss-panel" aria-labelledby="customer-work-title">
-                <header><h2 id="customer-work-title">Recent Tickets and Orders</h2></header>
+                <header><h2 id="customer-work-title">Phiếu và đơn hàng gần đây</h2></header>
                 <div class="table-responsive">
                     <table class="table align-middle">
                         <thead>
-                            <tr><th>Reference</th><th>Item</th><th>Status</th><th>Next Step</th></tr>
+                            <tr><th>Mã tham chiếu</th><th>Mục</th><th>Trạng thái</th><th>Bước tiếp theo</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>TT-1042</td><td>Laptop repair</td><td>Diagnosing</td><td>Await technician update</td></tr>
-                            <tr><td>SO-8821</td><td>Wireless mouse</td><td>Packed</td><td>Delivery confirmation</td></tr>
-                            <tr><td>TT-1036</td><td>Phone screen</td><td>Payment due</td><td>Confirm repair payment</td></tr>
+                            <tr><td>TT-1042</td><td>Sửa laptop</td><td>Đang chẩn đoán</td><td>Chờ kỹ thuật viên cập nhật</td></tr>
+                            <tr><td>SO-8821</td><td>Chuột không dây</td><td>Đã đóng gói</td><td>Xác nhận giao hàng</td></tr>
+                            <tr><td>TT-1036</td><td>Màn hình điện thoại</td><td>Chờ thanh toán</td><td>Xác nhận thanh toán sửa chữa</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -68,11 +68,11 @@
         </div>
         <div class="col-lg-4">
             <section class="rss-panel" aria-labelledby="customer-notifications-title">
-                <header><h2 id="customer-notifications-title">Notifications</h2></header>
+                <header><h2 id="customer-notifications-title">Thông báo</h2></header>
                 <ul>
-                    <li>Repair update available for TT-1042.</li>
-                    <li>Payment confirmation required for TT-1036.</li>
-                    <li>Feedback request for completed order SO-8795.</li>
+                    <li>Có cập nhật sửa chữa cho TT-1042.</li>
+                    <li>Cần xác nhận thanh toán cho TT-1036.</li>
+                    <li>Yêu cầu phản hồi cho đơn SO-8795 đã hoàn tất.</li>
                 </ul>
             </section>
         </div>

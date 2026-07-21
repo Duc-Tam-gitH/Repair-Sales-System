@@ -14,25 +14,25 @@
 
 <section class="technician-dashboard-page">
     <div class="tech-hero">
-        <div><span>Repair Workbench</span><h1>Technician Dashboard</h1><p>Review assigned work and the next tasks that need technical action.</p></div>
-        <a class="btn btn-light" asp-controller="Technician" asp-action="AssignedTasks">Open My Tasks</a>
+        <div><span>Bàn làm việc sửa chữa</span><h1>Bảng điều khiển kỹ thuật viên</h1><p>Xem công việc được giao và các nhiệm vụ cần thao tác kỹ thuật tiếp theo.</p></div>
+        <a class="btn btn-light" asp-controller="Technician" asp-action="AssignedTasks">Mở công việc của tôi</a>
     </div>
 
     <div class="row g-4">
-        <div class="col-md-6 col-xl-3"><article class="tech-metric"><span>Total Assigned Tasks</span><strong>@Model.Tickets.Count</strong></article></div>
-        <div class="col-md-6 col-xl-3"><article class="tech-metric pending"><span>Pending Tasks</span><strong>@pendingCount</strong></article></div>
-        <div class="col-md-6 col-xl-3"><article class="tech-metric progress"><span>In-Progress Tasks</span><strong>@progressCount</strong></article></div>
-        <div class="col-md-6 col-xl-3"><article class="tech-metric due"><span>Ready to Complete</span><strong>@Model.Tickets.Count(ticket => ticket.Status.Contains("Delivery", StringComparison.OrdinalIgnoreCase))</strong></article></div>
+        <div class="col-md-6 col-xl-3"><article class="tech-metric"><span>Tổng phiếu được giao</span><strong>@Model.Tickets.Count</strong></article></div>
+        <div class="col-md-6 col-xl-3"><article class="tech-metric pending"><span>Phiếu đang chờ</span><strong>@pendingCount</strong></article></div>
+        <div class="col-md-6 col-xl-3"><article class="tech-metric progress"><span>Phiếu đang xử lý</span><strong>@progressCount</strong></article></div>
+        <div class="col-md-6 col-xl-3"><article class="tech-metric due"><span>Sẵn sàng hoàn tất</span><strong>@Model.Tickets.Count(ticket => ticket.Status.Contains("Delivery", StringComparison.OrdinalIgnoreCase))</strong></article></div>
     </div>
 
     <div class="urgent-panel mt-4 table-responsive">
-        <h2>Recent Tasks</h2>
+        <h2>Công việc gần đây</h2>
         <table class="table align-middle">
-            <thead><tr><th>Task ID</th><th>Customer</th><th>Device</th><th>Status</th><th></th></tr></thead>
+            <thead><tr><th>Mã phiếu</th><th>Khách hàng</th><th>Thiết bị</th><th>Trạng thái</th><th></th></tr></thead>
             <tbody>
                 @foreach (var ticket in Model.Tickets.Take(5))
                 {
-                    <tr><td>@ticket.TicketCode</td><td>@ticket.CustomerName</td><td>@ticket.Brand @ticket.DeviceModel</td><td><span class="badge text-bg-info">@ticket.Status</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@ticket.RepairOrderId">View</a></td></tr>
+                    <tr><td>@ticket.TicketCode</td><td>@ticket.CustomerName</td><td>@ticket.Brand @ticket.DeviceModel</td><td><span class="badge text-bg-info">@ticket.Status</span></td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@ticket.RepairOrderId">Xem</a></td></tr>
                 }
             </tbody>
         </table>

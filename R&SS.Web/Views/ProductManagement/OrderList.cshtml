@@ -1,9 +1,9 @@
 @model ProductOrderListViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Order Management";
+    ViewData["Title"] = "Quản lý đơn hàng";
     ViewData["ActiveRole"] = "ProductManagement";
-    ViewData["RoleDisplay"] = "Product Staff";
+    ViewData["RoleDisplay"] = "Nhân viên sản phẩm";
 }
 
 @section Styles {
@@ -12,8 +12,8 @@
 
 <section class="order-management-page">
     <div class="product-admin-header">
-        <div><span>Customer Orders</span><h1>Order Management</h1><p>Review orders, customers, totals, and cancellation status.</p></div>
-        <a class="btn btn-outline-primary" asp-controller="ProductManagement" asp-action="OrderList">Refresh</a>
+        <div><span>Đơn hàng khách hàng</span><h1>Quản lý đơn hàng</h1><p>Xem đơn hàng, khách hàng, tổng tiền và trạng thái hủy.</p></div>
+        <a class="btn btn-outline-primary" asp-controller="ProductManagement" asp-action="OrderList">Làm mới</a>
     </div>
 
     @if (TempData["SuccessMessage"] is string success)
@@ -25,24 +25,24 @@
         <div class="alert alert-danger" role="alert">@error</div>
     }
     <form class="order-tools" method="get" asp-controller="ProductManagement" asp-action="OrderList">
-        <input class="form-control" name="keyword" value="@Model.Keyword" placeholder="Search by Order Code or Customer Name..." />
+        <input class="form-control" name="keyword" value="@Model.Keyword" placeholder="Tìm theo mã đơn hàng hoặc tên khách hàng..." />
         <select class="form-select" name="status">
-            <option value="">All Status</option>
+            <option value="">Tất cả trạng thái</option>
             @foreach (var status in Model.Orders.Select(order => order.Status).Distinct().OrderBy(value => value))
             {
                 <option value="@status" selected="@(Model.Status == status)">@status</option>
             }
         </select>
-        <button class="btn btn-outline-primary" type="submit">Filter</button>
+        <button class="btn btn-outline-primary" type="submit">Lọc</button>
     </form>
 
     <div class="table-card table-responsive">
         <table class="table align-middle">
-            <thead><tr><th>Order Code</th><th>Customer Name</th><th>Order Date</th><th>Total Amount</th><th>Status</th><th>Items</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Mã đơn hàng</th><th>Tên khách hàng</th><th>Ngày đặt hàng</th><th>Tổng tiền</th><th>Trạng thái</th><th>Mặt hàng</th><th>Thao tác</th></tr></thead>
             <tbody>
                 @if (!Model.Orders.Any())
                 {
-                    <tr><td colspan="7" class="text-center text-muted">No orders found.</td></tr>
+                    <tr><td colspan="7" class="text-center text-muted">Không tìm thấy đơn hàng.</td></tr>
                 }
                 else
                 {
@@ -50,7 +50,7 @@
                     {
                         <tr>
                             <td>@order.SalesOrderCode</td>
-                            <td>@(order.Customer?.FullName ?? "Customer")</td>
+                            <td>@(order.Customer?.FullName ?? "Khách hàng")</td>
                             <td>@order.SalesDate.ToLocalTime().ToString("yyyy-MM-dd")</td>
                             <td>@order.TotalAmount.ToString("C")</td>
                             <td><span class="badge text-bg-info">@order.Status</span></td>
@@ -62,12 +62,12 @@
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="salesOrderId" value="@order.SalesOrderId" />
                                         <input type="hidden" name="reason" value="Cancelled by product management." />
-                                        <button class="btn btn-sm btn-outline-danger" type="submit">Cancel</button>
+                                        <button class="btn btn-sm btn-outline-danger" type="submit">Hủy</button>
                                     </form>
                                 }
                                 else
                                 {
-                                    <span class="text-muted">No action</span>
+                                    <span class="text-muted">Không có thao tác</span>
                                 }
                             </td>
                         </tr>

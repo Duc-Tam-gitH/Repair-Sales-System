@@ -1,53 +1,53 @@
 @{
-    ViewData["Title"] = "Administrator Home";
+    ViewData["Title"] = "Trang quản trị viên";
     ViewData["ActiveRole"] = "Administrator";
-    ViewData["RoleDisplay"] = "Signed in as Administrator";
+    ViewData["RoleDisplay"] = "Đăng nhập với vai trò Quản trị viên";
 }
 
 <section class="rss-role-home rss-administrator-home" aria-labelledby="administrator-home-title">
     <header class="mb-4">
-        <p class="text-muted mb-1">Administration console</p>
-        <h1 id="administrator-home-title">Administrator Home</h1>
-        <p class="text-muted mb-0">Monitor the full system, manage users and roles, configure operations, and review activity.</p>
+        <p class="text-muted mb-1">Bảng điều khiển quản trị</p>
+        <h1 id="administrator-home-title">Trang quản trị viên</h1>
+        <p class="text-muted mb-0">Theo dõi toàn hệ thống, quản lý người dùng và vai trò, cấu hình vận hành và xem hoạt động.</p>
     </header>
 
-    <nav class="rss-role-menu mb-4" aria-label="Administrator menu">
-        <a href="#">Dashboard</a>
-        <a href="#">Users</a>
-        <a href="#">Roles & Permissions</a>
-        <a href="#">Tickets</a>
-        <a href="#">Staff Assignment</a>
-        <a href="#">Reports</a>
-        <a href="#">Inventory</a>
-        <a href="#">System Configuration</a>
-        <a href="#">Activity Log</a>
+    <nav class="rss-role-menu mb-4" aria-label="Menu quản trị viên">
+        <a href="#">Bảng điều khiển</a>
+        <a href="#">Người dùng</a>
+        <a href="#">Vai trò & quyền</a>
+        <a href="#">Phiếu</a>
+        <a href="#">Phân công nhân sự</a>
+        <a href="#">Báo cáo</a>
+        <a href="#">Tồn kho</a>
+        <a href="#">Cấu hình hệ thống</a>
+        <a href="#">Nhật ký hoạt động</a>
     </nav>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-3"><div class="rss-metric"><span>Active Users</span><strong>86</strong></div></div>
-        <div class="col-md-3"><div class="rss-metric"><span>Open Tickets</span><strong>31</strong></div></div>
-        <div class="col-md-3"><div class="rss-metric"><span>Pending Role Changes</span><strong>2</strong></div></div>
-        <div class="col-md-3"><div class="rss-metric"><span>System Alerts</span><strong>1</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Người dùng hoạt động</span><strong>86</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Phiếu đang mở</span><strong>31</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Đổi vai trò chờ duyệt</span><strong>2</strong></div></div>
+        <div class="col-md-3"><div class="rss-metric"><span>Cảnh báo hệ thống</span><strong>1</strong></div></div>
     </div>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-3"><a class="rss-action rss-action-primary" href="#"><strong>Manage Users</strong><span>Create, edit, disable, and review access.</span></a></div>
-        <div class="col-md-3"><a class="rss-action" href="#"><strong>Manage Roles</strong><span>Maintain permissions and assignments.</span></a></div>
-        <div class="col-md-3"><a class="rss-action" href="#"><strong>System Configuration</strong><span>Update operational settings.</span></a></div>
-        <div class="col-md-3"><a class="rss-action" href="#"><strong>View Reports</strong><span>Review business and system activity.</span></a></div>
+        <div class="col-md-3"><a class="rss-action rss-action-primary" href="#"><strong>Quản lý người dùng</strong><span>Tạo, sửa, khóa và kiểm tra quyền truy cập.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Quản lý vai trò</strong><span>Duy trì quyền và phân quyền.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Cấu hình hệ thống</strong><span>Cập nhật thiết lập vận hành.</span></a></div>
+        <div class="col-md-3"><a class="rss-action" href="#"><strong>Xem báo cáo</strong><span>Xem hoạt động kinh doanh và hệ thống.</span></a></div>
     </div>
 
     <div class="row g-4">
         <div class="col-lg-8">
             <section class="rss-panel" aria-labelledby="admin-queue-title">
-                <header><h2 id="admin-queue-title">Administration Queue</h2></header>
+                <header><h2 id="admin-queue-title">Hàng đợi quản trị</h2></header>
                 <div class="table-responsive">
                     <table class="table align-middle">
-                        <thead><tr><th>Item</th><th>Type</th><th>Status</th><th>Action</th></tr></thead>
+                        <thead><tr><th>Mục</th><th>Loại</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
                         <tbody>
-                            <tr><td>New employee account</td><td>User</td><td>Review</td><td><a href="#">Open</a></td></tr>
-                            <tr><td>Technician permission update</td><td>Role</td><td>Draft</td><td><a href="#">Edit</a></td></tr>
-                            <tr><td>Email template audit</td><td>Config</td><td>Current</td><td><a href="#">View</a></td></tr>
+                            <tr><td>Tài khoản nhân viên mới</td><td>Người dùng</td><td>Cần xem xét</td><td><a href="#">Mở</a></td></tr>
+                            <tr><td>Cập nhật quyền kỹ thuật viên</td><td>Vai trò</td><td>Bản nháp</td><td><a href="#">Sửa</a></td></tr>
+                            <tr><td>Kiểm tra mẫu email</td><td>Cấu hình</td><td>Hiện hành</td><td><a href="#">Xem</a></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -55,12 +55,12 @@
         </div>
         <div class="col-lg-4">
             <section class="rss-panel" aria-labelledby="admin-monitor-title">
-                <header><h2 id="admin-monitor-title">System Monitoring</h2></header>
+                <header><h2 id="admin-monitor-title">Giám sát hệ thống</h2></header>
                 <ul>
-                    <li>User management queue</li>
-                    <li>Role and permission shortcuts</li>
-                    <li>System activity log</li>
-                    <li>Operational overview</li>
+                    <li>Hàng đợi quản lý người dùng</li>
+                    <li>Lối tắt vai trò và quyền</li>
+                    <li>Nhật ký hoạt động hệ thống</li>
+                    <li>Tổng quan vận hành</li>
                 </ul>
             </section>
         </div>

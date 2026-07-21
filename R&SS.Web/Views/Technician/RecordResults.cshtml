@@ -12,17 +12,17 @@
 
 <section class="record-results-page">
     <div class="results-card">
-        <h1>Record Repair Results</h1>
-        <p>Complete the technical work and prepare the device for reception handover.</p>
+        <h1>Ghi nhận kết quả sửa chữa</h1>
+        <p>Hoàn tất công việc kỹ thuật và chuẩn bị thiết bị để bàn giao cho tiếp nhận.</p>
         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
         <form method="post" asp-controller="Technician" asp-action="RecordResults">
             @Html.AntiForgeryToken()
             <input name="RepairOrderId" type="hidden" value="@Model.Ticket.RepairOrderId" />
-            <label class="form-label" for="RepairResult">Repair Results</label><textarea class="form-control" id="RepairResult" name="RepairResult" rows="4" required>@Model.Update.RepairResult</textarea>
-            <label class="form-label mt-3" for="WorkPerformed">Work Performed</label><textarea class="form-control" id="WorkPerformed" name="WorkPerformed" rows="3">@Model.Update.WorkPerformed</textarea>
-            <label class="form-label mt-3" for="DeviceCondition">Equipment Status After Repair</label><input class="form-control" id="DeviceCondition" name="DeviceCondition" value="@Model.Update.DeviceCondition" />
-            <label class="form-label mt-3" for="ServiceFee">Service Fee</label><input class="form-control" id="ServiceFee" name="ServiceFee" type="number" step="0.01" min="0" value="@Model.Update.ServiceFee" />
-            <button class="btn btn-primary mt-4" type="submit">Confirm Completion of Technical Work</button>
+            <label class="form-label" for="RepairResult">Kết quả sửa chữa</label><textarea class="form-control" id="RepairResult" name="RepairResult" rows="4" required>@Model.Update.RepairResult</textarea>
+            <label class="form-label mt-3" for="WorkPerformed">Công việc đã thực hiện</label><textarea class="form-control" id="WorkPerformed" name="WorkPerformed" rows="3">@Model.Update.WorkPerformed</textarea>
+            <label class="form-label mt-3" for="DeviceCondition">Tình trạng thiết bị sau sửa chữa</label><input class="form-control" id="DeviceCondition" name="DeviceCondition" value="@Model.Update.DeviceCondition" />
+            <label class="form-label mt-3" for="ServiceFee">Phí dịch vụ</label><input class="form-control" id="ServiceFee" name="ServiceFee" type="number" step="0.01" min="0" value="@Model.Update.ServiceFee" />
+            <button class="btn btn-primary mt-4" type="submit">Xác nhận hoàn tất công việc kỹ thuật</button>
         </form>
     </div>
 </section>

@@ -11,9 +11,9 @@
 }
 
 <section class="update-components-page">
-    <div class="component-task-header"><span>@Model.Ticket.TicketCode</span><h1>Update Used Components</h1><p>Component usage is recorded through the repair update endpoint when inventory product ids are selected.</p></div>
+    <div class="component-task-header"><span>@Model.Ticket.TicketCode</span><h1>Cập nhật linh kiện đã dùng</h1><p>Việc sử dụng linh kiện được ghi nhận qua cập nhật sửa chữa khi chọn mã sản phẩm tồn kho.</p></div>
     <div class="component-list table-responsive mt-4">
-        <table class="table align-middle"><thead><tr><th>Ticket</th><th>Device</th><th>Status</th><th></th></tr></thead><tbody><tr><td>@Model.Ticket.TicketCode</td><td>@Model.Ticket.Brand @Model.Ticket.DeviceModel</td><td>@Model.Ticket.Status</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="UpdateProgress" asp-route-id="@Model.Ticket.RepairOrderId">Update Repair</a></td></tr></tbody></table>
+        <table class="table align-middle"><thead><tr><th>Phiếu</th><th>Thiết bị</th><th>Trạng thái</th><th></th></tr></thead><tbody><tr><td>@Model.Ticket.TicketCode</td><td>@Model.Ticket.Brand @Model.Ticket.DeviceModel</td><td>@Model.Ticket.Status</td><td><a class="btn btn-sm btn-outline-primary" asp-controller="Technician" asp-action="UpdateProgress" asp-route-id="@Model.Ticket.RepairOrderId">Cập nhật sửa chữa</a></td></tr></tbody></table>
     </div>
-    <div class="d-flex gap-2 mt-4"><a class="btn btn-outline-secondary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@Model.Ticket.RepairOrderId">Back to Task</a></div>
+    <div class="d-flex gap-2 mt-4"><a class="btn btn-outline-secondary" asp-controller="Technician" asp-action="TaskDetails" asp-route-id="@Model.Ticket.RepairOrderId">Quay lại phiếu</a></div>
 </section>
